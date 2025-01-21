@@ -8,32 +8,21 @@ class ProjectManagerRegisterPage extends StatefulWidget {
 
 class _ProjectManagerRegisterPageState
     extends State<ProjectManagerRegisterPage> {
-  final PageController _pageController = PageController();
-  int _currentStep = 0;
+  final _formKey = GlobalKey<FormState>();
+  final _pageController = PageController();
+  int _currentStep = 0; // Track current step
 
-  void _goToNextPage() {
-    if (_currentStep < 3) {
-      setState(() {
-        _currentStep++;
-      });
-      _pageController.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void _goToPreviousPage() {
-    if (_currentStep > 0) {
-      setState(() {
-        _currentStep--;
-      });
-      _pageController.previousPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
+  // Controllers for form fields
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _roleController = TextEditingController();
+  final TextEditingController _companyNameController = TextEditingController();
+  final TextEditingController _experienceController = TextEditingController();
+  final TextEditingController _educationController = TextEditingController();
+  final TextEditingController _skillsController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,135 +30,242 @@ class _ProjectManagerRegisterPageState
       appBar: AppBar(
         title: Text('Register as Project Manager'),
       ),
-      body: Column(
-        children: [
-          // Step indicator
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                4,
-                (index) => CircleAvatar(
-                  backgroundColor:
-                      _currentStep == index ? Colors.green : Colors.grey,
-                  radius: 12,
-                  child: Text(
-                    (index + 1).toString(),
-                    style: TextStyle(color: Colors.white),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            // Step indicator
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(
+                  5,
+                  (index) => CircleAvatar(
+                    backgroundColor:
+                        _currentStep == index ? Colors.green : Colors.grey,
+                    radius: 12,
+                    child: Text(
+                      (index + 1).toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                // Slide 1: Validate
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'First Name '),
-                      ),
-                      TextFormField(
-                        decoration:
-                            InputDecoration(labelText: 'Last Name'),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(labelText: ''),
-                      ),
-                    ],
-                  ),
+            // Form
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: PageView(
+                  controller: _pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: <Widget>[
+                    // Step 1: Personal Info
+                    _buildPersonalInfoPage(),
+                    // Step 2: Contact Info
+                    _buildContactInfoPage(),
+                    // Step 3: Project Info
+                    _buildProjectInfoPage(),
+                    // Step 4: Password Info
+                    _buildPasswordInfoPage(),
+                    // Step 5: Complete Registration
+                    _buildCompletePage(),
+                  ],
                 ),
-                // Slide 2: Contact
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'Email Address'),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'Phone Number'),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'Role'),
-                      ),
-                    ],
-                  ),
-                ),
-                // Slide 3: Password
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        decoration:
-                            InputDecoration(labelText: 'Password', hintText: 'Enter your password'),
-                        obscureText: true,
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Confirm Password',
-                          hintText: 'Re-enter your password',
-                        ),
-                        obscureText: true,
-                      ),
-                    ],
-                  ),
-                ),
-                // Slide 4: Complete
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Registration Complete!',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle final submission
-                        },
-                        child: Text('Finish'),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          // Navigation Buttons
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (_currentStep > 0)
-                  ElevatedButton(
-                    onPressed: _goToPreviousPage,
-                    child: Text('Previous'),
-                  ),
-                ElevatedButton(
-                  onPressed: _goToNextPage,
-                  child: Text(
-                    _currentStep < 3 ? 'Next' : 'Finish',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  // Step 1: Personal Info
+  Widget _buildPersonalInfoPage() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _buildTextFormField(_fullNameController, 'Full Name'),
+        _buildTextFormField(_roleController, 'Role'),
+        ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState?.validate() ?? false) {
+              setState(() {
+                _currentStep++;
+              });
+              _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
+            }
+          },
+          child: Text('Next'),
+        ),
+      ],
+    );
+  }
+
+  // Step 2: Contact Info
+  Widget _buildContactInfoPage() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _buildTextFormField(_emailController, 'Email Address', isEmail: true),
+        _buildTextFormField(_phoneController, 'Phone Number'),
+        ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState?.validate() ?? false) {
+              setState(() {
+                _currentStep++;
+              });
+              _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
+            }
+          },
+          child: Text('Next'),
+        ),
+      ],
+    );
+  }
+
+  // Step 3: Project Info
+  Widget _buildProjectInfoPage() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _buildTextFormField(_companyNameController, 'Project Executor Company Name'),
+        _buildTextFormField(_experienceController, 'Years of Experience'),
+        _buildTextFormField(_educationController, 'Highest Education Level'),
+        _buildTextFormField(_skillsController, 'Skills'),
+        ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState?.validate() ?? false) {
+              setState(() {
+                _currentStep++;
+              });
+              _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
+            }
+          },
+          child: Text('Next'),
+        ),
+      ],
+    );
+  }
+
+  // Step 4: Password Info
+  Widget _buildPasswordInfoPage() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _buildPasswordField(_passwordController, 'Password'),
+        _buildPasswordField(_confirmPasswordController, 'Confirm Password'),
+        ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState?.validate() ?? false) {
+              setState(() {
+                _currentStep++;
+              });
+              _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
+            }
+          },
+          child: Text('Next'),
+        ),
+      ],
+    );
+  }
+
+  // Step 5: Complete Registration
+  Widget _buildCompletePage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Registration Complete!',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: _handleRegistration,
+          child: Text('Finish'),
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(double.infinity, 50),
+            backgroundColor: Theme.of(context).primaryColor,
+            padding: EdgeInsets.symmetric(vertical: 15),
+            textStyle: TextStyle(fontSize: 16),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // TextFormField builder to reduce redundancy
+  Widget _buildTextFormField(
+      TextEditingController controller, String labelText,
+      {bool isEmail = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: labelText,
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return '$labelText is required';
+          }
+          if (isEmail && !RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+              .hasMatch(value)) {
+            return 'Please enter a valid email address';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  // Password field builder
+  Widget _buildPasswordField(
+      TextEditingController controller, String labelText) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        obscureText: true,
+        decoration: InputDecoration(
+          labelText: labelText,
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return '$labelText is required';
+          }
+          if (value.length < 8) {
+            return 'Password must be at least 8 characters long';
+          }
+          if (labelText == 'Confirm Password' &&
+              value != _passwordController.text) {
+            return 'Passwords do not match';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  // Handle registration logic here
+  void _handleRegistration() {
+    if (_formKey.currentState?.validate() ?? false) {
+      // Handle the registration logic here
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration Successful')),
+      );
+    }
   }
 }
 
