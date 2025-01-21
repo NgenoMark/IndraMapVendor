@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'project_vendor_register_page.dart';  // Import registration pages for each user type
+import 'package:frontend/pages/login_page.dart';
+import 'project_vendor_register_page.dart'; // Import registration pages for each user type
 import 'project_executor_register_page.dart';
 import 'project_manager_register_page.dart';
 import 'fieldman_register_page.dart';
@@ -34,7 +35,10 @@ class RegisterPage extends StatelessWidget {
             SizedBox(height: 10),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/login'); // Navigate to login page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
               },
               child: Text(
                 'Sign in',
@@ -57,7 +61,8 @@ class RegisterPage extends StatelessWidget {
                   () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ProjectVendorRegisterPage()),
+                      MaterialPageRoute(
+                          builder: (context) => ProjectVendorRegisterPage()),
                     );
                   },
                 ),
@@ -70,7 +75,8 @@ class RegisterPage extends StatelessWidget {
                   () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ProjectExecutorRegisterPage()),
+                      MaterialPageRoute(
+                          builder: (context) => ProjectExecutorRegisterPage()),
                     );
                   },
                 ),
@@ -83,7 +89,8 @@ class RegisterPage extends StatelessWidget {
                   () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ProjectManagerRegisterPage()),
+                      MaterialPageRoute(
+                          builder: (context) => ProjectManagerRegisterPage()),
                     );
                   },
                 ),
@@ -96,7 +103,8 @@ class RegisterPage extends StatelessWidget {
                   () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FieldmanRegisterPage()),
+                      MaterialPageRoute(
+                          builder: (context) => FieldmanRegisterPage()),
                     );
                   },
                 ),
