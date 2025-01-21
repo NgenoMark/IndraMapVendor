@@ -1,5 +1,7 @@
 package com.example.backend.service;
 
+import com.example.backend.BackendApplication;
+import com.example.backend.api.controller.DatabaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,7 @@ public class DatabaseService {
     private JdbcTemplate jdbcTemplate;
 
     public List<Map<String, Object>> getAllTables() {
-        String query = "SELECT TABLE_NAME FROM USER_TABLES"; // Fetch all table names
+        String query = "SHOW TABLES "; // Fetch all table names
         return jdbcTemplate.queryForList(query);
     }
 
@@ -24,3 +26,5 @@ public class DatabaseService {
     }
 
 }
+
+
