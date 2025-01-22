@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/login_page.dart';
-// import 'project_vendor_register_page.dart'; // Import registration pages for each user type
+// import 'project_vendor_register_page.dart'; 
+// Import registration pages for each user type
 // import 'project_executor_register_page.dart';
 // import 'project_manager_register_page.dart';
-import 'fieldman_register_page.dart';
+//import 'fieldman_register_page.dart';
+import 'customer_register_page.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
@@ -15,39 +17,51 @@ class RegisterPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'Select account ',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'or',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[900],
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              },
-              child: Text(
-                'Sign in',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.blue[700],
-                  fontWeight: FontWeight.w500,
+            // Row to keep "Select Account or Sign In" in one line
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Select account ',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
+                SizedBox(width: 5),
+                Text(
+                  'or',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[900],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 5),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue[700],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'Sign in',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 30),
             // Buttons for each user type
@@ -96,18 +110,30 @@ class RegisterPage extends StatelessWidget {
                 // ),
                 // SizedBox(height: 16),
                 // Fieldman button
+                // _buildRegisterButton(
+                //   context,
+                // 'Register as Fieldman',
+                // 'Field workers under project managers',
+                //   () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => FieldmanRegisterPage()),
+                //     );
+                //   },
+                // ),
                 _buildRegisterButton(
                   context,
-                  'Register as Fieldman',
-                  'Field workers under project managers',
+                  'Register as Onesait Customer',
+                  'Personnel requesting for project execution',
                   () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FieldmanRegisterPage()),
+                          builder: (context) => CustomerRegisterPage()),
                     );
                   },
-                ),
+                )
               ],
             ),
           ],
@@ -127,6 +153,7 @@ class RegisterPage extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         padding: EdgeInsets.all(16.0),
+        margin: EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),

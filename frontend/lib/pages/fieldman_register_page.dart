@@ -51,7 +51,7 @@ class _FieldmanRegisterPageState extends State<FieldmanRegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register as Fieldman')),
+      appBar: AppBar(title: Text('Register with you details ')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

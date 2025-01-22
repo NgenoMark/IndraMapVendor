@@ -5,6 +5,7 @@ import 'project_executor_page.dart';
 import 'project_manager_page.dart';
 import 'fieldmen_page.dart';
 import 'register_page.dart';
+import 'customer_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -40,6 +41,9 @@ class _LoginPageState extends State<LoginPage> {
           case 'FieldMen':
             nextPage = FieldMenPage();
             break;
+          case 'Customer':
+            nextPage = CustomerPage();
+            break;
           default:
             nextPage = LoginPage();
             break;
@@ -51,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid username or password')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Invalid username or password')));
       }
     }
   }
@@ -70,14 +75,16 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 controller: _usernameController,
                 decoration: InputDecoration(labelText: 'Username'),
-                validator: (value) => value!.isEmpty ? 'Please enter a username' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter a username' : null,
               ),
               SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(labelText: 'Password'),
-                validator: (value) => value!.isEmpty ? 'Please enter a password' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter a password' : null,
               ),
               SizedBox(height: 16),
               ElevatedButton(
