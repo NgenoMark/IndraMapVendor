@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
 import 'project_vendor_page.dart';
 import 'project_executor_page.dart';
@@ -15,19 +16,31 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthService _authService = AuthService(); // Injecting AuthService
+  final AuthService _authService = AuthService();
+  bool _isLoading = false;
 
-  void _login() {
-    if (_formKey.currentState?.validate() ?? false) {
-      String username = _usernameController.text;
-      String password = _passwordController.text;
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
 
-      String? userRole = _authService.login(username, password);
+    setState(() => _isLoading = true);
+    String username = _usernameController.text;
+    String password = _passwordController.text;
 
-      if (userRole != null) {
+    try {
+      Map<String, dynamic>? response = await _authService.login(username, password);
+      
+      if (response != null && response.containsKey('token')) {
+        String role = response['role']; // Get the user role from API response
+        String token = response['token']; // Get the JWT token
+
+        // Store token & role in shared preferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', token);
+        await prefs.setString('user_role', role);
+
         // Navigate based on role
         Widget nextPage;
-        switch (userRole) {
+        switch (role) {
           case 'ProjectVendor':
             nextPage = ProjectVendorPage();
             break;
@@ -50,10 +63,13 @@ class _LoginPageState extends State<LoginPage> {
           MaterialPageRoute(builder: (context) => nextPage),
         );
       } else {
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid username or password')));
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed. Try again.')));
     }
+
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -80,10 +96,12 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (value) => value!.isEmpty ? 'Please enter a password' : null,
               ),
               SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _login,
-                child: Text('Login'),
-              ),
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _login,
+                      child: Text('Login'),
+                    ),
               SizedBox(height: 16),
               TextButton(
                 onPressed: () {

@@ -1,21 +1,45 @@
-class AuthService {
-  // Simulated user database with roles
-  final Map<String, String> _users = {
-    'mark': 'ProjectManager', // Example: Mark is assigned as Project Manager
-    'vendor': 'ProjectVendor',
-    'executor': 'ProjectExecutor',
-    'manager': 'ProjectManager',
-    'fieldmen': 'FieldMen'
-  };
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-  // Mock login function (replace this with real authentication)
-  String? login(String username, String password) {
-    if (username == 'mark' && password == '1234') {
-      return 'ProjectManager'; // Redirect Mark to ProjectManager page
+class AuthService {
+  final String baseUrl = 'http://localhost:8080/api/auth'; // Replace with your backend URL
+
+  Future<Map<String, dynamic>?> login(String username, String password) async {
+    final url = Uri.parse('$baseUrl/login'); // Adjust endpoint if needed
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"username": username, "password": password}),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        if (responseData.containsKey('token') && responseData.containsKey('role')) {
+          return {
+            'token': responseData['token'],
+            'role': responseData['role'],
+          };
+        }
+      }
+    } catch (e) {
+      print('Error during login: $e');
     }
-    if (_users.containsKey(username)) {
-      return _users[username]; // Return user role for other users
-    }
-    return null; // Invalid login
+
+    return null;
+  }
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+    await prefs.remove('user_role');
+  }
+
+  Future<bool> isAuthenticated() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey('auth_token');
   }
 }
