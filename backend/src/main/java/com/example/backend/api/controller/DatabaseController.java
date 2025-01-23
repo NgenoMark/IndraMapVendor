@@ -1,6 +1,6 @@
 package com.example.backend.api.controller;
 
-import com.example.backend.service.DatabaseService;
+import com.example.backend.api.service.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

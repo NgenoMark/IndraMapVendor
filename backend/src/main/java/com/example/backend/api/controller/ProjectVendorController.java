@@ -1,7 +1,7 @@
 package com.example.backend.api.controller;
 
 import com.example.backend.api.model.ProjectVendor;
-import com.example.backend.service.ProjectVendorService;
+import com.example.backend.api.service.ProjectVendorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

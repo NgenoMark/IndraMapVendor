@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.api.service;
 
 import com.example.backend.api.model.ProjectVendor;
 import com.example.backend.api.repository.ProjectVendorRepository;

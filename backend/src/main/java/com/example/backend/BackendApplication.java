@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootApplication
+//@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.example.backend")
+
 public class BackendApplication {
 
     @Autowired
