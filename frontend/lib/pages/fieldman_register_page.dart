@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FieldmanRegisterPage extends StatefulWidget {
+  const FieldmanRegisterPage({super.key});
+
   @override
   _FieldmanRegisterPageState createState() => _FieldmanRegisterPageState();
 }
@@ -162,13 +164,13 @@ class _FieldmanRegisterPageState extends State<FieldmanRegisterPage> {
         SizedBox(height: 20),
         ElevatedButton(
           onPressed: _handleRegistration,
-          child: Text('Register as Fieldman'),
           style: ElevatedButton.styleFrom(
             minimumSize: Size(double.infinity, 50),
             backgroundColor: Theme.of(context).primaryColor,
             padding: EdgeInsets.symmetric(vertical: 15),
             textStyle: TextStyle(fontSize: 16),
           ),
+          child: Text('Register as Fieldman'),
         ),
       ],
     );

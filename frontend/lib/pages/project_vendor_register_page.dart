@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProjectVendorRegisterPage extends StatefulWidget {
+  const ProjectVendorRegisterPage({super.key});
+
   @override
   _ProjectVendorRegisterPageState createState() =>
       _ProjectVendorRegisterPageState();
@@ -173,13 +175,13 @@ class _ProjectVendorRegisterPageState
         SizedBox(height: 20),
         ElevatedButton(
           onPressed: _handleRegistration,
-          child: Text('Register as Project Vendor'),
           style: ElevatedButton.styleFrom(
             minimumSize: Size(double.infinity, 50),
             backgroundColor: Theme.of(context).primaryColor,
             padding: EdgeInsets.symmetric(vertical: 15),
             textStyle: TextStyle(fontSize: 16),
           ),
+          child: Text('Register as Project Vendor'),
         ),
       ],
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProjectManagerPage extends StatelessWidget {
+  const ProjectManagerPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
