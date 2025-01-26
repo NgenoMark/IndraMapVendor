@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProjectExecutorRegisterPage extends StatefulWidget {
+  const ProjectExecutorRegisterPage({super.key});
+
   @override
   _ProjectExecutorRegisterPageState createState() =>
       _ProjectExecutorRegisterPageState();
@@ -172,13 +174,13 @@ class _ProjectExecutorRegisterPageState
         SizedBox(height: 20),
         ElevatedButton(
           onPressed: _handleRegistration,
-          child: Text('Register as Project Executor'),
           style: ElevatedButton.styleFrom(
             minimumSize: Size(double.infinity, 50),
             backgroundColor: Theme.of(context).primaryColor,
             padding: EdgeInsets.symmetric(vertical: 15),
             textStyle: TextStyle(fontSize: 16),
           ),
+          child: Text('Register as Project Executor'),
         ),
       ],
     );

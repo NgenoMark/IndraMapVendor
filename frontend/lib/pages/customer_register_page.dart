@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomerRegisterPage extends StatefulWidget {
+  const CustomerRegisterPage({super.key});
+
   @override
   _CustomerRegisterPageState createState() => _CustomerRegisterPageState();
 }

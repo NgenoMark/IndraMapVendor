@@ -8,13 +8,15 @@ void main() {
 }
 
 class CustomerPage extends StatefulWidget {
+  const CustomerPage({super.key});
+
   @override
   _CustomerPageState createState() => _CustomerPageState();
 }
 
 class _CustomerPageState extends State<CustomerPage> {
   int _selectedIndex = 0;
-  List<Map<String, String>> _projects = []; // List to store projects
+  final List<Map<String, String>> _projects = []; // List to store projects
 
   void _onBottomNavTapped(int index) {
     setState(() {
@@ -116,7 +118,7 @@ class HomeScreen extends StatelessWidget {
   final List<Map<String, String>> projects;
   final Function(int) onDelete;
 
-  HomeScreen({required this.projects, required this.onDelete});
+  const HomeScreen({super.key, required this.projects, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +157,7 @@ class HomeScreen extends StatelessWidget {
 class CreateProjectScreen extends StatefulWidget {
   final Function(Map<String, String>) onProjectCreated;
 
-  CreateProjectScreen({required this.onProjectCreated});
+  const CreateProjectScreen({super.key, required this.onProjectCreated});
 
   @override
   _CreateProjectScreenState createState() => _CreateProjectScreenState();

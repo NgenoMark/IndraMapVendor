@@ -8,6 +8,8 @@ import 'package:frontend/pages/login_page.dart';
 import 'customer_register_page.dart';
 
 class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

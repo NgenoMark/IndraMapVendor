@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProjectManagerRegisterPage extends StatefulWidget {
+  const ProjectManagerRegisterPage({super.key});
+
   @override
   _ProjectManagerRegisterPageState createState() =>
       _ProjectManagerRegisterPageState();
@@ -191,13 +193,13 @@ class _ProjectManagerRegisterPageState
         SizedBox(height: 20),
         ElevatedButton(
           onPressed: _handleRegistration,
-          child: Text('Finish'),
           style: ElevatedButton.styleFrom(
             minimumSize: Size(double.infinity, 50),
             backgroundColor: Theme.of(context).primaryColor,
             padding: EdgeInsets.symmetric(vertical: 15),
             textStyle: TextStyle(fontSize: 16),
           ),
+          child: Text('Finish'),
         ),
       ],
     );
