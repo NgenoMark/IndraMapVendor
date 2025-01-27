@@ -26,7 +26,7 @@ public class User {
     }
 
     public String getUsername() {
-        return null;
+        return username;
     }
 
     public void setId(Long id) {

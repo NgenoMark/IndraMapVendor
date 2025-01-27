@@ -16,7 +16,7 @@ public class DatabaseService {
     private JdbcTemplate jdbcTemplate;
 
     public List<Map<String, Object>> getAllTables() {
-        String query = "SHOW TABLES "; // Fetch all table names
+        String query = "SELECT TABLE_NAME FROM USER_TABLES"; // Fetch all table names
         return jdbcTemplate.queryForList(query);
     }
 
