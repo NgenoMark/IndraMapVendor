@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 void main() {
   runApp(MaterialApp(
     home: CustomerPage(),
@@ -37,7 +36,7 @@ class _CustomerPageState extends State<CustomerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Project Manager"),
+        title: Text("My Projects"),
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -129,7 +128,7 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
           )
-        : ListView.builder(
+        :  ListView.builder(
             itemCount: projects.length,
             itemBuilder: (context, index) {
               final project = projects[index];
@@ -285,6 +284,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
     );
   }
 }
+// Creating a Logout Button and back button 
 
 // Search Delegate
 class ProjectSearch extends SearchDelegate<String> {
