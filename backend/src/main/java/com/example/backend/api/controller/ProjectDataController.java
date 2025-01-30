@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 
-@RestController("/")
+@RestController
+@RequestMapping("/")
 public class ProjectDataController {
 
 
@@ -26,8 +27,5 @@ public class ProjectDataController {
     throws Exception {
         return projectDataService.saveProjectData( projectDataRequest);
     }
-
-
-
 
 }
