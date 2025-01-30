@@ -17,6 +17,8 @@ public class DatabaseService {
 
     public List<Map<String, Object>> getAllTables() {
         String query = "SELECT TABLE_NAME FROM USER_TABLES"; // Fetch all table names
+        //String query = "SELECT TABLE_NAME, OWNER FROM DBA_TABLES WHERE OWNER = 'SGC' AND TABLE_NAME LIKE 'P%'"; // Fetch all table names
+
         return jdbcTemplate.queryForList(query);
     }
 
