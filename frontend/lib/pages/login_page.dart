@@ -1,8 +1,7 @@
+// lib/pages/login_page.dart
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'customer_page.dart';
+import '../services/auth_service.dart';
+import 'map_vendor_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,15 +12,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController _mapVendorNumberController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  final String tokenUrl = "https://172.22.1.221:8283/token";
-  final String userDetailsUrl = "https://172.22.1.221:8283/mapLogin/1.0.1/login";
-  final String authorizationHeader =
-      "Basic MHJfZkRDX3QyamM4Z0luYXJvZjRjT0x5NjZnYTptUzJ3cUpuYXpsM2RrbXV6VHpxMXF0dWI4dndh";
+  final AuthService _authService = AuthService();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -30,83 +25,51 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('access_token');
-
+    String? token = await _authService.getToken();
     if (token != null) {
-      await _fetchUserDetails(token);
+      _fetchUserDetails(token);
     }
   }
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
+    setState(() {
+      _isLoading = true;
+    });
+
     String mapVendorNumber = _mapVendorNumberController.text.trim();
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
     String formattedUsername = "$mapVendorNumber#$username";
 
-    try {
-      var tokenResponse = await http.post(
-        Uri.parse(tokenUrl),
-        headers: {
-          'Authorization': authorizationHeader,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: {
-          'username': formattedUsername,
-          'password': password,
-          'grant_type': 'password',
-        },
-      );
+    String? token = await _authService.login(formattedUsername, password);
 
-      if (tokenResponse.statusCode == 200) {
-        var tokenData = json.decode(tokenResponse.body);
-        String accessToken = tokenData['access_token'];
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('access_token', accessToken);
-
-        await _fetchUserDetails(accessToken);
-      } else {
-        _showError("Invalid credentials. Please try again.");
-      }
-    } catch (e) {
-      _showError("An error occurred. Please check your connection.");
+    if (token != null) {
+      await _authService.saveToken(token);
+      await _fetchUserDetails(token);
+    } else {
+      _showError("Invalid credentials. Please try again.");
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
-Future<void> _fetchUserDetails(String token) async {
-  try {
-    var response = await http.get(
-      Uri.parse(userDetailsUrl),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
+  Future<void> _fetchUserDetails(String token) async {
+    var userDetails = await _authService.fetchUserDetails(token);
 
-    if (response.statusCode == 200) {
-      var userDetails = json.decode(response.body);
+    if (userDetails != null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => CustomerPage(userDetails: userDetails),
+          builder: (context) => MapVendorPage(userDetails: userDetails),
         ),
       );
     } else {
       _showError("Failed to fetch user details.");
     }
-  } catch (e) {
-    _showError("An error occurred while fetching user details.");
-  }
-}
-
-
-  void _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('access_token');
-    setState(() {});
   }
 
   void _showError(String message) {
@@ -145,10 +108,12 @@ Future<void> _fetchUserDetails(String token) async {
                 validator: (value) => value!.isEmpty ? 'Enter password' : null,
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _login,
-                child: const Text('Login'),
-              ),
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _login,
+                      child: const Text('Login'),
+                    ),
             ],
           ),
         ),
@@ -163,4 +128,4 @@ Future<void> _fetchUserDetails(String token) async {
     _passwordController.dispose();
     super.dispose();
   }
-}
+} 
