@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
-import 'register_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'customer_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,45 +13,112 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _mapVendorNumberController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthService  _authService = AuthService(); // Injecting AuthService
 
-  void _login() {
-    if (_formKey.currentState?.validate() ?? false) {
-      String username = _usernameController.text;
-      String password = _passwordController.text;
+  final String tokenUrl = "https://172.22.1.221:8283/token";
+  final String userDetailsUrl = "https://172.22.1.221:8283/mapLogin/1.0.1/login";
+  final String authorizationHeader =
+      "Basic MHJfZkRDX3QyamM4Z0luYXJvZjRjT0x5NjZnYTptUzJ3cUpuYXpsM2RrbXV6VHpxMXF0dWI4dndh";
 
-c
-      if (userRole!= null) {
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
 
-        // Navigate based on role
-        Widget nextPage;
-        switch (userRole) { 
-          case 'Customer':
-            nextPage = CustomerPage();
-            break;
-          default:
-            nextPage = LoginPage();
-            break;
-        }
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => nextPage),
-        );
-      } else {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Invalid username or password')));
-      }
+    if (token != null) {
+      await _fetchUserDetails(token);
     }
+  }
+
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    String mapVendorNumber = _mapVendorNumberController.text.trim();
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+    String formattedUsername = "$mapVendorNumber#$username";
+
+    try {
+      var tokenResponse = await http.post(
+        Uri.parse(tokenUrl),
+        headers: {
+          'Authorization': authorizationHeader,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'username': formattedUsername,
+          'password': password,
+          'grant_type': 'password',
+        },
+      );
+
+      if (tokenResponse.statusCode == 200) {
+        var tokenData = json.decode(tokenResponse.body);
+        String accessToken = tokenData['access_token'];
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('access_token', accessToken);
+
+        await _fetchUserDetails(accessToken);
+      } else {
+        _showError("Invalid credentials. Please try again.");
+      }
+    } catch (e) {
+      _showError("An error occurred. Please check your connection.");
+    }
+  }
+
+Future<void> _fetchUserDetails(String token) async {
+  try {
+    var response = await http.get(
+      Uri.parse(userDetailsUrl),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var userDetails = json.decode(response.body);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CustomerPage(userDetails: userDetails),
+        ),
+      );
+    } else {
+      _showError("Failed to fetch user details.");
+    }
+  } catch (e) {
+    _showError("An error occurred while fetching user details.");
+  }
+}
+
+
+  void _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('access_token');
+    setState(() {});
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login Page')),
+      appBar: AppBar(title: const Text('Vendor Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -59,43 +127,27 @@ c
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(labelText: 'Username'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter a username' : null,
+                controller: _mapVendorNumberController,
+                decoration: const InputDecoration(labelText: 'Map Vendor Number'),
+                validator: (value) => value!.isEmpty ? 'Enter vendor number' : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _usernameController,
+                decoration: const InputDecoration(labelText: 'Username'),
+                validator: (value) => value!.isEmpty ? 'Enter username' : null,
+              ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(labelText: 'Password'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter a password' : null,
+                decoration: const InputDecoration(labelText: 'Password'),
+                validator: (value) => value!.isEmpty ? 'Enter password' : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _login,
-                child: Text('Login'),
-              ),
-              SizedBox(height: 16),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
-                  );
-                },
-                child: Text('Don’t have an account? Register here'),
-              ),
-              SizedBox(height: 8),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                  );
-                },
-                child: Text('Forgot Password?'),
+                child: const Text('Login'),
               ),
             ],
           ),
@@ -106,100 +158,9 @@ c
 
   @override
   void dispose() {
+    _mapVendorNumberController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
-    super.dispose();
-  }
-}
-
-class ForgotPasswordPage extends StatefulWidget {
-  @override
-  _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
-}
-
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-
-  void _resetPassword() {
-    if (_formKey.currentState?.validate() ?? false) {
-      String username = _usernameController.text;
-      String email = _emailController.text;
-
-      // Simulate sending a reset password email
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Reset password email sent to $email')),
-      );
-
-      // Navigate back to login after sending the email
-      Navigator.pop(context);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Forgot Password'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // Username Field
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                  hintText: 'Enter your username',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your username';
-                  }
-                  return null; // Return null if the input is valid
-                },
-              ),
-              SizedBox(height: 20), // Spacing between fields
-
-              // Email Field
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Enter your email address',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null; // Return null if the input is valid
-                },
-              ),
-              SizedBox(height: 20), // Spacing between fields and button
-
-              // Reset Password Button
-              ElevatedButton(
-                onPressed: _resetPassword,
-                child: Text('Reset Password'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _emailController.dispose();
     super.dispose();
   }
 }
