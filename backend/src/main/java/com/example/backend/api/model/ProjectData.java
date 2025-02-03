@@ -7,21 +7,23 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "PROJECT_DATA", schema = "SGC")
 public class ProjectData {
+
+
     @EmbeddedId
-    private ProjectDataId id;
+    private ProjectDataId projectDataId;
     
 
 @Column(name = "USUARIO", columnDefinition = "unknown")
     private String usuario;
-
 @Column(name = "F_ACTUAL", columnDefinition = "unknown")
-    private String fActual;
+    private Date fActual;
 @Column(name = "PROGRAMA", columnDefinition = "unknown")
     private String programa;
 @Column(name = "CUSTOMER_NAME", columnDefinition = "unknown")
@@ -38,11 +40,11 @@ public class ProjectData {
     private String zone;
 
     public ProjectDataId getId() {
-        return id;
+        return projectDataId;
     }
 
     public void setId(ProjectDataId id) {
-        this.id = id;
+        this.projectDataId = id;
     }
 
     public String getUsuario() {
@@ -53,11 +55,19 @@ public class ProjectData {
         this.usuario = usuario;
     }
 
-    public String getfActual() {
+    public ProjectDataId getProjectDataId() {
+        return projectDataId;
+    }
+
+    public void setProjectDataId(ProjectDataId projectDataId) {
+        this.projectDataId = projectDataId;
+    }
+
+    public Date getfActual() {
         return fActual;
     }
 
-    public void setfActual(String fActual) {
+    public void setfActual(Date fActual) {
         this.fActual = fActual;
     }
 
