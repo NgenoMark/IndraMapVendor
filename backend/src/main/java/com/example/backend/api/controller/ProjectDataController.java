@@ -29,11 +29,24 @@ public class ProjectDataController {
         return projectDataService.saveProjectData( projectDataRequest);
     }
 
+    @GetMapping("/getProjectData/1.0.1/{applicationNoOrMapVendorId}")
+    public ResponseEntity<ProjectDataResponse> getProjectData(@PathVariable String applicationNoOrMapVendorId) {
+        ProjectDataResponse response = projectDataService.getProjectData(applicationNoOrMapVendorId);
+        return ResponseEntity.ok(response);
+    }
 
-    // 🔹 Retrieve Data by Application Number (GET)
-    @GetMapping("/getProjectData/{applicationNo}")
-    public ResponseEntity<ProjectDataResponse> getProjectData(@PathVariable String applicationNo) {
-        ProjectDataResponse response = projectDataService.getProjectData(applicationNo);
+
+//    // 🔹 Retrieve Data by Application Number (GET)
+//    @GetMapping("/getProjectData/{applicationNo}")
+//    public ResponseEntity<ProjectDataResponse> getProjectData(@PathVariable String applicationNo) {
+//        ProjectDataResponse response = projectDataService.getProjectDataBy(applicationNo);
+//        return ResponseEntity.ok(response);
+//    }
+//
+//
+    @GetMapping("/getProjectById/{mapVendorId}")
+    public ResponseEntity<ProjectDataResponse> getProjectDataById(@PathVariable String mapVendorId) {
+        ProjectDataResponse response = projectDataService.getProjectDataById(mapVendorId);
         return ResponseEntity.ok(response);
     }
 

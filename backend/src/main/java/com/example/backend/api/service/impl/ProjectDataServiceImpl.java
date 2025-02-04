@@ -71,15 +71,35 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         return convertToResponse(projectData, "Data saved successfully");
     }
 
-
-    // 🔹 Retrieve Single Project Data by Application No
     @Override
-    public ProjectDataResponse getProjectData(String applicationNo) {
-        ProjectData projectData = projectDataRepository.findByProjectDataId_ApplicationNo(applicationNo)
+    public ProjectDataResponse getProjectData(String applicationNoOrMapVendorId) {
+        ProjectData projectData = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId ,applicationNoOrMapVendorId)
                 .orElseThrow(() -> new RuntimeException("Project Data not found"));
 
         return convertToResponse(projectData, "Data retrieved successfully");
     }
+
+
+
+    // 🔹 Retrieve Single Project Data by Application No
+//    @Override
+//    public ProjectDataResponse getProjectDataBy(String applicationNo) {
+//        ProjectData projectData = projectDataRepository.findByProjectDataId_ApplicationNo(applicationNo)
+//                .orElseThrow(() -> new RuntimeException("Project Data not found"));
+//
+//        return convertToResponse(projectData, "Data retrieved successfully");
+//    }
+//
+//
+    @Override
+    public ProjectDataResponse getProjectDataById(String mapVendorId){
+        ProjectData projectData = projectDataRepository.findByProjectDataId_MapVendorId(mapVendorId)
+                .orElseThrow(() -> new RuntimeException("Project Data not found."));
+
+        return convertToResponse(projectData, "Data retrieved successfully");
+    }
+
+
 
     // 🔹 Retrieve All Project Data
     @Override
@@ -89,6 +109,8 @@ public class ProjectDataServiceImpl implements ProjectDataService {
                 .map(data -> convertToResponse(data, "Data retrieved successfully"))
                 .collect(Collectors.toList());
     }
+
+
 
     // 🔹 Convert Entity to Response DTO
     private ProjectDataResponse convertToResponse(ProjectData projectData, String message) {

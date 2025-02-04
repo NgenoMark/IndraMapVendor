@@ -11,7 +11,10 @@ import java.util.Optional;
 @Repository
 public interface ProjectDataRepository extends JpaRepository<ProjectData, ProjectDataId> {
 
-    Optional<ProjectData> findByProjectDataId_ApplicationNo(String applicationNo);
+//    Optional<ProjectData> findByProjectDataId_ApplicationNo(String applicationNo);
+//
+    Optional<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
 
+    Optional<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(String applicationNo , String mapVendorId);
 }
 
