@@ -34,3 +34,8 @@ flutter_native_splash:
   android_12:
     image: assets/splash_logo.jpg
   fullscreen: true
+
+  dependencies:
+  flutter:
+    sdk: flutter
+  google_maps_flutter: ^2.2.0
