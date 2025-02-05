@@ -197,6 +197,8 @@ class _LoginPageState extends State<LoginPage> {
           var data = json.decode(response.body);
           String accessToken = data['access_token'];
 
+          print("Access token is : $accessToken");
+
           // Fetch user details using access token
           var userResponse = await http.post(
             Uri.parse(userDetailsUrl),
@@ -205,9 +207,9 @@ class _LoginPageState extends State<LoginPage> {
               'Content-Type': 'application/json',
             },
             body: json.encode({  // Add required body parameters
-              'username': formattedUsername,
-              'password': password,
-              'grant_type' : 'password',
+              'idVendor': mapVendorNumber,
+              'codUser': password,
+              'currentPwd' : password,
           }),
           );
 
