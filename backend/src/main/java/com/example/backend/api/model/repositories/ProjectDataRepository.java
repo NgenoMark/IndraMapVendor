@@ -13,7 +13,10 @@ import java.util.Optional;
 public interface ProjectDataRepository extends JpaRepository<ProjectData, ProjectDataId> {
 
 //    Optional<ProjectData> findByProjectDataId_ApplicationNo(String applicationNo);
-//
+
+
+    //Optional<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(String applicationNo , String mapVendorId);
+    java.util.List<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(String applicationNo , String mapVendorId);
 
     //List<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
 
@@ -21,6 +24,5 @@ public interface ProjectDataRepository extends JpaRepository<ProjectData, Projec
 
     //Optional<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
 
-    Optional<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(String applicationNo , String mapVendorId);
 }
 

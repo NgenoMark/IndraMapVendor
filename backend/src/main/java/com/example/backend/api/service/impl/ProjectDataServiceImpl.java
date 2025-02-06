@@ -71,12 +71,24 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         return convertToResponse(projectData, "Data saved successfully");
     }
 
-    @Override
-    public ProjectDataResponse getProjectData(String applicationNoOrMapVendorId) {
-        ProjectData projectData = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId ,applicationNoOrMapVendorId)
-                .orElseThrow(() -> new RuntimeException("Project Data not found"));
+//    @Override
+//    public ProjectDataResponse getProjectData(String applicationNoOrMapVendorId) {
+//        ProjectData projectData = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId ,applicationNoOrMapVendorId)
+//                .orElseThrow(() -> new RuntimeException("Project Data not found"));
+//
+//        return convertToResponse(projectData, "Data retrieved successfully");
+//    }
 
-        return convertToResponse(projectData, "Data retrieved successfully");
+
+    @Override
+    public List<ProjectDataResponse> getProjectData(String applicationNoOrMapVendorId) {
+        List<ProjectData> projectDataList = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId , applicationNoOrMapVendorId);
+        if(projectDataList.isEmpty()){
+            throw new RuntimeException("Project data is not available ");
+        }
+        return projectDataList.stream()
+                .map(projectData -> convertToResponse(projectData , "Project data has been retrieved successfully"))
+                .collect(Collectors.toList());
     }
 
 
