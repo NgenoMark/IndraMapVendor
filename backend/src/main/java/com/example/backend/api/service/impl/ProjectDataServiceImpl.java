@@ -91,14 +91,25 @@ public class ProjectDataServiceImpl implements ProjectDataService {
 //    }
 //
 //
+//    @Override
+//    public ProjectDataResponse getProjectDataById(String mapVendorId){
+//        ProjectData projectData = projectDataRepository.findByProjectDataId_MapVendorId(mapVendorId)
+//                .orElseThrow(() -> new RuntimeException("Project Data not found."));
+//
+//        return convertToResponse(projectData, "Data retrieved successfully");
+//    }
+
+
     @Override
-    public ProjectDataResponse getProjectDataById(String mapVendorId){
-        ProjectData projectData = projectDataRepository.findByProjectDataId_MapVendorId(mapVendorId)
-                .orElseThrow(() -> new RuntimeException("Project Data not found."));
-
-        return convertToResponse(projectData, "Data retrieved successfully");
+    public List<ProjectDataResponse> getProjectDataById(String mapVendorId) {
+        List<ProjectData> projectDataList = projectDataRepository.findByProjectDataId_MapVendorId(mapVendorId);
+        if (projectDataList.isEmpty()) {
+            throw new RuntimeException("Project Data not found.");
+        }
+        return projectDataList.stream()
+                .map(projectData -> convertToResponse(projectData, "Data retrieved successfully"))
+                .collect(Collectors.toList());
     }
-
 
 
     // 🔹 Retrieve All Project Data

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.awt.*;
 import java.util.Optional;
 
 @Repository
@@ -13,7 +14,12 @@ public interface ProjectDataRepository extends JpaRepository<ProjectData, Projec
 
 //    Optional<ProjectData> findByProjectDataId_ApplicationNo(String applicationNo);
 //
-    Optional<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
+
+    //List<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
+
+    java.util.List<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
+
+    //Optional<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
 
     Optional<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(String applicationNo , String mapVendorId);
 }

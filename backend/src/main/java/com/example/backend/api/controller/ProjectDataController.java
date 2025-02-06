@@ -44,11 +44,18 @@ public class ProjectDataController {
 //    }
 //
 //
+//    @GetMapping("/getProjectById/{mapVendorId}")
+//    public ResponseEntity<ProjectDataResponse> getProjectDataById(@PathVariable String mapVendorId) {
+//        ProjectDataResponse response = projectDataService.getProjectDataById(mapVendorId);
+//        return ResponseEntity.ok(response);
+//    }
+
     @GetMapping("/getProjectById/{mapVendorId}")
-    public ResponseEntity<ProjectDataResponse> getProjectDataById(@PathVariable String mapVendorId) {
-        ProjectDataResponse response = projectDataService.getProjectDataById(mapVendorId);
+    public ResponseEntity<List<ProjectDataResponse>> getProjectDataById(@PathVariable String mapVendorId) {
+        List<ProjectDataResponse> response = projectDataService.getProjectDataById(mapVendorId);
         return ResponseEntity.ok(response);
     }
+
 
     // 🔹 Retrieve All Data (GET)
     @GetMapping("/getAllProjectData")

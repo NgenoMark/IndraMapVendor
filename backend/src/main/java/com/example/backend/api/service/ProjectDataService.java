@@ -13,7 +13,10 @@ public interface  ProjectDataService {
 
 //    ProjectDataResponse getProjectDataBy(String applicationNumber);
 //
-    ProjectDataResponse getProjectDataById(String mapVendorId);
+    //ProjectDataResponse getProjectDataById(String mapVendorId);
+
+    public List<ProjectDataResponse> getProjectDataById(String mapVendorId);
+
 
     //ProjectDataResponse deleteProjectData(String applicationNumber);
 
