@@ -36,7 +36,7 @@ class _CustomerPageState extends State<CustomerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Projects"),
+        title: Text("Projects"),
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -70,7 +70,7 @@ class _CustomerPageState extends State<CustomerPage> {
                   _selectedIndex = 0;
                 });
                 Navigator.pop(context);
-              },
+              }, 
             ),
             ListTile(
               leading: Icon(Icons.add),
@@ -183,6 +183,9 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                 "Create a Project",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
+          
+
+            
               SizedBox(height: 16),
               TextFormField(
                 controller: _titleController,
