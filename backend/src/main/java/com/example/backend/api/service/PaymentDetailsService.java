@@ -10,6 +10,8 @@ import java.util.List;
 public interface PaymentDetailsService {
 
     PaymentDetailResponse savePaymentDetails ( PaymentDetailRequest paymentDetailRequest);
+
+    PaymentDetailResponse getPaymentByMapNo(String mapNo);
     List<PaymentDetailResponse> getAllPayments();
 
 }

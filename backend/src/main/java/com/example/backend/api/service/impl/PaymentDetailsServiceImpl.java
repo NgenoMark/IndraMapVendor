@@ -79,6 +79,14 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
 //    }
 
     @Override
+    public PaymentDetailResponse getPaymentByMapNo(String mapNo) {
+        PaymentDetail paymentDetail = paymentDetailRepository.findById_MapNo(mapNo)
+                .orElseThrow(() -> new RuntimeException("Project Data not found"));
+
+        return new PaymentDetailResponse(paymentDetail);
+    }
+
+    @Override
     public List<PaymentDetailResponse> getAllPayments() {
         return paymentDetailRepository.findAll().stream()
                 .map(PaymentDetailResponse::new)
