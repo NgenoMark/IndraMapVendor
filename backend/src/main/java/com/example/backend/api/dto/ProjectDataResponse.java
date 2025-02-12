@@ -1,5 +1,6 @@
 package com.example.backend.api.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ProjectDataResponse {
@@ -17,7 +18,8 @@ public class ProjectDataResponse {
     private String mapVendorId;
     private String mapNo;
     private String message;
-
+    private BigDecimal amount;
+    private Date paymentDate;
     public Long getProjectId() {
         return projectId;
     }
@@ -128,6 +130,22 @@ public class ProjectDataResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Date getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(Date paymentDate) {
+        this.paymentDate = paymentDate;
     }
 }
 
