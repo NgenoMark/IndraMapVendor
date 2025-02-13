@@ -35,9 +35,9 @@ public class ProjectDataController {
 //        return ResponseEntity.ok(response);
 //    }
 
-    @GetMapping("/getProjectData/1.0.1/{applicationNoOrMapVendorId}")
-    public ResponseEntity<List<ProjectDataResponse>> getProjectData(@PathVariable String applicationNoOrMapVendorId) {
-        List<ProjectDataResponse> response = projectDataService.getProjectData(applicationNoOrMapVendorId);
+    @GetMapping("/getProjectData/1.0.1/{applicationNoOrMapNo}")
+    public ResponseEntity<List<ProjectDataResponse>> getProjectData(@PathVariable String applicationNoOrMapNo) {
+        List<ProjectDataResponse> response = projectDataService.getProjectData(applicationNoOrMapNo);
         return ResponseEntity.ok(response);
     }
 

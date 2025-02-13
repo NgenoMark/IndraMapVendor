@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'customer_page.dart';
 import 'map_vendor_page.dart';
 
 void main() {

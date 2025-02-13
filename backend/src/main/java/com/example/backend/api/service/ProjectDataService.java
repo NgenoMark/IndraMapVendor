@@ -10,7 +10,7 @@ public interface  ProjectDataService {
             throws Exception;
 
     //ProjectDataResponse getProjectData(String applicationNoOrMapVendorId);
-    List<ProjectDataResponse> getProjectData(String applicationNoOrMapVendorId);
+    List<ProjectDataResponse> getProjectData(String applicationNoOrMapNo);
 
     //ProjectDataResponse getProjectDataBy(String applicationNumber);
 

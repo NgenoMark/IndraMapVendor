@@ -2,11 +2,13 @@ package com.example.backend.api.service.impl;
 
 import com.example.backend.api.dto.ProjectDataRequest;
 import com.example.backend.api.dto.ProjectDataResponse;
+import com.example.backend.api.exception.ResourceNotFoundException;
 import com.example.backend.api.model.ProjectData;
 import com.example.backend.api.model.ProjectDataId;
 import com.example.backend.api.model.repositories.ProjectDataRepository;
 import com.example.backend.api.service.ProjectDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -80,16 +82,32 @@ public class ProjectDataServiceImpl implements ProjectDataService {
 //    }
 
 
+//    @Override
+//    public List<ProjectDataResponse> getProjectData(String applicationNoOrMapVendorId) {
+//        List<ProjectData> projectDataList = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId , applicationNoOrMapVendorId);
+//        if(projectDataList.isEmpty()){
+//            throw new RuntimeException("Project data is not available ");
+//        }
+//        return projectDataList.stream()
+//                .map(projectData -> convertToResponse(projectData , "Project data has been retrieved successfully"))
+//                .collect(Collectors.toList());
+//    }
+
+
     @Override
-    public List<ProjectDataResponse> getProjectData(String applicationNoOrMapVendorId) {
-        List<ProjectData> projectDataList = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId , applicationNoOrMapVendorId);
-        if(projectDataList.isEmpty()){
-            throw new RuntimeException("Project data is not available ");
+    public List<ProjectDataResponse> getProjectData(String applicationNoOrMapNo) {
+        List<ProjectData> projectDataList = projectDataRepository
+                .findByProjectDataId_ApplicationNoOrProjectDataId_MapNumber(applicationNoOrMapNo, applicationNoOrMapNo);
+
+        if (projectDataList.isEmpty()) {
+            throw new ResourceNotFoundException("Project data not available for ID: " + applicationNoOrMapNo);
         }
+
         return projectDataList.stream()
-                .map(projectData -> convertToResponse(projectData , "Project data has been retrieved successfully"))
+                .map(projectData -> convertToResponse(projectData, "Project data has been retrieved successfully"))
                 .collect(Collectors.toList());
     }
+
 
 
 
@@ -136,12 +154,37 @@ public class ProjectDataServiceImpl implements ProjectDataService {
 
 
     // 🔹 Convert Entity to Response DTO
+//    private ProjectDataResponse convertToResponse(ProjectData projectData, String message) {
+//        ProjectDataResponse response = new ProjectDataResponse();
+//
+//        // Retrieve values from composite key
+//        ProjectDataId projectDataId = projectData.getProjectDataId();
+//
+//        response.setApplicationNo(projectDataId.getApplicationNo());
+//        response.setMapVendorId(projectDataId.getMapVendorId());
+//        response.setMapNo(projectDataId.getMapNo());
+//
+//        // Retrieve values from main entity
+//        response.setfActual(projectData.getfActual());
+//        response.setPrograma(projectData.getPrograma());
+//        response.setUsuario(projectData.getUsuario());
+//        response.setCustomerName(projectData.getCustomerName());
+//        response.setCustomerAddress(projectData.getCustomerAddress());
+//        response.setCustomerTelephone(projectData.getCustomerTelephone());
+//        response.setCity(projectData.getCity());
+//        response.setDistrict(projectData.getDistrict());
+//        response.setZone(projectData.getZone());
+//        response.setMessage(message);
+//
+//        return response;
+//    }
+
+
     private ProjectDataResponse convertToResponse(ProjectData projectData, String message) {
         ProjectDataResponse response = new ProjectDataResponse();
 
         // Retrieve values from composite key
         ProjectDataId projectDataId = projectData.getProjectDataId();
-
         response.setApplicationNo(projectDataId.getApplicationNo());
         response.setMapVendorId(projectDataId.getMapVendorId());
         response.setMapNo(projectDataId.getMapNo());
@@ -158,6 +201,16 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         response.setZone(projectData.getZone());
         response.setMessage(message);
 
+        // 🔹 Include Payment Details
+        if (projectData.getPaymentDetail() != null) {
+            response.setAmount(projectData.getPaymentDetail().getAmount());
+            response.setPaymentDate(projectData.getPaymentDetail().getPaymentDate());
+        } else {
+            response.setAmount(null);
+            response.setPaymentDate(null);
+        }
+
         return response;
     }
+
 }

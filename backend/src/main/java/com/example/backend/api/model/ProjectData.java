@@ -3,10 +3,7 @@ package com.example.backend.api.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -15,10 +12,8 @@ import java.util.Date;
 @Table(name = "PROJECT_DATA", schema = "SGC")
 public class ProjectData {
 
-
     @EmbeddedId
     private ProjectDataId projectDataId;
-    
 
 @Column(name = "USUARIO", columnDefinition = "unknown")
     private String usuario;
@@ -38,6 +33,15 @@ public class ProjectData {
     private String district;
 @Column(name = "ZONE", columnDefinition = "unknown")
     private String zone;
+
+
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "APPLICATION_NO", referencedColumnName = "APPLICATION_NO", insertable = false, updatable = false),
+            @JoinColumn(name = "MAP_VENDOR_ID", referencedColumnName = "MAP_VENDOR_ID", insertable = false, updatable = false),
+            @JoinColumn(name = "MAP_NO", referencedColumnName = "MAP_NO", insertable = false, updatable = false)
+    })
+    private PaymentDetail paymentDetail;
 
     public ProjectDataId getId() {
         return projectDataId;
@@ -125,5 +129,13 @@ public class ProjectData {
 
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    public PaymentDetail getPaymentDetail() {
+        return paymentDetail;
+    }
+
+    public void setPaymentDetail(PaymentDetail paymentDetail) {
+        this.paymentDetail = paymentDetail;
     }
 }
