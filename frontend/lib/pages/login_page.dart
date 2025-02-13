@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'map_vendor_page.dart';
-import 'payment.dart'; 
 
 void main() {
   runApp(MyApp());

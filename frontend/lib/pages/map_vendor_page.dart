@@ -58,7 +58,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
         return "⭐☆☆☆☆";
       case "pending":
         return "⭐⭐☆☆☆";
-      case "completed":
+      case "completed"; 
         return "⭐⭐⭐⭐⭐";
       default:
         return "No Rating";
@@ -75,15 +75,17 @@ class _MapVendorPageState extends State<MapVendorPage> {
             child: ListBody(
               children: <Widget>[
                 Text('Application No: ${data['applicationNo']}'),
-                Text('Map Vendor ID: ${data['mapVendorId']}'),
-                Text('Map No: ${data['mapNo']}'),
+                Text('Customer Name: ${data['customerName']}'),
+                Text('Customer Address: ${data ['customerAddress']}'),
+                Text('Customer Telephone: ${data ['Telephone']}'),
+                Text('Customer Email: ${data ['customerEmail']}'),
                 Text('City: ${data['city']}'),
                 Text('District: ${data['district']}'),
                 Text('Zone: ${data['zone']}'),
-                Text('Status: ${data['status'] ?? 'Not Available'}'),
-                Text('Rating: ${getStatusStars(data['status'] ?? 'Unknown')}'),
-                Text('Estimated Completion Time: ${data['completionTime'] ?? 'Not Available'}'),
-              ],
+                Text('Map Vendor ID: ${data['mapVendorId']}'),
+                Text('Map No: ${data['mapNo']}'),
+
+              ]
             ),
           ), 
           actions: <Widget>[
@@ -107,7 +109,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Projects'),
+        title: Text('My Projects'), 
         leading: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -122,7 +124,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
             ),
             PopupMenuButton<String>(
               onSelected: (String result) {
-                print("Selected: $result");
+                print("Selected:  \$result");
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 PopupMenuItem<String>(
@@ -133,10 +135,17 @@ class _MapVendorPageState extends State<MapVendorPage> {
                   value: 'My Projects',
                   child: Text('My Projects'),
                 ),
+                PopupMenuItem<String>(
+                  value: 'Past Projects' ,
+                  child: Text('Past Projects'),
+                ),
+              ],
+              icon: Icon(Icons.menu),
+                ),
               ],
               icon: Icon(Icons.menu),
             ),
-          ],
+          
         ),
         actions: <Widget>[
           IconButton(
@@ -167,14 +176,16 @@ class _MapVendorPageState extends State<MapVendorPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Map Vendor ID: ${data['mapVendorId']}'),
-                              Text('Map No: ${data['mapNo']}'),
+                              Text('Application No: ${data['applicationNo']}'),
+                              Text('Customer Name: ${data['customerName']}'),
+                              Text('Customer Address: ${data ['customerAddress']}'),
+                              Text('Customer Telephone: ${data ['Telephone']}'),
+                              Text('Customer Email: ${data ['customerEmail']}'),
                               Text('City: ${data['city']}'),
                               Text('District: ${data['district']}'),
                               Text('Zone: ${data['zone']}'),
-                              Text('Status: ${data['status'] ?? 'Not Available'}'),
-                              Text('Rating: ${getStatusStars(data['status'] ?? 'Unknown')}'),
-                              Text('Estimated Completion Time: ${data['completionTime'] ?? 'Not Available'}'),
+                              Text('Map Vendor ID: ${data['mapVendorId']}'),
+                                Text('Map No: ${data['mapNo']}'),
                             ],
                           ),
                           onTap: () {
@@ -197,7 +208,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
                       ),
                       SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () { 
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder:( context) => PaymentPage()),
@@ -210,8 +221,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
                   ),
                 ),
               ],
-            ),
-    );
+            );
   }
 }
 
