@@ -9,11 +9,16 @@ public interface  ProjectDataService {
     ProjectDataResponse saveProjectData (ProjectDataRequest projectDataRequest)
             throws Exception;
 
-    ProjectDataResponse getProjectData(String applicationNoOrMapVendorId);
+    //ProjectDataResponse getProjectData(String applicationNoOrMapVendorId);
+    List<ProjectDataResponse> getProjectData(String applicationNoOrMapNo);
 
-//    ProjectDataResponse getProjectDataBy(String applicationNumber);
-//
-    ProjectDataResponse getProjectDataById(String mapVendorId);
+    //ProjectDataResponse getProjectDataBy(String applicationNumber);
+
+
+
+    //ProjectDataResponse getProjectDataById(String mapVendorId);
+    List<ProjectDataResponse> getProjectDataById(String mapVendorId);
+
 
     //ProjectDataResponse deleteProjectData(String applicationNumber);
 

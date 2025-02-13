@@ -29,11 +29,19 @@ public class ProjectDataController {
         return projectDataService.saveProjectData( projectDataRequest);
     }
 
-    @GetMapping("/getProjectData/1.0.1/{applicationNoOrMapVendorId}")
-    public ResponseEntity<ProjectDataResponse> getProjectData(@PathVariable String applicationNoOrMapVendorId) {
-        ProjectDataResponse response = projectDataService.getProjectData(applicationNoOrMapVendorId);
+//    @GetMapping("/getProjectData/1.0.1/{applicationNoOrMapVendorId}")
+//    public ResponseEntity<ProjectDataResponse> getProjectData(@PathVariable String applicationNoOrMapVendorId) {
+//        ProjectDataResponse response = projectDataService.getProjectData(applicationNoOrMapVendorId);
+//        return ResponseEntity.ok(response);
+//    }
+
+    @GetMapping("/getProjectData/1.0.1/{applicationNoOrMapNo}")
+    public ResponseEntity<List<ProjectDataResponse>> getProjectData(@PathVariable String applicationNoOrMapNo) {
+        List<ProjectDataResponse> response = projectDataService.getProjectData(applicationNoOrMapNo);
         return ResponseEntity.ok(response);
     }
+
+
 
 
 //    // 🔹 Retrieve Data by Application Number (GET)
@@ -44,11 +52,18 @@ public class ProjectDataController {
 //    }
 //
 //
+//    @GetMapping("/getProjectById/{mapVendorId}")
+//    public ResponseEntity<ProjectDataResponse> getProjectDataById(@PathVariable String mapVendorId) {
+//        ProjectDataResponse response = projectDataService.getProjectDataById(mapVendorId);
+//        return ResponseEntity.ok(response);
+//    }
+
     @GetMapping("/getProjectById/{mapVendorId}")
-    public ResponseEntity<ProjectDataResponse> getProjectDataById(@PathVariable String mapVendorId) {
-        ProjectDataResponse response = projectDataService.getProjectDataById(mapVendorId);
+    public ResponseEntity<List<ProjectDataResponse>> getProjectDataById(@PathVariable String mapVendorId) {
+        List<ProjectDataResponse> response = projectDataService.getProjectDataById(mapVendorId);
         return ResponseEntity.ok(response);
     }
+
 
     // 🔹 Retrieve All Data (GET)
     @GetMapping("/getAllProjectData")
