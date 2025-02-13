@@ -1,47 +1,48 @@
-package com.example.backend.api.model;
+package com.example.backend.api.dto;
+
 
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "PAYMENT_DETAILS", schema = "SGC")
-public class PaymentDetail {
-    @EmbeddedId
-    private PaymentDetailId id;
-
-@Column(name = "USUARIO", columnDefinition = "unknown")
+public class PaymentDetailRequest {
+    private String applicationNo;
+    private String mapNo;
+    private String mapVendorId;
     private String usuario;
-
-@Column(name = "F_ACTUAL", columnDefinition = "unknown")
     private Date fActual;
-
-@Column(name = "PROGRAMA", columnDefinition = "unknown")
-    private String  programa;
-
-@Column(name = "AMOUNT", columnDefinition = "unknown")
+    private String programa;
     private BigDecimal amount;
-
-@Column(name = "PAYMENT_DATE", columnDefinition = "unknown")
     private Date paymentDate;
-
-@Column(name = "PAYMENT_REF", columnDefinition = "unknown")
     private String paymentRef;
 
-    public PaymentDetailId getId() {
-        return id;
+
+    public String getApplicationNo() {
+        return applicationNo;
     }
 
-    public void setId(PaymentDetailId id) {
-        this.id = id;
+    public void setApplicationNo(String applicationNo) {
+        this.applicationNo = applicationNo;
+    }
+
+    public String getMapNo() {
+        return mapNo;
+    }
+
+    public void setMapNo(String mapNo) {
+        this.mapNo = mapNo;
+    }
+
+    public String getMapVendorId() {
+        return mapVendorId;
+    }
+
+    public void setMapVendorId(String mapVendorId) {
+        this.mapVendorId = mapVendorId;
     }
 
     public String getUsuario() {
@@ -92,3 +93,4 @@ public class PaymentDetail {
         this.paymentRef = paymentRef;
     }
 }
+

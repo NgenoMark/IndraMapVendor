@@ -15,35 +15,35 @@ import java.util.Objects;
 public class PaymentDetailId implements Serializable {
     private static final long serialVersionUID = -1331555916875501934L;
     @Column(name = "APPLICATION_NO", columnDefinition = "unknown")
-    private Object applicationNo;
+    private String  applicationNo;
 
     @Column(name = "MAP_NO", columnDefinition = "unknown")
-    private Object mapNo;
+    private String  mapNo;
 
     @Column(name = "MAP_VENDOR_ID", columnDefinition = "unknown")
-    private Object mapVendorId;
+    private String  mapVendorId;
 
-    public Object getApplicationNo() {
+    public String getApplicationNo() {
         return applicationNo;
     }
 
-    public void setApplicationNo(Object applicationNo) {
+    public void setApplicationNo(String applicationNo) {
         this.applicationNo = applicationNo;
     }
 
-    public Object getMapNo() {
+    public String getMapNo() {
         return mapNo;
     }
 
-    public void setMapNo(Object mapNo) {
+    public void setMapNo(String mapNo) {
         this.mapNo = mapNo;
     }
 
-    public Object getMapVendorId() {
+    public String getMapVendorId() {
         return mapVendorId;
     }
 
-    public void setMapVendorId(Object mapVendorId) {
+    public void setMapVendorId(String mapVendorId) {
         this.mapVendorId = mapVendorId;
     }
 
