@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,7 +88,7 @@ public class ProjectDataServiceImpl implements ProjectDataService {
 //    public List<ProjectDataResponse> getProjectData(String applicationNoOrMapVendorId) {
 //        List<ProjectData> projectDataList = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId , applicationNoOrMapVendorId);
 //        if(projectDataList.isEmpty()){
-//            throw new RuntimeException("Project data is not available ");
+//            throw new RuntimeException("Project data is not available");
 //        }
 //        return projectDataList.stream()
 //                .map(projectData -> convertToResponse(projectData , "Project data has been retrieved successfully"))
@@ -180,6 +182,39 @@ public class ProjectDataServiceImpl implements ProjectDataService {
 //    }
 
 
+    private ProjectDataResponse convertToResponse1(ProjectData projectData, String message) {
+        ProjectDataResponse response = new ProjectDataResponse();
+
+        // Retrieve values from composite key
+        ProjectDataId projectDataId = projectData.getProjectDataId();
+        response.setApplicationNo(projectDataId.getApplicationNo());
+        response.setMapVendorId(projectDataId.getMapVendorId());
+        response.setMapNo(projectDataId.getMapNo());
+
+        // Retrieve values from main entity
+        response.setfActual(projectData.getfActual());
+        response.setPrograma(projectData.getPrograma());
+        response.setUsuario(projectData.getUsuario());
+        response.setCustomerName(projectData.getCustomerName());
+        response.setCustomerAddress(projectData.getCustomerAddress());
+        response.setCustomerTelephone(projectData.getCustomerTelephone());
+        response.setCity(projectData.getCity());
+        response.setDistrict(projectData.getDistrict());
+        response.setZone(projectData.getZone());
+        response.setMessage(message);
+
+        // 🔹 Include Payment Details
+//        if (projectData.getPaymentDetail() != null) {
+//            response.setAmount(projectData.getPaymentDetail().getAmount());
+//            response.setPaymentDate(projectData.getPaymentDetail().getPaymentDate());
+//        } else {
+//            response.setAmount(null);
+//            response.setPaymentDate(null);
+//        }
+
+        return response;
+    }
+
     private ProjectDataResponse convertToResponse(ProjectData projectData, String message) {
         ProjectDataResponse response = new ProjectDataResponse();
 
@@ -206,8 +241,8 @@ public class ProjectDataServiceImpl implements ProjectDataService {
             response.setAmount(projectData.getPaymentDetail().getAmount());
             response.setPaymentDate(projectData.getPaymentDetail().getPaymentDate());
         } else {
-            response.setAmount(null);
-            response.setPaymentDate(null);
+            response.setAmount(BigDecimal.valueOf(0.0));
+            response.setPaymentDate(new Date());
         }
 
         return response;
