@@ -1,7 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
-// import 'payment.dart';
 
 // class MapVendorPage extends StatefulWidget {
 //   @override
@@ -11,6 +10,7 @@
 // class _MapVendorPageState extends State<MapVendorPage> {
 //   List<dynamic> vendorDataList = [];
 //   bool isLoading = true;
+//   bool isError = false;
 //   final String mapVendorId = "VM012"; // Hardcoded for independent execution
 //   final String accessToken = "your_access_token"; // Replace with actual token if needed
 
@@ -48,6 +48,7 @@
 //       print("Error: $e");
 //       setState(() {
 //         isLoading = false;
+//         isError = true;
 //       });
 //     }
 //   }
@@ -71,21 +72,20 @@
 //       builder: (BuildContext context) {
 //         return AlertDialog(
 //           title: Text('Project Description'),
-//           content: SingleChildScrollView  (
+//           content: SingleChildScrollView(
 //             child: ListBody(
 //               children: <Widget>[
-//                 Text('Application No: ${data['applicationNo']}'),
-//                 Text('Customer Name: ${data['customerName']}'),
-//                 Text('Customer Address: ${data ['customerAddress']}'),
-//                 Text('Customer Telephone: ${data ['Telephone']}'),
-//                 Text('Customer Email: ${data ['customerEmail']}'),
-//                 Text('City: ${data['city']}'),
-//                 Text('District: ${data['district']}'),
-//                 Text('Zone: ${data['zone']}'),
-//                 Text('Map Vendor ID: ${data['mapVendorId']}'),
-//                 Text('Map No: ${data['mapNo']}'),
-
-//               ]
+//                 Text('Application No: ${data['applicationNo'] ?? "N/A"}'),
+//                 Text('Customer Name: ${data['customerName'] ?? "N/A"}'),
+//                 Text('Customer Address: ${data['customerAddress'] ?? "N/A"}'),
+//                 Text('Customer Telephone: ${data['Telephone'] ?? "N/A"}'),
+//                 Text('Customer Email: ${data['customerEmail'] ?? "N/A"}'),
+//                 Text('City: ${data['city'] ?? "N/A"}'),
+//                 Text('District: ${data['district'] ?? "N/A"}'),
+//                 Text('Zone: ${data['zone'] ?? "N/A"}'),
+//                 Text('Map Vendor ID: ${data['mapVendorId'] ?? "N/A"}'),
+//                 Text('Map No: ${data['mapNo'] ?? "N/A"}'),
+//               ],
 //             ),
 //           ),
 //           actions: <Widget>[
@@ -101,6 +101,36 @@
 //     );
 //   }
 
+//   Widget _buildProjectList() {
+//     if (isLoading) {
+//       return Center(child: CircularProgressIndicator());
+//     }
+
+//     if (isError) {
+//       return Center(child: Text('Failed to load data. Please try again later.'));
+//     }
+
+//     if (vendorDataList.isEmpty) {
+//       return Center(child: Text('No projects available.'));
+//     }
+
+//     return ListView.builder(
+//       itemCount: vendorDataList.length,
+//       itemBuilder: (context, index) {
+//         final data = vendorDataList[index];
+//         return Card(
+//           child: ListTile(
+//             title: Text(data['mapNo'] ?? 'No Map No'),
+//             subtitle: Text('Status: ${data['status'] ?? 'Unknown'}\n'
+//                 '${getStatusStars(data['status'] ?? 'Unknown')}'),
+//             trailing: Icon(Icons.arrow_forward),
+//             onTap: () => _showDescriptionDialog(context, data),
+//           ),
+//         );
+//       },
+//     );
+//   }
+
 //   void _logout() {
 //     print("User logged out");
 //   }
@@ -110,41 +140,14 @@
 //     return Scaffold(
 //       appBar: AppBar(
 //         title: Text('My Projects'),
-//         leading: Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             IconButton(
-//               icon: Icon(Icons.home),
-//               onPressed: () {
-//                 Navigator.pushReplacement(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => MapVendorPage()),
-//                 );
-//               },
-//             ),
-//             PopupMenuButton<String>(
-//               onSelected: (String result) {
-//                 print("Selected:  \$result");
-//               },
-//               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-//                 PopupMenuItem<String>(
-//                   value: 'My Account',
-//                   child: Text('My Account'),
-//                 ),
-//                 PopupMenuItem<String>(
-//                   value: 'My Projects',
-//                   child: Text('My Projects'),
-//                 ),
-//                 PopupMenuItem<String>(
-//                   value: 'Past Projects' ,
-//                   child: Text('Past Projects'),
-//                 ),
-//               ],
-//               icon: Icon(Icons.menu),
-//                 ),
-//               ],
-//             ),
-
+//         leading: IconButton(
+//           icon: Icon(Icons.home),
+//           onPressed: () {
+//             Navigator.pushReplacement(
+//               context,
+//               MaterialPageRoute(builder: (context) => MapVendorPage()),
+//             );
+//           },
 //         ),
 //         actions: <Widget>[
 //           IconButton(
@@ -157,78 +160,66 @@
 //             icon: Icon(Icons.logout),
 //             onPressed: _logout,
 //           ),
+//           PopupMenuButton<String>(
+//             onSelected: (String result) {
+//               print("Selected: $result");
+//             },
+//             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+//               PopupMenuItem<String>(
+//                 value: 'My Account',
+//                 child: Text('My Account'),
+//               ),
+//               PopupMenuItem<String>(
+//                 value: 'My Projects',
+//                 child: Text('My Projects'),
+//               ),
+//               PopupMenuItem<String>(
+//                 value: 'Past Projects',
+//                 child: Text('Past Projects'),
+//               ),
+//             ],
+//             icon: Icon(Icons.menu),
+//           ),
 //         ],
 //       ),
-//       body: isLoading
-//           ? Center(child: CircularProgressIndicator())
-//           : Column(
-//               children: [
-//                 Expanded(
-//                   child: ListView.builder(
-//                     itemCount: vendorDataList.length,
-//                     itemBuilder: (context, index) {
-//                       final data = vendorDataList[index];
-//                       return Card(
-//                         margin: EdgeInsets.all(8.0),
-//                         child: ListTile(
-//                           title: Text('Application No: ${data['applicationNo']}'),
-//                           subtitle: Column(
-//                             crossAxisAlignment: CrossAxisAlignment.start,
-//                             children: [
-//                               Text('Application No: ${data['applicationNo']}'),
-//                               Text('Customer Name: ${data['customerName']}'),
-//                               Text('Customer Address: ${data ['customerAddress']}'),
-//                               Text('Customer Telephone: ${data ['Telephone']}'),
-//                               Text('Customer Email: ${data ['customerEmail']}'),
-//                               Text('City: ${data['city']}'),
-//                               Text('District: ${data['district']}'),
-//                               Text('Zone: ${data['zone']}'),
-//                               Text('Map Vendor ID: ${data['mapVendorId']}'),
-//                                 Text('Map No: ${data['mapNo']}'),
-//                             ],
-//                           ),
-//                           onTap: () {
-//                             _showDescriptionDialog(context, data);
-//                           },
-//                         ),
-//                       );
-//                     },
-//                   ),
-//                 ),
-//                 Padding(
-//                   padding: const EdgeInsets.all(16.0),
-//                   child: Column(
-//                     children: [
-//                       ElevatedButton(
-//                         onPressed: () {
-//                           print("Explore Projects clicked");
-//                         },
-//                         child: Text('Explore Projects'),
-//                       ),
-//                       SizedBox(height: 10),
-//                       ElevatedButton(
-//                         onPressed: () {
-//                           Navigator.push(
-//                             context,
-//                             MaterialPageRoute(builder:( context) => PaymentPage()),
-//                             );
-
-//                        },
-//                         child: Text('Payment Page'),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             );
+//       body: _buildProjectList(),
+//     );
 //   }
 // }
 
 // void main() {
 //   runApp(MaterialApp(
 //     home: MapVendorPage(),
+//     theme: ThemeData(
+//       primarySwatch: Colors.blue,
+//       visualDensity: VisualDensity.adaptivePlatformDensity,
+//     ),
 //   ));
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -238,14 +229,14 @@ import 'package:intl/intl.dart'; // Import this at the top
 
 class MapVendorPage extends StatefulWidget {
 
-  // final String mapVendorId;
-  // final String accessToken;
+  //  final String mapVendorId;
+  //  final String accessToken;
 
   // final String mapVendorId = "VM012"; // Hardcoded for independent execution
   // final String accessToken ="your_access_token"; // Replace with actual token if needed
 
 
-  // const MapVendorPage({Key? key, required this.mapVendorId, required this.accessToken}) : super(key: key);
+  //const MapVendorPage({Key? key, required this.mapVendorId, required this.accessToken}) : super(key: key);
 
 
   @override
@@ -265,7 +256,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
   }
 
   Future<void> fetchVendorData() async {
-    // final url = Uri.parse('http://localhost:8081/getProjectById/${widget.mapVendorId}');
+    //final url = Uri.parse('http://localhost:8081/getProjectById/${widget.mapVendorId}');
     final url = Uri.parse('http://localhost:8081/getProjectById/$mapVendorId');
     print("Fetching data from: $url");
 
@@ -273,7 +264,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
       final response = await http.get(
         url,
         headers: {
-          // 'Authorization': 'Bearer ${widget.accessToken}',
+          //'Authorization': 'Bearer ${widget.accessToken}',
           'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json',
         },
