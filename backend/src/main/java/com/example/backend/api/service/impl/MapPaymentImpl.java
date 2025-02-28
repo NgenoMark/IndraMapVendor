@@ -1,0 +1,68 @@
+package com.example.backend.api.service.impl;
+
+import com.example.backend.api.dto.MapPaymentResponse;
+import com.example.backend.api.dto.ProjectDataResponse;
+import com.example.backend.api.exception.ResourceNotFoundException;
+import com.example.backend.api.model.MapPayment;
+import com.example.backend.api.model.ProjectData;
+import com.example.backend.api.model.repositories.MapPaymentRepository;
+import com.example.backend.api.service.MapPaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+@Service
+public class MapPaymentImpl implements MapPaymentService {
+
+    private MapPaymentRepository mapPaymentRepository;
+
+//    @Autowired
+//    public List<MapPaymentResponse> getAllMapPayments() {
+//        return MapPaymentRepository.findAll().stream()
+//                .map(MapPaymentResponse::new)
+//                .collect(Collectors.toList());
+//    }
+
+    @Autowired
+    public MapPaymentImpl(MapPaymentRepository mapPaymentRepository) {
+        this.mapPaymentRepository = mapPaymentRepository;
+    }
+
+    @Override
+    public List<MapPaymentResponse> getAllPayments() {
+        return mapPaymentRepository.findAll().stream()
+                .map(MapPaymentResponse::new)
+                .collect(Collectors.toList());
+    }
+
+//    @Autowired
+//    public List<MapPaymentResponse> getPaymentsByAccountIdOrIdRecord( String accountId, String idRecord)
+//    {
+//        List<MapPayment> mapPaymentList = mapPaymentRepository
+//                .findByIdRecordOrAccountId( String idRecord, String accountId);
+//
+//        if (mapPaymentList.isEmpty()) {
+//            throw new ResourceNotFoundException("Project data not available for ID: " + idRecord + accountId);
+//        }
+//
+//        return mapPaymentList.stream()
+//                .map(projectData -> convertToResponse(projectData, "Project data has been retrieved successfully"))
+//                .collect(Collectors.toList());
+//    }
+
+    @Override
+    public List<MapPaymentResponse> getPaymentsByAccountIdOrIdRecord(String accountId, Long idRecord) {
+        List<MapPayment> mapPaymentList = mapPaymentRepository
+                .findByIdAccountIdOrIdIdRecord(accountId, idRecord)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No payments found for ACCOUNT_ID: " + accountId + " or ID_RECORD: " + idRecord)
+                );
+
+        return mapPaymentList.stream()
+                .map(MapPaymentResponse::new)
+                .collect(Collectors.toList());
+    }
+}
