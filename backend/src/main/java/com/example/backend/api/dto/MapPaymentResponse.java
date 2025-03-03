@@ -29,7 +29,6 @@ public class MapPaymentResponse {
     private Double impQuota;
     private Double remQuota;
 
-    // Getters and Setters
     public String getEstPago() {
         return estPago;
     }
@@ -38,27 +37,27 @@ public class MapPaymentResponse {
         this.estPago = estPago;
     }
 
-    public String getFPago() {
+    public String getfPago() {
         return fPago;
     }
 
-    public void setFPago(String fPago) {
+    public void setfPago(String fPago) {
         this.fPago = fPago;
     }
 
-    public String getFVal() {
+    public String getfVal() {
         return fVal;
     }
 
-    public void setFVal(String fVal) {
+    public void setfVal(String fVal) {
         this.fVal = fVal;
     }
 
-    public String getFTrans() {
+    public String getfTrans() {
         return fTrans;
     }
 
-    public void setFTrans(String fTrans) {
+    public void setfTrans(String fTrans) {
         this.fTrans = fTrans;
     }
 
@@ -78,11 +77,11 @@ public class MapPaymentResponse {
         this.refPago = refPago;
     }
 
-    public String getFGen() {
+    public String getfGen() {
         return fGen;
     }
 
-    public void setFGen(String fGen) {
+    public void setfGen(String fGen) {
         this.fGen = fGen;
     }
 
@@ -126,42 +125,120 @@ public class MapPaymentResponse {
         this.usuario = usuario;
     }
 
-    public Date getFActual() {
+    public Date getfActual() {
         return fActual;
     }
 
-    public void setFActual(Date fActual) {
+    public void setfActual(Date fActual) {
         this.fActual = fActual;
     }
 
-    // (Other Getters and Setters are similar)
+    public String getPrograma() {
+        return programa;
+    }
 
-    public MapPaymentResponse( MapPayment mapPayment){
-        this.idRecord = (String) mapPayment.getId().getIdRecord();
-        this.accountId = (String) mapPayment.getId().getAccountId();
-        this.fPago = (String) mapPayment.getfPago();
-        this.estPago = (String ) mapPayment.getEstPago();
-        this.fVal = (String) mapPayment.getfVal();
-        this.fTrans = (String) mapPayment.getfTrans();
-        this.fGen = (String) mapPayment.getfGen();
-        this.userGen = (String) mapPayment.getUserGen();
-        this.linkPago = (String) mapPayment.getLinkPago();
-        this.tipFormaPago = (String) mapPayment.getTipFormaPago();
-        this.numExp = (String) mapPayment.getNumExp();
-        this.usuario = (String) mapPayment.getUsuario();
-        this.fActual = (Date) mapPayment.getfActual();
-        this.programa = (String) mapPayment.getPrograma();
-        this.idRecord = (String) mapPayment.getId().getIdRecord();
-        this.numMap = (String) mapPayment.getNumMap();
-        this.coMapVend = (String) mapPayment.getCoMapVend();
-        this.impTotRec = (Double) mapPayment.getImpTotRec();
-        this.impPago = (Double) mapPayment.getImpPago();
-        this.impQuota = (Double) mapPayment.getImpQuota();
-        this.remQuota = (Double) mapPayment.getRemQuota();
-        this.nisRad = (String) mapPayment.getNisRad();
-        this.refTrans = (String) mapPayment.getRefTrans();
-        this.refPago = (String) mapPayment.getRefPago();
+    public void setPrograma(String programa) {
+        this.programa = programa;
+    }
 
+    public String getIdRecord() {
+        return idRecord;
+    }
+
+    public void setIdRecord(String idRecord) {
+        this.idRecord = idRecord;
+    }
+
+    public String getNisRad() {
+        return nisRad;
+    }
+
+    public void setNisRad(String nisRad) {
+        this.nisRad = nisRad;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getNumMap() {
+        return numMap;
+    }
+
+    public void setNumMap(String numMap) {
+        this.numMap = numMap;
+    }
+
+    public String getCoMapVend() {
+        return coMapVend;
+    }
+
+    public void setCoMapVend(String coMapVend) {
+        this.coMapVend = coMapVend;
+    }
+
+    public Double getImpTotRec() {
+        return impTotRec;
+    }
+
+    public void setImpTotRec(Double impTotRec) {
+        this.impTotRec = impTotRec;
+    }
+
+    public Double getImpPago() {
+        return impPago;
+    }
+
+    public void setImpPago(Double impPago) {
+        this.impPago = impPago;
+    }
+
+    public Double getImpQuota() {
+        return impQuota;
+    }
+
+    public void setImpQuota(Double impQuota) {
+        this.impQuota = impQuota;
+    }
+
+    public Double getRemQuota() {
+        return remQuota;
+    }
+
+    public void setRemQuota(Double remQuota) {
+        this.remQuota = remQuota;
+    }
+
+
+    public MapPaymentResponse( MapPayment mapPayment ){
+
+        this.usuario = mapPayment.getUsuario();
+        this.fActual = mapPayment.getfActual();
+        this.programa = mapPayment.getPrograma();
+        this.idRecord = mapPayment.getId().getIdRecord();
+        this.nisRad = mapPayment.getNisRad();
+        this.accountId = mapPayment.getId().getAccountId();
+        this.numMap = mapPayment.getNumMap();
+        this.coMapVend = mapPayment.getCoMapVend();
+        this.impTotRec = mapPayment.getImpTotRec();
+        this.impPago = mapPayment.getImpPago();
+        this.impQuota = mapPayment.getImpQuota();
+        this.remQuota = mapPayment.getRemQuota();
+        this.estPago = mapPayment.getEstPago();
+        this.fPago = mapPayment.getfPago();
+        this.fVal = mapPayment.getfVal();
+        this.fTrans = mapPayment.getfTrans();
+        this.refTrans = mapPayment.getRefTrans();
+        this.refPago = mapPayment.getRefPago();
+        this.fGen = mapPayment.getfGen();
+        this.userGen = mapPayment.getUserGen();
+        this.linkPago = mapPayment.getLinkPago();
+        this.tipFormaPago = mapPayment.getTipFormaPago();
+        this.numExp = mapPayment.getNumExp();
     }
 }
 
