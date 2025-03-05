@@ -5,9 +5,11 @@ import com.example.backend.api.dto.MapSurveyRequest;
 import com.example.backend.api.dto.MapSurveyResponse;
 import com.example.backend.api.service.MapSurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -41,7 +43,33 @@ public class MapSurveyController {
 
     @PutMapping("/updateSurvey")
     public MapSurveyResponse updateMapSurvey(@RequestBody MapSurveyRequest request) throws Exception {
-        return mapSurveyService.updateProject(request);
+        return mapSurveyService.updateSurvey(request);
+    }
+
+//    @DeleteMapping("/delete/{idSurveyData}/{mapNumber}/{numExp}") {
+//        public ResponseEntity<String> deleteSurvey (@PathVariable Integer idSurveyData, @PathVariable String
+//        mapNumber, @PathVariable String numExp){
+//            mapSurveyService.deleteSurvey(idSurveyData, mapNumber, numExp);
+//            return ResponseEntity.ok("Survey deleted successfully")
+//        }
+//    }
+
+    @DeleteMapping("/deleteSurvey/{idSurveyData}/{mapNumber}/{numExp}")
+    public ResponseEntity<String> deleteSurvey(
+            @PathVariable Integer idSurveyData,
+            @PathVariable String mapNumber,
+            @PathVariable String numExp) {
+        try {
+            // Call the service method to delete the survey
+            mapSurveyService.deleteSurvey(idSurveyData, mapNumber, numExp);
+            return ResponseEntity.ok("Survey deleted successfully");
+        } catch (EntityNotFoundException e) {
+            // Handle survey not found exception
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            // Handle other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 
 

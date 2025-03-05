@@ -9,6 +9,7 @@ import com.example.backend.api.service.MapSurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -118,7 +119,7 @@ public class MapSurveyImpl implements MapSurveyService {
     }
 
     @Override
-    public MapSurveyResponse updateProject( MapSurveyRequest mapSurveyRequest ) {
+    public MapSurveyResponse updateSurvey( MapSurveyRequest mapSurveyRequest ) {
         MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId();
         mapSurveyDetailId.setIdSurveyData(mapSurveyRequest.getIdSurveyData());
         mapSurveyDetailId.setMapNumber(mapSurveyRequest.getMapNumber());
@@ -138,6 +139,49 @@ public class MapSurveyImpl implements MapSurveyService {
 
         return new MapSurveyResponse(existingSurveyDetail);
 
+    }
+
+
+//    @Override
+//    public void deleteSurvey(Integer idSurveyData , String mapNumber , String numExp ) {
+//        MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId(idSurveyData, mapNumber, numExp);
+//        if(!mapSurveyRepository.existsById(mapSurveyDetailId)) {
+//            throw new RuntimeException("Survey not found");
+//        }
+//        mapSurveyRepository.deleteById(mapSurveyDetailId);
+//    }
+
+//    @Override
+//    public void deleteSurvey(Integer idSurveyData, String mapNumber, String numExp) {
+//        // Create composite key
+//        MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId();
+//
+//        //MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId(idSurveyData, mapNumber, numExp);
+//
+//        // Check if the survey exists (optional, for custom error message)
+//        if (!mapSurveyRepository.existsById(mapSurveyDetailId)) {
+//            throw new EntityNotFoundException("Survey not found with ID: " + mapSurveyDetailId);
+//        }
+//
+//        // Delete the survey
+//        mapSurveyRepository.deleteById(mapSurveyDetailId);
+//    }
+
+    @Override
+    public void deleteSurvey(Integer idSurveyData, String mapNumber, String numExp) {
+        // Create composite key and set its fields
+        MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId();
+        mapSurveyDetailId.setIdSurveyData(idSurveyData);
+        mapSurveyDetailId.setMapNumber(mapNumber);
+        mapSurveyDetailId.setNumExp(numExp);
+
+        // Check if the survey exists (optional, for custom error message)
+        if (!mapSurveyRepository.existsById(mapSurveyDetailId)) {
+            throw new EntityNotFoundException("Survey not found with ID: " + mapSurveyDetailId);
+        }
+
+        // Delete the survey
+        mapSurveyRepository.deleteById(mapSurveyDetailId);
     }
 
 

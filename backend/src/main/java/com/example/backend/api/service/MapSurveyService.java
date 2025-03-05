@@ -14,6 +14,8 @@ public interface MapSurveyService {
 
     List<MapSurveyResponse> findByMapNumber(String mapNumber);
 
-    MapSurveyResponse updateProject( MapSurveyRequest mapSurveyRequest);
+    MapSurveyResponse updateSurvey( MapSurveyRequest mapSurveyRequest);
+
+    void deleteSurvey(Integer idSurveyData , String mapNumber , String numExp);
 
 }
