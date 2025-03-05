@@ -10,5 +10,7 @@ public interface MapSurveyRepository extends JpaRepository<MapSurveyDetail , Map
 
     List<MapSurveyDetail> findAll();
 
+    List<MapSurveyDetail> findByIdMapNumber(String mapNumber);
+
 
 }

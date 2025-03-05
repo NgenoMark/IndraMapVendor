@@ -33,4 +33,11 @@ public class MapSurveyController {
     public List<MapSurveyResponse> getAllSurveys() {
         return mapSurveyService.getAllSurveys();
     }
+
+    @GetMapping("/search/{mapNumber}")
+    public List<MapSurveyResponse> findByMapNumber(@PathVariable("mapNumber") String mapNumber) {
+        return mapSurveyService.findByMapNumber(mapNumber);
+    }
+
+
 }

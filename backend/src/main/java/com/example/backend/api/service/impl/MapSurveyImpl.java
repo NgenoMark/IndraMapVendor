@@ -109,6 +109,14 @@ public class MapSurveyImpl implements MapSurveyService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MapSurveyResponse> findByMapNumber(String mapNumber) {
+        return mapSurveyRepository.findByIdMapNumber(mapNumber)
+                .stream()
+                .map(MapSurveyResponse :: new)
+                .collect(Collectors.toList());
+    }
+
 
 
 

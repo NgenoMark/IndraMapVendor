@@ -10,6 +10,8 @@ public interface MapSurveyService {
     MapSurveyResponse saveMapSurvey(MapSurveyRequest mapSurveyRequest)
             throws Exception;
 
-
     List<MapSurveyResponse> getAllSurveys();
+
+    List<MapSurveyResponse> findByMapNumber(String mapNumber);
+
 }
