@@ -39,5 +39,10 @@ public class MapSurveyController {
         return mapSurveyService.findByMapNumber(mapNumber);
     }
 
+    @PutMapping("/updateSurvey")
+    public MapSurveyResponse updateMapSurvey(@RequestBody MapSurveyRequest request) throws Exception {
+        return mapSurveyService.updateProject(request);
+    }
+
 
 }

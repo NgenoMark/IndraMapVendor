@@ -7,6 +7,8 @@ import java.util.Date;
 public class MapSurveyResponse {
 
     //private Long id;
+
+    //private String message;
     private String usuario;
     private Date fActual;
     private String programa;
@@ -21,8 +23,17 @@ public class MapSurveyResponse {
 //        return id;
 //    }
 //
-//    public void setId(Long id) {
-//        this.id = id;
+////    public void setId(Long id) {
+////        this.id = id;
+////    }
+//
+//
+//    public String getMessage() {
+//        return message;
+//    }
+//
+//    public void setMessage(String message) {
+//        this.message = message;
 //    }
 
     public String getUsuario() {
@@ -98,6 +109,7 @@ public class MapSurveyResponse {
     }
 
     public MapSurveyResponse( MapSurveyDetail mapSurveyDetail) {
+        //this.message = message;
         this.usuario = mapSurveyDetail.getUsuario();
         this.fActual = mapSurveyDetail.getfActual();
         this.programa = mapSurveyDetail.getPrograma();

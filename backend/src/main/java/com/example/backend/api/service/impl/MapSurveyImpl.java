@@ -113,8 +113,31 @@ public class MapSurveyImpl implements MapSurveyService {
     public List<MapSurveyResponse> findByMapNumber(String mapNumber) {
         return mapSurveyRepository.findByIdMapNumber(mapNumber)
                 .stream()
-                .map(MapSurveyResponse :: new)
+                .map(MapSurveyResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MapSurveyResponse updateProject( MapSurveyRequest mapSurveyRequest ) {
+        MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId();
+        mapSurveyDetailId.setIdSurveyData(mapSurveyRequest.getIdSurveyData());
+        mapSurveyDetailId.setMapNumber(mapSurveyRequest.getMapNumber());
+        mapSurveyDetailId.setNumExp(mapSurveyRequest.getNumExp());
+
+        MapSurveyDetail existingSurveyDetail = mapSurveyRepository.findById(mapSurveyDetailId).orElseThrow(()
+                -> new RuntimeException("Survey not found"));
+
+        existingSurveyDetail.setUsuario(mapSurveyRequest.getUsuario());
+        existingSurveyDetail.setPrograma(mapSurveyRequest.getPrograma());
+        existingSurveyDetail.setIdMapWs(mapSurveyRequest.getIdMapWs());
+        existingSurveyDetail.setTipFase(mapSurveyRequest.getTipFase());
+        existingSurveyDetail.setVendorId(mapSurveyRequest.getVendorId());
+        existingSurveyDetail.setVendorId(mapSurveyRequest.getVendorId());
+
+        existingSurveyDetail = mapSurveyRepository.save(existingSurveyDetail);
+
+        return new MapSurveyResponse(existingSurveyDetail);
+
     }
 
 
