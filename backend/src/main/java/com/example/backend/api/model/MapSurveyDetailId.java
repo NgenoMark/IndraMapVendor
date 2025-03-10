@@ -47,6 +47,13 @@ public class MapSurveyDetailId implements Serializable {
         this.mapNumber = mapNumber;
     }
 
+//    public MapSurveyDetailId( Integer idSurveyData, String numExp, String mapNumber ) {
+//        this.idSurveyData = idSurveyData;
+//        this.numExp = numExp;
+//        this.mapNumber = mapNumber;
+//
+//    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,9 +64,20 @@ public class MapSurveyDetailId implements Serializable {
                 Objects.equals(this.numExp, entity.numExp);
     }
 
+
+
     @Override
     public int hashCode() {
         return Objects.hash(mapNumber, idSurveyData, numExp);
     }
 
+    // Override toString() to provide meaningful output
+    @Override
+    public String toString() {
+        return "MapSurveyDetailId{" +
+                "idSurveyData=" + idSurveyData +
+                ", mapNumber='" + mapNumber + '\'' +
+                ", numExp='" + numExp + '\'' +
+                '}';
+    }
 }

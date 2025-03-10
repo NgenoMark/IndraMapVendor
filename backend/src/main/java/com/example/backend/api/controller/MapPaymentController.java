@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/payment")
 public class MapPaymentController {
 
     private final MapPaymentService mapPaymentService;
@@ -24,7 +24,7 @@ public class MapPaymentController {
     }
 
     // Fetch all payment details
-    @GetMapping("/all")
+    @GetMapping("/allPayments")
     public List<MapPaymentResponse> getAllPayments() {
         return mapPaymentService.getAllPayments();
     }
