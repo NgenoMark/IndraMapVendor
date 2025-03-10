@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'map_vendor_page.dart';
+import 'dashboard.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,95 +27,96 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _mapVendorNumberController =
-      TextEditingController();
+  final TextEditingController _mapVendorNumberController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  final String tokenUrl =
-      "https://172.22.1.221:8283/token"; // Replace with actual token URL
-  final String userDetailsUrl =
-      "https://172.22.1.221:8283/mapLogin/1.0.1/login"; // Replace with actual user details URL
-  final String authorizationHeader =
-      "Basic MHJfZkRDX3QyamM4Z0luYXJvZjRjT0x5NjZnYTptUzJ3cUpuYXpsM2RrbXV6VHpxMXF0dWI4dndh"; // Replace with actual value
+  bool _isLoading = false;
+
+  final String tokenUrl = "https://172.22.1.221:8283/token";
+  final String userDetailsUrl = "https://172.22.1.221:8283/mapLogin/1.0.1/login";
+  final String authorizationHeader = "Basic MHJfZkRDX3QyamM4Z0luYXJvZjRjT0x5NjZnYTptUzJ3cUpuYXpsM2RrbXV6VHpxMXF0dWI4dndh";
 
   Future<void> _login() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      String mapVendorNumber = _mapVendorNumberController.text.trim();
-      String username = _usernameController.text.trim();
-      String password = _passwordController.text.trim();
+    if (!_formKey.currentState!.validate()) return;
 
-      String formattedUsername = "$mapVendorNumber#$username"; // Combine vendor number and username
+    setState(() => _isLoading = true);
 
-      try {
-        // Send login request to retrieve token
-        var response = await http.post(
-          Uri.parse(tokenUrl),
-          headers: {
-            'Authorization': authorizationHeader,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: {
-            'username': formattedUsername,
-            'password': password,
-            'grant_type': 'password',
-          },
-        );
+    String mapVendorNumber = _mapVendorNumberController.text.trim();
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+    String formattedUsername = "$mapVendorNumber#$username";
 
-        if (response.statusCode == 200) {
-          var data = json.decode(response.body);
-          String accessToken = data['access_token'];
+    try {
+      // Step 1: Request Access Token
+      var tokenResponse = await http.post(
+        Uri.parse(tokenUrl),
+        headers: {
+          'Authorization': authorizationHeader,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'username': formattedUsername,
+          'password': password,
+          'grant_type': 'password',
+        },
+      );
 
-          print("Access token is: $accessToken");
-
-          // Fetch user details using access token
-          var userResponse = await http.post(
-            Uri.parse(userDetailsUrl),
-            headers: {
-              'Authorization': 'Bearer $accessToken',
-              'Content-Type': 'application/json',
-            },
-            body: json.encode({
-              'idVendor': mapVendorNumber,
-              'codUser': password,
-              'currentPwd': password,
-            }),
-          );
-
-          if (userResponse.statusCode == 200) {
-            var userDetails = json.decode(userResponse.body);
-
-            // Navigate to MapVendorPage with mapVendorId and accessToken
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MapVendorPage(
-                  mapVendorId: mapVendorNumber,
-                  accessToken: accessToken,
-                ),
-              ),
-            );
-          } else {
-            _showError('Failed to retrieve user details.');
-          }
-        } else {
-          _showError('Invalid credentials. Please try again.');
-        }
-      } catch (e) {
-        _showError('An error occurred. Please try again later.');
+      if (tokenResponse.statusCode != 200) {
+        _showError('Invalid credentials. Please try again.');
+        return;
       }
+
+      var tokenData = json.decode(tokenResponse.body);
+      String accessToken = tokenData['access_token'];
+
+      // Step 2: Fetch User Details
+      var userResponse = await http.post(
+        Uri.parse(userDetailsUrl),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'idVendor': mapVendorNumber,
+          'codUser': username,
+          'currentPwd': password,
+        }),
+      );
+
+      if (userResponse.statusCode != 200) {
+        _showError('Failed to retrieve user details.');
+        return;
+      }
+
+      var userDetails = json.decode(userResponse.body);
+      print("User details: $userDetails");
+
+      // Navigate to Dashboard with access token
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Dashboard(),
+        ),
+      );
+    } catch (e) {
+      _showError('An error occurred. Please try again.');
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message, style: TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+    );
+    setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login Page')),
+      appBar: AppBar(title: Text('Vendor Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -126,29 +127,28 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 controller: _mapVendorNumberController,
                 decoration: InputDecoration(labelText: 'Map Vendor Number'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Enter vendor number' : null,
+                validator: (value) => value!.isEmpty ? 'Enter vendor number' : null,
               ),
               SizedBox(height: 16),
               TextFormField(
                 controller: _usernameController,
                 decoration: InputDecoration(labelText: 'Username'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Enter username' : null,
+                validator: (value) => value!.isEmpty ? 'Enter username' : null,
               ),
               SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(labelText: 'Password'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Enter password' : null,
+                validator: (value) => value!.isEmpty ? 'Enter password' : null,
               ),
               SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _login,
-                child: Text('Login'),
-              ),
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _login,
+                      child: Text('Login'),
+                    ),
             ],
           ),
         ),
