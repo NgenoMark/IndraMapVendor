@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
-import 'map_vendor_page.dart';
 
 void main() {
-  runApp(DashboardApp());
+  runApp(MyApp());
 }
 
-class DashboardApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Dashboard(),
       debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Dashboard(),
+        '/mapVendor': (context) => MapVendorScreen(),
+      },
     );
   }
 }
 
-class Dashboard extends StatefulWidget {
-  @override
-  _DashboardState createState() => _DashboardState();
-}
-
-class _DashboardState extends State<Dashboard> {
+class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('DashBoard', style: TextStyle(color: Colors.white)),
+        title: Text('Dashboard', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.green,
         leading: IconButton(
           icon: Icon(Icons.menu, color: Colors.white),
-          onPressed: () {},
+          onPressed: () {
+            // TODO: Implement drawer or menu functionality
+          },
         ),
       ),
       body: Padding(
@@ -38,79 +38,75 @@ class _DashboardState extends State<Dashboard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'juma',
+              'Juma',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             Text('Welcome back', style: TextStyle(fontSize: 18)),
             SizedBox(height: 20),
 
-            // Work Status Section
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Work status', style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 8),
-                    Text('Click to reload data'),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                      child: Text('Refresh Data', style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            SizedBox(height: 20),
-
-            // Map Survey Summary
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Map Survey Summary', style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
-                    Container(
-                      height: 100,
-                      child: MapVendorPage(
-                        mapVendorId: "VM012",
-                        accessToken: "your_access_token",
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            Spacer(),
-
-            // Bottom Navigation Bar
-            BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              items: [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
-                BottomNavigationBarItem(icon: Icon(Icons.poll), label: 'SURVEY'),
-                BottomNavigationBarItem(icon: Icon(Icons.build), label: 'INSTALL'),
-                BottomNavigationBarItem(icon: Icon(Icons.support), label: 'SUPPORT'),
-                BottomNavigationBarItem(icon: Icon(Icons.person), label: 'PROFILE'),
-              ],
+            // Button to navigate to the MapVendor screen
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/mapVendor');
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Text('Go to Map', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.green, // Highlight selected icon
+        unselectedItemColor: Colors.grey,
+        currentIndex: 0, // Default selection
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Dashboard()));
+              break;
+            case 1:
+              print("Survey clicked");
+              // TODO: Implement Survey navigation
+              break;
+            case 2:
+              print("Install clicked");
+              // TODO: Implement Install navigation
+              break;
+            case 3:
+              print("Support clicked");
+              // TODO: Implement Support navigation
+              break;
+            case 4:
+              print("Profile clicked");
+              // TODO: Implement Profile navigation
+              break;
+          }
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
+          BottomNavigationBarItem(icon: Icon(Icons.poll), label: 'SURVEY'),
+          BottomNavigationBarItem(icon: Icon(Icons.build), label: 'INSTALL'),
+          BottomNavigationBarItem(icon: Icon(Icons.support), label: 'SUPPORT'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'PROFILE'),
+        ],
+      ),
+    );
+  }
+}
+
+// Dummy MapVendorScreen for navigation
+class MapVendorScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Map Vendor'),
+        backgroundColor: Colors.green,
+      ),
+      body: Center(
+        child: Text('Map Vendor Page'),
       ),
     );
   }
