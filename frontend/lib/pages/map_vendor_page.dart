@@ -197,14 +197,11 @@
 //   ));
 // }
 
-
-
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'payment.dart';
-import 'package:intl/intl.dart'; // Import this at the top
+import 'package:intl/intl.dart';
 
 class MapVendorPage extends StatefulWidget {
   final String mapVendorId;
@@ -229,8 +226,8 @@ class _MapVendorPageState extends State<MapVendorPage> {
   }
 
   Future<void> fetchVendorData() async {
-    final url = Uri.parse(
-        'http://localhost:8081/getProjectById/${widget.mapVendorId}');
+    final url =
+        Uri.parse('http://localhost:8081/getProjectById/${widget.mapVendorId}');
     print("Fetching data from: $url");
 
     try {
@@ -252,8 +249,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
           isLoading = false;
         });
       } else {
-        print(
-            "Error: Failed to load vendor data. Status Code: ${response.statusCode}");
+        print("Error: Failed to load vendor data. Status Code: ${response.statusCode}");
         setState(() {
           isLoading = false;
         });
@@ -272,8 +268,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
     }
     try {
       DateTime parsedDate = DateTime.parse(dateString);
-      return DateFormat('yyyy-MM-dd HH:mm:ss')
-          .format(parsedDate); // Adjust format as needed
+      return DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedDate);
     } catch (e) {
       print("Error parsing date: $e");
       return 'Invalid Date';
@@ -285,7 +280,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Project Description'),
+          title: const Text('Project Description'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -305,7 +300,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close'),
+              child: const Text('Close'),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -315,51 +310,46 @@ class _MapVendorPageState extends State<MapVendorPage> {
   }
 
   Widget _buildDetailRow(String label, String? value) {
-    return Text('$label: ${value ?? 'N/A'}', style: TextStyle(fontSize: 16));
+    return Text('$label: ${value ?? 'N/A'}', style: const TextStyle(fontSize: 16));
   }
 
   void _logout() {
     print("User logged out");
-    // Implement logout functionality here
+    // Implement logout functionality
+  }
+
+  void _navigateTo(String route) {
+    Navigator.pushNamed(context, route);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Projects'),
+        title: const Text('My Projects'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               print("Search button clicked");
-              // TODO: Implement search functionality
             },
           ),
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: _logout,
           ),
           PopupMenuButton<String>(
             onSelected: (String result) {
-              print("Selected: $result");
-              // Implement navigation logic based on selection
               if (result == 'My Account') {
-                // TODO: Navigate to My Account page
-              } else if (result == 'My Projects') {
-                // Already on My Projects page, do nothing or refresh
+                _navigateTo('/myAccount');
               } else if (result == 'Past Projects') {
-                // TODO: Navigate to Past Projects page
+                _navigateTo('/pastProjects');
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
                 value: 'My Account',
                 child: Text('My Account'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'My Projects',
-                child: Text('My Projects'),
               ),
               const PopupMenuItem<String>(
                 value: 'Past Projects',
@@ -374,12 +364,18 @@ class _MapVendorPageState extends State<MapVendorPage> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Map Survey Summary',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
                 Expanded(
                   child: ListView.builder(
                     itemCount: vendorDataList.length,
                     itemBuilder: (context, index) {
                       final data = vendorDataList[index];
-                      // Determine project status based on your data
                       String projectStatus = getProjectStatus(data);
 
                       return Card(
@@ -392,17 +388,14 @@ class _MapVendorPageState extends State<MapVendorPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildDetailRow(
-                                  'Customer Name', data['customerName']),
+                              _buildDetailRow('Customer Name', data['customerName']),
                               _buildDetailRow('City', data['city']),
                               _buildDetailRow('District', data['district']),
                               _buildDetailRow('Zone', data['zone']),
-                              // Display project status
                               Text('Status: $projectStatus'),
                             ],
                           ),
-                          leading:
-                              getStatusIcon(projectStatus), // Display status icon
+                          leading: getStatusIcon(projectStatus),
                           onTap: () => _showDescriptionDialog(context, data),
                         ),
                       );
@@ -415,35 +408,27 @@ class _MapVendorPageState extends State<MapVendorPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          print("Explore Projects clicked");
-                          // TODO: Implement Explore Projects functionality
+                          _navigateTo('/exploreProjects');
                         },
                         child: const Text('Explore Projects'),
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PaymentPage()),
-                          );
+                          _navigateTo('/payment');
                         },
                         child: const Text('Payment Page'),
                       ),
                     ],
                   ),
                 ),
-                // Bottom Navigation Bar
                 _buildBottomNavigationBar(),
               ],
             ),
     );
   }
 
-  // Function to determine project status (replace with your logic)
   String getProjectStatus(dynamic data) {
-    // Example logic:
     if (data['fActual'] == null || data['fActual'].isEmpty) {
       return 'Not Started';
     } else if (data['status'] == 'complete') {
@@ -453,7 +438,6 @@ class _MapVendorPageState extends State<MapVendorPage> {
     }
   }
 
-  // Function to return status icon based on project status
   Widget getStatusIcon(String status) {
     switch (status) {
       case 'Not Started':
@@ -463,69 +447,26 @@ class _MapVendorPageState extends State<MapVendorPage> {
       case 'Complete':
         return const Icon(Icons.check_circle, color: Colors.green);
       default:
-        return const Icon(Icons.error, color: Colors.red); // Unknown status
+        return const Icon(Icons.error, color: Colors.red);
     }
   }
 
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.list),
-          label: 'Projects',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle),
-          label: 'Account',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Projects'),
+        BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
       ],
-      currentIndex: 1, // Highlight the "Projects" icon
+      currentIndex: 1,
       selectedItemColor: Colors.blue,
       onTap: (int index) {
-        switch (index) {
-          case 0:
-            // TODO: Navigate to Home page
-            print("Home button tapped");
-            break;
-          case 1:
-            // Already on Projects page, do nothing or refresh
-            print("Projects button tapped");
-            break;
-          case 2:
-            // TODO: Navigate to Account page
-            print("Account button tapped");
-            break;
-        }
+        if (index == 0) _navigateTo('/home');
+        if (index == 2) _navigateTo('/account');
       },
     );
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    home: MapVendorPage(
-      mapVendorId: '',
-      accessToken: '',
-    ),
-  ));
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
