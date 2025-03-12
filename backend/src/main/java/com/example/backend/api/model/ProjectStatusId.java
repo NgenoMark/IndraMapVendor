@@ -13,14 +13,16 @@ import java.util.Objects;
 @Setter
 @Embeddable
 public class ProjectStatusId implements Serializable {
+
     private static final long serialVersionUID = -456703636840036304L;
-    @Column(name = "PROJECT_ID", columnDefinition = "unknown")
+
+    @Column(name = "PROJECT_ID", nullable = false, length = 50)
     private String projectId;
 
-    @Column(name = "MAP_NUMBER", columnDefinition = "unknown")
+    @Column(name = "MAP_NUMBER", nullable = false, length = 50)
     private String mapNumber;
 
-    @Column(name = "APPLICATION_NUMBER", columnDefinition = "unknown")
+    @Column(name = "APPLICATION_NUMBER", nullable = false, length = 50)
     private String applicationNumber;
 
     @Override
@@ -37,5 +39,4 @@ public class ProjectStatusId implements Serializable {
     public int hashCode() {
         return Objects.hash(applicationNumber, mapNumber, projectId);
     }
-
 }
