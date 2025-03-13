@@ -83,6 +83,7 @@ import com.example.backend.api.service.MapVendorSurveyorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -181,4 +182,20 @@ public class MapVendorSurveyorImpl implements MapVendorSurveyorService {
         return new MapVendorSurveyorResponse(existingSurveyorDetail);
 
     }
+
+    @Override
+    public void deleteSurveyor(String surveyorId , String employeeNumber) {
+        MapVendorSurveyorId mapVendorSurveyorId = new MapVendorSurveyorId();
+        mapVendorSurveyorId.setSurveyorId(surveyorId);
+        mapVendorSurveyorId.setEmployeeNumber(employeeNumber);
+
+        if(!mapVendorSurveyorRepository.existsById(mapVendorSurveyorId)) {
+            //throw new RuntimeException("Surveyor not found");
+            throw new EntityNotFoundException("Surveyor not found with ID: " + surveyorId + " and Employee Number: " + employeeNumber);
+
+        }
+
+        mapVendorSurveyorRepository.deleteById(mapVendorSurveyorId);
+    }
+
 }
