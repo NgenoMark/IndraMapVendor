@@ -13,4 +13,6 @@ public interface MapVendorSurveyorService {
             throws Exception;
 
     List<MapVendorSurveyorResponse> findBySurveyorId ( String surveyorId);
+
+    MapVendorSurveyorResponse updateSurveyor ( MapVendorSurveyorRequest surveyorRequest);
 }

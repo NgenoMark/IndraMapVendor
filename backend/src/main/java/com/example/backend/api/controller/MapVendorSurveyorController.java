@@ -33,9 +33,16 @@ public class MapVendorSurveyorController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping("/searchSurveyor/{surveyorId}")
+    @GetMapping("/searchSurveyor/{surveyorId}")
     public List<MapVendorSurveyorResponse> searchSurveyor(@PathVariable String surveyorId) {
         return mapVendorSurveyorService.findBySurveyorId(surveyorId);
     }
+
+    @PutMapping("/updateSurveyor")
+    public MapVendorSurveyorResponse updateSurveyor(@RequestBody MapVendorSurveyorRequest request) throws Exception {
+        return mapVendorSurveyorService.updateSurveyor(request);
+    }
+
+
 
 }

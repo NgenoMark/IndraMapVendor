@@ -74,6 +74,7 @@ package com.example.backend.api.service.impl;
 
 import com.example.backend.api.dto.MapVendorSurveyorRequest;
 import com.example.backend.api.dto.MapVendorSurveyorResponse;
+import com.example.backend.api.model.MapSurveyDetail;
 import com.example.backend.api.model.MapVendorSurveyor;
 import com.example.backend.api.model.MapVendorSurveyorId;
 import com.example.backend.api.model.repositories.MapSurveyRepository;
@@ -151,5 +152,33 @@ public class MapVendorSurveyorImpl implements MapVendorSurveyorService {
                 stream().
                 map(MapVendorSurveyorResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MapVendorSurveyorResponse updateSurveyor(MapVendorSurveyorRequest mapVendorSurveyorRequest) {
+        MapVendorSurveyorId mapVendorSurveyorId = new MapVendorSurveyorId();
+        mapVendorSurveyorId.setSurveyorId(mapVendorSurveyorRequest.getSurveyorId());
+        mapVendorSurveyorId.setEmployeeNumber(mapVendorSurveyorRequest.getEmployeeNumber());
+
+//        boolean exists = mapVendorSurveyorRepository.existsById(mapVendorSurveyorId);
+//        if (exists) {
+//        }
+
+        MapVendorSurveyor existingSurveyorDetail = mapVendorSurveyorRepository.findById(mapVendorSurveyorId).orElseThrow(()
+                -> new RuntimeException("Surveyor not found"));
+
+        existingSurveyorDetail.setPrograma(mapVendorSurveyorRequest.getPrograma());
+        existingSurveyorDetail.setUsuario(mapVendorSurveyorRequest.getUsuario());
+        existingSurveyorDetail.setMapVendorId(mapVendorSurveyorRequest.getMapVendorId());
+        existingSurveyorDetail.setMapNumber(mapVendorSurveyorRequest.getMapNumber());
+        existingSurveyorDetail.setName(mapVendorSurveyorRequest.getName());
+        existingSurveyorDetail.setEmail(mapVendorSurveyorRequest.getEmail());
+        existingSurveyorDetail.setPhoneNumber(mapVendorSurveyorRequest.getPhoneNumber());
+        existingSurveyorDetail.setfActual(mapVendorSurveyorRequest.getfActual());
+
+        existingSurveyorDetail = mapVendorSurveyorRepository.save(existingSurveyorDetail);
+
+        return new MapVendorSurveyorResponse(existingSurveyorDetail);
+
     }
 }
