@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface MapVendorSurveyorRepository extends JpaRepository<MapVendorSurveyor, MapVendorSurveyorId> {
     List<MapVendorSurveyor> findAll();
+
+    List<MapVendorSurveyor> findByIdSurveyorId(String surveyorId);
 }

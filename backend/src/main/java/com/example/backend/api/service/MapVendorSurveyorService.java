@@ -11,4 +11,6 @@ public interface MapVendorSurveyorService {
 
     MapVendorSurveyorResponse saveSurveyor(MapVendorSurveyorRequest surveyorRequest)
             throws Exception;
+
+    List<MapVendorSurveyorResponse> findBySurveyorId ( String surveyorId);
 }

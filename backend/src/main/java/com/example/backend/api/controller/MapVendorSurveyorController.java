@@ -7,10 +7,7 @@ import com.example.backend.api.model.MapVendorSurveyor;
 import com.example.backend.api.service.MapVendorSurveyorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +31,11 @@ public class MapVendorSurveyorController {
     public ResponseEntity<MapVendorSurveyorResponse> saveSurveyor(@RequestBody MapVendorSurveyorRequest request) throws Exception {
         MapVendorSurveyorResponse response = mapVendorSurveyorService.saveSurveyor(request);
         return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping("/searchSurveyor/{surveyorId}")
+    public List<MapVendorSurveyorResponse> searchSurveyor(@PathVariable String surveyorId) {
+        return mapVendorSurveyorService.findBySurveyorId(surveyorId);
     }
 
 }

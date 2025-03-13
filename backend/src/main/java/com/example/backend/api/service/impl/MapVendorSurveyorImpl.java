@@ -144,4 +144,12 @@ public class MapVendorSurveyorImpl implements MapVendorSurveyorService {
         // Return the saved entity as a response
         return new MapVendorSurveyorResponse(mapVendorSurveyor);
     }
+
+    @Override
+    public List<MapVendorSurveyorResponse> findBySurveyorId( String surveyorId) {
+        return mapVendorSurveyorRepository.findByIdSurveyorId(surveyorId).
+                stream().
+                map(MapVendorSurveyorResponse::new)
+                .collect(Collectors.toList());
+    }
 }
