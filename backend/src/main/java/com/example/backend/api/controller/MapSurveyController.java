@@ -36,7 +36,7 @@ public class MapSurveyController {
         return mapSurveyService.getAllSurveys();
     }
 
-    @GetMapping("/search/{mapNumber}")
+    @GetMapping("/searchSurvey/{mapNumber}")
     public List<MapSurveyResponse> findByMapNumber(@PathVariable("mapNumber") String mapNumber) {
         return mapSurveyService.findByMapNumber(mapNumber);
     }
