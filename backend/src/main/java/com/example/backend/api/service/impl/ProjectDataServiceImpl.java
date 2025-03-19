@@ -154,6 +154,26 @@ public class ProjectDataServiceImpl implements ProjectDataService {
     }
 
 
+    @Override
+    public List<ProjectDataResponse> getProjectDataByCompletionStatus(String completionStatus) {
+        List<ProjectData> projects = (List<ProjectData>) projectDataRepository.findByCompletionStatus(completionStatus);
+        return projects.stream()
+                .map(data -> convertToResponse(data, "Data retrieved successfully"))
+                .collect(Collectors.toList());
+
+//        return projects.stream().map(this::convertToResponse).collect(Collectors.toList());
+    }
+
+//    private ProjectDataResponse convertToResponse(ProjectData project) {
+//        return new ProjectDataResponse(
+//                project.getId(),
+//                project.getName(),
+//                project.getCompletionStatus(),
+//                project.getDescription()
+//        );
+   // }
+
+
 
     // 🔹 Convert Entity to Response DTO
 //    private ProjectDataResponse convertToResponse(ProjectData projectData, String message) {

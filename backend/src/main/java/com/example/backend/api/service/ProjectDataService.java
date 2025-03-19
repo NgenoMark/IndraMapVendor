@@ -23,4 +23,8 @@ public interface  ProjectDataService {
     //ProjectDataResponse deleteProjectData(String applicationNumber);
 
     List<ProjectDataResponse> getAllProjectData();
+
+
+    List<ProjectDataResponse> getProjectDataByCompletionStatus(String completionStatus);
+
 }

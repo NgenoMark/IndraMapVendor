@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/project-data")
 public class ProjectDataController {
 
 
@@ -23,7 +23,7 @@ public class ProjectDataController {
 
 
 
-    @RequestMapping(path = "/sendProjectData")
+    @PostMapping(path = "/sendProjectData")
     public Object saveProjectData( @Valid @RequestBody ProjectDataRequest projectDataRequest)
     throws Exception {
         return projectDataService.saveProjectData( projectDataRequest);
@@ -70,6 +70,21 @@ public class ProjectDataController {
     public ResponseEntity<List<ProjectDataResponse>> getAllProjectData() {
         List<ProjectDataResponse> responseList = projectDataService.getAllProjectData();
         return ResponseEntity.ok(responseList);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<List<ProjectDataResponse>> getProjectDataStatus(
+            @RequestParam(required = false) String completionStatus) {
+
+        List<ProjectDataResponse> response;
+
+        if (completionStatus == null || completionStatus.isEmpty()) {
+            response = projectDataService.getAllProjectData();
+        } else {
+            response = projectDataService.getProjectDataByCompletionStatus(completionStatus);
+        }
+
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.backend.api.model.repositories;
 
+import com.example.backend.api.dto.ProjectDataResponse;
 import com.example.backend.api.model.ProjectData;
 import com.example.backend.api.model.ProjectDataId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,6 +32,8 @@ public interface ProjectDataRepository extends JpaRepository<ProjectData, Projec
     java.util.List<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
 
     //Optional<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
+
+    java.util.List<ProjectData> findByCompletionStatus(String completionStatus);
 
 }
 
