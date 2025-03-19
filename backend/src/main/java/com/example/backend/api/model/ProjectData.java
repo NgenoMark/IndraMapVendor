@@ -34,6 +34,27 @@ public class ProjectData {
 @Column(name = "ZONE", columnDefinition = "unknown")
     private String zone;
 
+@Column(name = "COMPLETION_STATUS", columnDefinition = "unknown")
+    private String completionStatus;
+
+@Column(name = "SURVEY_STATUS", columnDefinition = "unknown")
+    private String surveyStatus;
+
+@Column(name = "ASSIGNED_TO_ID", columnDefinition = "unknown")
+    private String assignedToId;
+
+@Column(name = "START_DATE", columnDefinition = "unknown")
+    private Date startDate;
+
+@Column(name = "END_DATE", columnDefinition = "unknown")
+    private Date endDate;
+
+@Column(name = "LAST_UPDATED", columnDefinition = "unknown")
+    private Date lastUpdated;
+
+@Column(name = "UPDATED_BY", columnDefinition = "unknown")
+    private String updatedBy;
+
 
     @ManyToOne
     @JoinColumns({
@@ -137,5 +158,61 @@ public class ProjectData {
 
     public void setPaymentDetail(PaymentDetail paymentDetail) {
         this.paymentDetail = paymentDetail;
+    }
+
+    public String getCompletionStatus() {
+        return completionStatus;
+    }
+
+    public void setCompletionStatus(String completionStatus) {
+        this.completionStatus = completionStatus;
+    }
+
+    public String getSurveyStatus() {
+        return surveyStatus;
+    }
+
+    public void setSurveyStatus(String surveyStatus) {
+        this.surveyStatus = surveyStatus;
+    }
+
+    public String getAssignedToId() {
+        return assignedToId;
+    }
+
+    public void setAssignedToId(String assignedToId) {
+        this.assignedToId = assignedToId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }

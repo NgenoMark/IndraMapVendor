@@ -235,6 +235,13 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         response.setDistrict(projectData.getDistrict());
         response.setZone(projectData.getZone());
         response.setMessage(message);
+        response.setCompletionStatus(projectData.getCompletionStatus());
+        response.setSurveyStatus(projectData.getSurveyStatus());
+        response.setAssignedToId(projectData.getAssignedToId());
+        response.setStartDate(projectData.getStartDate());
+        response.setEndDate(projectData.getEndDate());
+        response.setLastUpdated(projectData.getLastUpdated());
+        response.setUpdatedBy(projectData.getUpdatedBy());
 
         // 🔹 Include Payment Details
         if (projectData.getPaymentDetail() != null) {

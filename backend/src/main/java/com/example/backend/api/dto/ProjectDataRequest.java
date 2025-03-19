@@ -16,6 +16,21 @@ public class ProjectDataRequest {
     private String mapVendorId;
     private String mapNo;
 
+    private String completionStatus;
+
+    private String surveyStatus;
+
+    private String assignedToId;
+
+    private Date startDate;
+
+    private Date endDate;
+
+    private Date lastUpdated;
+
+    private String updatedBy;
+
+
     public Date getfActual() {
         return fActual;
     }
@@ -110,6 +125,62 @@ public class ProjectDataRequest {
 
     public void setMapNo(String mapNo) {
         this.mapNo = mapNo;
+    }
+
+    public String getCompletionStatus() {
+        return completionStatus;
+    }
+
+    public void setCompletionStatus(String completionStatus) {
+        this.completionStatus = completionStatus;
+    }
+
+    public String getSurveyStatus() {
+        return surveyStatus;
+    }
+
+    public void setSurveyStatus(String surveyStatus) {
+        this.surveyStatus = surveyStatus;
+    }
+
+    public String getAssignedToId() {
+        return assignedToId;
+    }
+
+    public void setAssignedToId(String assignedToId) {
+        this.assignedToId = assignedToId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }
 
