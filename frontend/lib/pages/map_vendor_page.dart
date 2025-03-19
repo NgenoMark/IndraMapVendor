@@ -1,209 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
-
-// class MapVendorPage extends StatefulWidget {
-//   @override
-//   _MapVendorPageState createState() => _MapVendorPageState();
-// }
-
-// class _MapVendorPageState extends State<MapVendorPage> {
-//   List<dynamic> vendorDataList = [];
-//   bool isLoading = true;
-//   bool isError = false;
-//   final String mapVendorId = "VM012"; // Hardcoded for independent execution
-//   final String accessToken = "your_access_token"; // Replace with actual token if needed
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchVendorData();
-//   }
-
-//   Future<void> fetchVendorData() async {
-//     final url = Uri.parse('http://localhost:8081/getProjectById/$mapVendorId');
-//     print("Final URL: $url");
-
-//     try {
-//       final response = await http.get(
-//         url,
-//         headers: {
-//           'Authorization': 'Bearer $accessToken',
-//           'Content-Type': 'application/json',
-//         },
-//       );
-
-//       if (response.statusCode == 200) {
-//         var decodedResponse = json.decode(response.body);
-//         print("API Response: $decodedResponse");
-
-//         setState(() {
-//           vendorDataList = decodedResponse is List ? decodedResponse : [decodedResponse];
-//           isLoading = false;
-//         });
-//       } else {
-//         throw Exception('Failed to load vendor data. Status Code: ${response.statusCode}');
-//       }
-//     } catch (e) {
-//       print("Error: $e");
-//       setState(() {
-//         isLoading = false;
-//         isError = true;
-//       });
-//     }
-//   }
-
-//   String getStatusStars(String status) {
-//     switch (status.toLowerCase()) {
-//       case "not started":
-//         return "⭐☆☆☆☆";
-//       case "pending":
-//         return "⭐⭐☆☆☆";
-//       case "completed":
-//         return "⭐⭐⭐⭐⭐";
-//       default:
-//         return "No Rating";
-//     }
-//   }
-
-//   void _showDescriptionDialog(BuildContext context, dynamic data) {
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: Text('Project Description'),
-//           content: SingleChildScrollView(
-//             child: ListBody(
-//               children: <Widget>[
-//                 Text('Application No: ${data['applicationNo'] ?? "N/A"}'),
-//                 Text('Customer Name: ${data['customerName'] ?? "N/A"}'),
-//                 Text('Customer Address: ${data['customerAddress'] ?? "N/A"}'),
-//                 Text('Customer Telephone: ${data['Telephone'] ?? "N/A"}'),
-//                 Text('Customer Email: ${data['customerEmail'] ?? "N/A"}'),
-//                 Text('City: ${data['city'] ?? "N/A"}'),
-//                 Text('District: ${data['district'] ?? "N/A"}'),
-//                 Text('Zone: ${data['zone'] ?? "N/A"}'),
-//                 Text('Map Vendor ID: ${data['mapVendorId'] ?? "N/A"}'),
-//                 Text('Map No: ${data['mapNo'] ?? "N/A"}'),
-//               ],
-//             ),
-//           ),
-//           actions: <Widget>[
-//             TextButton(
-//               child: Text('Close'),
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-
-//   Widget _buildProjectList() {
-//     if (isLoading) {
-//       return Center(child: CircularProgressIndicator());
-//     }
-
-//     if (isError) {
-//       return Center(child: Text('Failed to load data. Please try again later.'));
-//     }
-
-//     if (vendorDataList.isEmpty) {
-//       return Center(child: Text('No projects available.'));
-//     }
-
-//     return ListView.builder(
-//       itemCount: vendorDataList.length,
-//       itemBuilder: (context, index) {
-//         final data = vendorDataList[index];
-//         return Card(
-//           child: ListTile(
-//             title: Text(data['mapNo'] ?? 'No Map No'),
-//             subtitle: Text('Status: ${data['status'] ?? 'Unknown'}\n'
-//                 '${getStatusStars(data['status'] ?? 'Unknown')}'),
-//             trailing: Icon(Icons.arrow_forward),
-//             onTap: () => _showDescriptionDialog(context, data),
-//           ),
-//         );
-//       },
-//     );
-//   }
-
-//   void _logout() {
-//     print("User logged out");
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('My Projects'),
-//         leading: IconButton(
-//           icon: Icon(Icons.home),
-//           onPressed: () {
-//             Navigator.pushReplacement(
-//               context,
-//               MaterialPageRoute(builder: (context) => MapVendorPage()),
-//             );
-//           },
-//         ),
-//         actions: <Widget>[
-//           IconButton(
-//             icon: Icon(Icons.search),
-//             onPressed: () {
-//               print("Search button clicked");
-//             },
-//           ),
-//           IconButton(
-//             icon: Icon(Icons.logout),
-//             onPressed: _logout,
-//           ),
-//           PopupMenuButton<String>(
-//             onSelected: (String result) {
-//               print("Selected: $result");
-//             },
-//             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-//               PopupMenuItem<String>(
-//                 value: 'My Account',
-//                 child: Text('My Account'),
-//               ),
-//               PopupMenuItem<String>(
-//                 value: 'My Projects',
-//                 child: Text('My Projects'),
-//               ),
-//               PopupMenuItem<String>(
-//                 value: 'Past Projects',
-//                 child: Text('Past Projects'),
-//               ),
-//             ],
-//             icon: Icon(Icons.menu),
-//           ),
-//         ],
-//       ),
-//       body: _buildProjectList(),
-//     );
-//   }
-// }
-
-// void main() {
-//   runApp(MaterialApp(
-//     home: MapVendorPage(),
-//     theme: ThemeData(
-//       primarySwatch: Colors.blue,
-//       visualDensity: VisualDensity.adaptivePlatformDensity,
-//     ),
-//   ));
-// }
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
 // import 'payment.dart';
 // import 'package:intl/intl.dart';
 
@@ -480,23 +277,258 @@
 
 
 
+// import 'package:flutter/material.dart';
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'payment.dart';
+// import 'package:intl/intl.dart'; // Import this at the top
+
+// class MapVendorPage extends StatefulWidget {
+
+//   // final String mapVendorId;
+//   // final String accessToken;
+
+//   // final String mapVendorId = "VM012"; // Hardcoded for independent execution
+//   // final String accessToken ="your_access_token"; // Replace with actual token if needed
+
+
+//   //const MapVendorPage({Key? key, required this.mapVendorId, required this.accessToken}) : super(key: key);
+//   const MapVendorPage({Key? key}) : super(key: key);
+
+
+
+//   @override
+//   _MapVendorPageState createState() => _MapVendorPageState();
+// }
+
+// class _MapVendorPageState extends State<MapVendorPage> {
+//   List<dynamic> vendorDataList = [];
+  
+//   bool isLoading = true;
+//   final String mapVendorId = "VM012"; // Hardcoded for independent execution
+//   final String accessToken ="your_access_token"; // Replace with actual token if needed
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     fetchVendorData();
+//   }
+
+//   Future<void> fetchVendorData() async {
+//     //final url = Uri.parse('http://localhost:8081/getProjectById/${widget.mapVendorId}');
+//     final url = Uri.parse('http://localhost:8081/getProjectById/$mapVendorId');
+//     print("Fetching data from: $url");
+
+//     try {
+//       final response = await http.get(
+//         url,  
+//         headers: {
+//           //'Authorization': 'Bearer ${widget.accessToken}',
+//           'Authorization': 'Bearer $accessToken',
+//           'Content-Type': 'application/json',
+//         },
+//       );
+
+//       if (response.statusCode == 200) {
+//         var decodedResponse = json.decode(response.body);
+//         print("API Response: $decodedResponse");
+
+//         setState(() {
+//           vendorDataList =
+//               decodedResponse is List ? decodedResponse : [decodedResponse];
+//           isLoading = false;
+//         });
+//       } else {
+//         print(
+//             "Error: Failed to load vendor data. Status Code: ${response.statusCode}");
+//         setState(() {
+//           isLoading = false;
+//         });
+//       }
+//     } catch (e) {
+//       print("Error fetching data: $e");
+//       setState(() {
+//         isLoading = false;
+//       });
+//     }
+//   }
+
+//   String formatDate(String? dateString) {
+//     if (dateString == null || dateString.isEmpty) {
+//       return 'N/A';
+//     }
+//     try {
+//       DateTime parsedDate = DateTime.parse(dateString);
+//       return DateFormat('yyyy-MM-dd HH:mm:ss')
+//           .format(parsedDate); // Adjust format as needed
+//     } catch (e) {
+//       print("Error parsing date: $e"); 
+//       return 'Invalid Date';
+//     }
+//   }
+
+//   void _showDescriptionDialog(BuildContext context, dynamic data) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text('Project Description'),
+//           content: SingleChildScrollView(
+//             child: ListBody(
+//               children: <Widget>[
+//                 _buildDetailRow('Application No', data['applicationNo']),
+//                 _buildDetailRow('Customer Name', data['customerName']),
+//                 _buildDetailRow('Customer Address', data['customerAddress']),
+//                 _buildDetailRow('Customer Telephone',
+//                     data['customerTelephone']), // Fixed key
+//                 _buildDetailRow('City', data['city']),
+//                 _buildDetailRow('District', data['district']),
+//                 _buildDetailRow('Zone', data['zone']),
+//                 _buildDetailRow('Map Vendor ID', data['mapVendorId']),
+//                 _buildDetailRow('Map No', data['mapNo']),
+//                 _buildDetailRow('Amount', data['amount'].toString()),
+//                 Text('Date Paid: ${formatDate(data['fActual'])}'),
+//               ],
+//             ),
+//           ),
+//           actions: <Widget>[
+//             TextButton(
+//               child: Text('Close'),
+//               onPressed: () => Navigator.of(context).pop(),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+
+//   Widget _buildDetailRow(String label, String? value) {
+//     return Text('$label: ${value ?? 'N/A'}', style: TextStyle(fontSize: 16));
+//   }
+
+//   void _logout() {
+//     print("User logged out");
+//     // Implement logout functionality here
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('My Projects'),
+//         actions: <Widget>[
+//           IconButton(
+//             icon: Icon(Icons.search),
+//             onPressed: () {
+//               print("Search button clicked");
+//             },
+//           ),
+//           IconButton(
+//             icon: Icon(Icons.logout),
+//             onPressed: _logout,
+//           ),
+//           PopupMenuButton<String>(
+//             onSelected: (String result) {
+//               print("Selected: $result");
+//               // Implement navigation logic based on selection
+//             },
+//             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+//               PopupMenuItem<String>(
+//                 value: 'My Account',
+//                 child: Text('My Account'),
+//               ),
+//               PopupMenuItem<String>(
+//                 value: 'My Projects',
+//                 child: Text('My Projects'),
+//               ),
+//               PopupMenuItem<String>(
+//                 value: 'Past Projects',
+//                 child: Text('Past Projects'),
+//               ),
+//             ],
+//             icon: Icon(Icons.menu),
+//           ),
+//         ],
+//       ),
+//       body: isLoading
+//           ? Center(child: CircularProgressIndicator())
+//           : Column(
+//               children: [
+//                 Expanded(
+//                   child: ListView.builder(
+//                     itemCount: vendorDataList.length,
+//                     itemBuilder: (context, index) {
+//                       final data = vendorDataList[index];
+//                       return Card(
+//                         margin: EdgeInsets.all(8.0),
+//                         child: ListTile(
+//                           title: Text(
+//                               'Application No: ${data['applicationNo']}',
+//                               style: TextStyle(fontWeight: FontWeight.bold)),
+//                           subtitle: Column(
+//                             crossAxisAlignment: CrossAxisAlignment.start,
+//                             children: [
+//                               _buildDetailRow(
+//                                   'Customer Name', data['customerName']),
+//                               _buildDetailRow('City', data['city']),
+//                               _buildDetailRow('District', data['district']),
+//                               _buildDetailRow('Zone', data['zone']),
+//                             ],
+//                           ),
+//                           onTap: () => _showDescriptionDialog(context, data),
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ),
+//                 Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: Column(
+//                     children: [
+//                       ElevatedButton(
+//                         onPressed: () {
+//                           print("Explore Projects clicked");
+//                         },
+//                         child: Text('Explore Projects'),
+//                       ),
+//                       SizedBox(height: 10),
+//                       ElevatedButton(
+//                         onPressed: () {
+//                           Navigator.push(
+//                             context,
+//                             MaterialPageRoute(
+//                                 builder: (context) => PaymentPage()),
+//                           );
+//                         },
+//                         child: Text('Payment Page'),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//     );
+//   }
+// }
+
+// void main() {
+//   runApp(MaterialApp(
+//     home: MapVendorPage(),
+//     //home: MapVendorPage(mapVendorId: '', accessToken: '',),
+//   ));
+// }
+
+
+
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'payment.dart';
-import 'package:intl/intl.dart'; // Import this at the top
+import 'package:intl/intl.dart';
 
 class MapVendorPage extends StatefulWidget {
-
-  final String mapVendorId;
-  final String accessToken;
-
-  // final String mapVendorId = "VM012"; // Hardcoded for independent execution
-  // final String accessToken ="your_access_token"; // Replace with actual token if needed
-
-
-  const MapVendorPage({Key? key, required this.mapVendorId, required this.accessToken}) : super(key: key);
-
+  const MapVendorPage({Key? key}) : super(key: key);
 
   @override
   _MapVendorPageState createState() => _MapVendorPageState();
@@ -505,8 +537,9 @@ class MapVendorPage extends StatefulWidget {
 class _MapVendorPageState extends State<MapVendorPage> {
   List<dynamic> vendorDataList = [];
   bool isLoading = true;
-  //final String mapVendorId = "VM012"; // Hardcoded for independent execution
-  //final String accessToken ="your_access_token"; // Replace with actual token if needed
+  final String mapVendorId = "VM012"; // Hardcoded for independent execution
+  final String accessToken = "your_access_token"; // Replace with actual token
+  String selectedStatus = ''; // Holds the selected filter
 
   @override
   void initState() {
@@ -514,17 +547,19 @@ class _MapVendorPageState extends State<MapVendorPage> {
     fetchVendorData();
   }
 
-  Future<void> fetchVendorData() async {
-    final url = Uri.parse('http://localhost:8081/getProjectById/${widget.mapVendorId}');
-    //final url = Uri.parse('http://localhost:8081/getProjectById/$mapVendorId');
+  Future<void> fetchVendorData({String? completionStatus}) async {
+    String baseUrl = 'http://localhost:8081/project-data/status';
+    Uri url = completionStatus != null && completionStatus.isNotEmpty
+        ? Uri.parse('$baseUrl?completionStatus=$completionStatus')
+        : Uri.parse(baseUrl);
+
     print("Fetching data from: $url");
 
     try {
       final response = await http.get(
-        url,  
+        url,
         headers: {
-          'Authorization': 'Bearer ${widget.accessToken}',
-          //'Authorization': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json',
         },
       );
@@ -539,8 +574,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
           isLoading = false;
         });
       } else {
-        print(
-            "Error: Failed to load vendor data. Status Code: ${response.statusCode}");
+        print("Error: Failed to load vendor data. Status Code: ${response.statusCode}");
         setState(() {
           isLoading = false;
         });
@@ -553,16 +587,28 @@ class _MapVendorPageState extends State<MapVendorPage> {
     }
   }
 
+  Color getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return Colors.green;
+      case 'cancelled':
+        return Colors.red;
+      case 'pending':
+        return Colors.grey;
+      default:
+        return Colors.black;
+    }
+  }
+
   String formatDate(String? dateString) {
     if (dateString == null || dateString.isEmpty) {
       return 'N/A';
     }
     try {
       DateTime parsedDate = DateTime.parse(dateString);
-      return DateFormat('yyyy-MM-dd HH:mm:ss')
-          .format(parsedDate); // Adjust format as needed
+      return DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedDate);
     } catch (e) {
-      print("Error parsing date: $e"); 
+      print("Error parsing date: $e");
       return 'Invalid Date';
     }
   }
@@ -579,8 +625,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
                 _buildDetailRow('Application No', data['applicationNo']),
                 _buildDetailRow('Customer Name', data['customerName']),
                 _buildDetailRow('Customer Address', data['customerAddress']),
-                _buildDetailRow('Customer Telephone',
-                    data['customerTelephone']), // Fixed key
+                _buildDetailRow('Customer Telephone', data['customerTelephone']),
                 _buildDetailRow('City', data['city']),
                 _buildDetailRow('District', data['district']),
                 _buildDetailRow('Zone', data['zone']),
@@ -617,36 +662,37 @@ class _MapVendorPageState extends State<MapVendorPage> {
       appBar: AppBar(
         title: Text('My Projects'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              print("Search button clicked");
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              setState(() {
+                selectedStatus = value;
+                isLoading = true;
+              });
+              fetchVendorData(completionStatus: value);
             },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: '',
+                child: Text('All Projects'),
+              ),
+              PopupMenuItem<String>(
+                value: 'Pending',
+                child: Text('Pending'),
+              ),
+              PopupMenuItem<String>(
+                value: 'Completed',
+                child: Text('Completed'),
+              ),
+              PopupMenuItem<String>(
+                value: 'Cancelled',
+                child: Text('Cancelled'),
+              ),
+            ],
+            icon: Icon(Icons.filter_list),
           ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: _logout,
-          ),
-          PopupMenuButton<String>(
-            onSelected: (String result) {
-              print("Selected: $result");
-              // Implement navigation logic based on selection
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: 'My Account',
-                child: Text('My Account'),
-              ),
-              PopupMenuItem<String>(
-                value: 'My Projects',
-                child: Text('My Projects'),
-              ),
-              PopupMenuItem<String>(
-                value: 'Past Projects',
-                child: Text('Past Projects'),
-              ),
-            ],
-            icon: Icon(Icons.menu),
           ),
         ],
       ),
@@ -659,20 +705,39 @@ class _MapVendorPageState extends State<MapVendorPage> {
                     itemCount: vendorDataList.length,
                     itemBuilder: (context, index) {
                       final data = vendorDataList[index];
+                      final status = data['completionStatus'] ?? 'Unknown';
+                      final statusColor = getStatusColor(status);
+
                       return Card(
                         margin: EdgeInsets.all(8.0),
                         child: ListTile(
                           title: Text(
-                              'Application No: ${data['applicationNo']}',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                            'Application No: ${data['applicationNo']}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildDetailRow(
-                                  'Customer Name', data['customerName']),
+                              _buildDetailRow('Customer Name', data['customerName']),
                               _buildDetailRow('City', data['city']),
                               _buildDetailRow('District', data['district']),
                               _buildDetailRow('Zone', data['zone']),
+                              Row(
+                                children: [
+                                  Text('Status: ', style: TextStyle(fontSize: 16)),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: statusColor,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      status,
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                           onTap: () => _showDescriptionDialog(context, data),
@@ -696,8 +761,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => PaymentPage()),
+                            MaterialPageRoute(builder: (context) => PaymentPage()),
                           );
                         },
                         child: Text('Payment Page'),
@@ -713,11 +777,6 @@ class _MapVendorPageState extends State<MapVendorPage> {
 
 void main() {
   runApp(MaterialApp(
-    //home: MapVendorPage(),
-    home: MapVendorPage(mapVendorId: '', accessToken: '',),
+    home: MapVendorPage(),
   ));
 }
-
-
-
-
