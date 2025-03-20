@@ -56,13 +56,13 @@ public class ProjectData {
     private String updatedBy;
 
 
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "APPLICATION_NO", referencedColumnName = "APPLICATION_NO", insertable = false, updatable = false),
-            @JoinColumn(name = "MAP_VENDOR_ID", referencedColumnName = "MAP_VENDOR_ID", insertable = false, updatable = false),
-            @JoinColumn(name = "MAP_NO", referencedColumnName = "MAP_NO", insertable = false, updatable = false)
-    })
-    private PaymentDetail paymentDetail;
+//    @ManyToOne
+//    @JoinColumns({
+//            @JoinColumn(name = "APPLICATION_NO", referencedColumnName = "APPLICATION_NO", insertable = false, updatable = false),
+//            @JoinColumn(name = "MAP_VENDOR_ID", referencedColumnName = "MAP_VENDOR_ID", insertable = false, updatable = false),
+//            @JoinColumn(name = "MAP_NO", referencedColumnName = "MAP_NO", insertable = false, updatable = false)
+//    })
+//    private PaymentDetail paymentDetail;
 
     public ProjectDataId getId() {
         return projectDataId;
@@ -152,13 +152,13 @@ public class ProjectData {
         this.zone = zone;
     }
 
-    public PaymentDetail getPaymentDetail() {
-        return paymentDetail;
-    }
-
-    public void setPaymentDetail(PaymentDetail paymentDetail) {
-        this.paymentDetail = paymentDetail;
-    }
+//    public PaymentDetail getPaymentDetail() {
+//        return paymentDetail;
+//    }
+//
+//    public void setPaymentDetail(PaymentDetail paymentDetail) {
+//        this.paymentDetail = paymentDetail;
+//    }
 
     public String getCompletionStatus() {
         return completionStatus;

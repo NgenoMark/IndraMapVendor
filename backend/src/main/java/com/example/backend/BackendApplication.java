@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 //@SpringBootApplication
 @SpringBootApplication(scanBasePackages = "com.example.backend")
-@EnableJpaRepositories(basePackages = "com.example.backend.api.repository")
+//@EnableJpaRepositories(basePackages = "com.example.backend.api.model.repositories")
 
 public class BackendApplication {
 

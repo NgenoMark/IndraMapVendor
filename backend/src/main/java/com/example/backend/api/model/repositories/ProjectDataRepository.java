@@ -22,8 +22,10 @@ public interface ProjectDataRepository extends JpaRepository<ProjectData, Projec
     //java.util.List<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(String applicationNo , String mapVendorId);
 
 
-    @Query("SELECT pd FROM ProjectData pd LEFT JOIN FETCH pd.paymentDetail WHERE pd.projectDataId.applicationNo = :applicationNo OR pd.projectDataId.mapNo = :mapNo")
-    java.util.List<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapNumber(@Param("applicationNo") String applicationNo, @Param("mapNo") String mapNo);
+//    @Query("SELECT pd FROM ProjectData pd LEFT JOIN FETCH pd.paymentDetail WHERE pd.projectDataId.applicationNo = :applicationNo OR pd.projectDataId.mapNo = :mapNo")
+//    java.util.List<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapNo(@Param("applicationNo") String applicationNo, @Param("mapNo") String mapNo);
+
+    java.util.List<ProjectData> findByProjectDataId_ApplicationNoOrProjectDataId_MapNo(@Param("applicationNo") String applicationNo, @Param("mapNo") String mapNo);
 
 
 

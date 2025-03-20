@@ -99,7 +99,7 @@ public class ProjectDataServiceImpl implements ProjectDataService {
     @Override
     public List<ProjectDataResponse> getProjectData(String applicationNoOrMapNo) {
         List<ProjectData> projectDataList = projectDataRepository
-                .findByProjectDataId_ApplicationNoOrProjectDataId_MapNumber(applicationNoOrMapNo, applicationNoOrMapNo);
+                .findByProjectDataId_ApplicationNoOrProjectDataId_MapNo(applicationNoOrMapNo, applicationNoOrMapNo);
 
         if (projectDataList.isEmpty()) {
             throw new ResourceNotFoundException("Project data not available for ID: " + applicationNoOrMapNo);
@@ -263,14 +263,14 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         response.setLastUpdated(projectData.getLastUpdated());
         response.setUpdatedBy(projectData.getUpdatedBy());
 
-        // 🔹 Include Payment Details
-        if (projectData.getPaymentDetail() != null) {
-            response.setAmount(projectData.getPaymentDetail().getAmount());
-            response.setPaymentDate(projectData.getPaymentDetail().getPaymentDate());
-        } else {
-            response.setAmount(BigDecimal.valueOf(0.0));
-            response.setPaymentDate(new Date());
-        }
+//        // 🔹 Include Payment Details
+//        if (projectData.getPaymentDetail() != null) {
+//            response.setAmount(projectData.getPaymentDetail().getAmount());
+//            response.setPaymentDate(projectData.getPaymentDetail().getPaymentDate());
+//        } else {
+//            response.setAmount(BigDecimal.valueOf(0.0));
+//            response.setPaymentDate(new Date());
+//        }
 
         return response;
     }

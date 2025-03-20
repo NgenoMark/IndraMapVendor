@@ -33,8 +33,8 @@ public class ProjectDataResponse {
 
     private String updatedBy;
 
-    private BigDecimal amount;
-    private Date paymentDate;
+//    private BigDecimal amount;
+//    private Date paymentDate;
     public Long getProjectId() {
         return projectId;
     }
@@ -147,21 +147,21 @@ public class ProjectDataResponse {
         this.message = message;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public Date getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
-    }
+//    public BigDecimal getAmount() {
+//        return amount;
+//    }
+//
+//    public void setAmount(BigDecimal amount) {
+//        this.amount = amount;
+//    }
+//
+//    public Date getPaymentDate() {
+//        return paymentDate;
+//    }
+//
+//    public void setPaymentDate(Date paymentDate) {
+//        this.paymentDate = paymentDate;
+//    }
 
     public String getCompletionStatus() {
         return completionStatus;
