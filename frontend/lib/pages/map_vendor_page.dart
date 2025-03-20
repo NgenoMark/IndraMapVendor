@@ -519,14 +519,13 @@
 // }
 
 
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'payment.dart';
 import 'package:intl/intl.dart';
 import 'project_details_page.dart';
-
+import 'dashboard.dart';
 
 class MapVendorPage extends StatefulWidget {
   const MapVendorPage({Key? key}) : super(key: key);
@@ -722,31 +721,32 @@ class _MapVendorPageState extends State<MapVendorPage> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          print("Explore Projects clicked");
-                        },
-                        child: Text('Explore Projects'),
-                      ),
-                      SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => PaymentPage()),
-                          );
-                        },
-                        child: Text('Payment Page'),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.blue,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.work),
+            label: 'My Projects',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'My Account',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+          }
+        },
+      ),
     );
   }
 }

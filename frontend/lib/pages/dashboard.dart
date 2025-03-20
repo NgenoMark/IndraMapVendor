@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'map_vendor.dart';
+import 'map_vendor_page.dart';
 
 class Dashboard extends StatelessWidget {
   @override
@@ -9,29 +9,21 @@ class Dashboard extends StatelessWidget {
         title: Text('Dashboard'),
         backgroundColor: Colors.blue,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Project Overview',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              children: [
-                _buildProjectCard('Total Projects', '10', Colors.blue),
-                _buildProjectCard('Completed', '6', Colors.green),
-                _buildProjectCard('Pending', '3', Colors.orange),
-                _buildProjectCard('Cancelled', '1', Colors.red),
-              ],
-            ),
-          ],
+      body: SingleChildScrollView( // Enables scrolling
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Project Overview',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              _buildProjectSummaryCard(), // Single card for project stats
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -64,28 +56,59 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildProjectCard(String title, String count, Color color) {
+  Widget _buildProjectSummaryCard() {
     return Card(
-      color: color,
+      color: Colors.blue.shade700,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              title,
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+              'Project Status',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
-            Text(
-              count,
-              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildProjectStatus('Total', '10', Colors.white),
+                _buildProjectStatus('Completed', '6', Colors.greenAccent),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildProjectStatus('Pending', '3', Colors.orangeAccent),
+                _buildProjectStatus('Cancelled', '1', Colors.redAccent),
+              ],
             ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildProjectStatus(String title, String count, Color color) {
+    return Column(
+      children: [
+        Text(
+          count,
+          style: TextStyle(color: color, fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          title,
+          style: TextStyle(color: Colors.white, fontSize: 14),
+        ),
+      ],
+    );
+  }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: Dashboard(),
+  ));
 }
