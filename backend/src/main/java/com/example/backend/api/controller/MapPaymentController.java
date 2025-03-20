@@ -4,12 +4,10 @@ package com.example.backend.api.controller;
 import com.example.backend.api.dto.MapPaymentResponse;
 import com.example.backend.api.service.MapPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/payment")
@@ -36,6 +34,14 @@ public class MapPaymentController {
             @RequestParam(required = false) Long idRecord) {
         return mapPaymentService.getPaymentsByAccountIdOrIdRecord(accountId, idRecord);
     }
+
+    @GetMapping("/numMap/{numMap}")
+    public Optional<List<MapPaymentResponse>> getPaymentsByNumMap(@PathVariable String numMap) {
+        Optional<List<MapPaymentResponse>> payments = mapPaymentService.getPaymentByNumMap(numMap);
+
+        return mapPaymentService.getPaymentByNumMap(numMap);
+    }
+
 
 
 }

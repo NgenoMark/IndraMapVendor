@@ -17,10 +17,7 @@ public interface MapPaymentRepository extends JpaRepository<MapPayment, MapPayme
 
     //Optional<List<MapPayment>> findByIdRecordOrAccountId( String idRecord, String accountId);
 
-
-
-
-
+    Optional<List<MapPayment>> findByNumMap(String numMap);
 
 
 }

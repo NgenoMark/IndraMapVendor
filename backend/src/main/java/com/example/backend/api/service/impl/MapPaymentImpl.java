@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -64,5 +65,26 @@ public class MapPaymentImpl implements MapPaymentService {
         return mapPaymentList.stream()
                 .map(MapPaymentResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<List<MapPaymentResponse>> getPaymentByNumMap(String numMap) {
+        Optional<List<MapPayment>> payments = mapPaymentRepository.findByNumMap(numMap);
+
+        // Convert entity to response DTO
+        return payments.map(list -> list.stream()
+                .map(MapPaymentResponse::new)
+                .collect(Collectors.toList()));
+    }
+
+    public MapPaymentResponse convertToResponse(MapPayment mapPayment) {
+        return new MapPaymentResponse(
+
+                mapPayment.getId(),
+                mapPayment.getNumMap(),
+                mapPayment.getImpTotRec(),
+                mapPayment.getEstPago()
+        );
+
     }
 }

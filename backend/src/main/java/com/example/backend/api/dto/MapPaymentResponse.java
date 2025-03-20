@@ -1,6 +1,7 @@
 package com.example.backend.api.dto;
 
 import com.example.backend.api.model.MapPayment;
+import com.example.backend.api.model.MapPaymentId;
 
 import java.util.Date;
 
@@ -28,6 +29,9 @@ public class MapPaymentResponse {
     private Double impPago;
     private Double impQuota;
     private Double remQuota;
+
+    public MapPaymentResponse(MapPaymentId id, String numMap, Double impTotRec, String estPago) {
+    }
 
     public String getEstPago() {
         return estPago;
