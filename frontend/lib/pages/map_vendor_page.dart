@@ -520,12 +520,13 @@
 
 
 
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'payment.dart';
 import 'package:intl/intl.dart';
+import 'project_details_page.dart';
+
 
 class MapVendorPage extends StatefulWidget {
   const MapVendorPage({Key? key}) : super(key: key);
@@ -613,37 +614,12 @@ class _MapVendorPageState extends State<MapVendorPage> {
     }
   }
 
-  void _showDescriptionDialog(BuildContext context, dynamic data) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Project Description'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                _buildDetailRow('Application No', data['applicationNo']),
-                _buildDetailRow('Customer Name', data['customerName']),
-                _buildDetailRow('Customer Address', data['customerAddress']),
-                _buildDetailRow('Customer Telephone', data['customerTelephone']),
-                _buildDetailRow('City', data['city']),
-                _buildDetailRow('District', data['district']),
-                _buildDetailRow('Zone', data['zone']),
-                _buildDetailRow('Map Vendor ID', data['mapVendorId']),
-                _buildDetailRow('Map No', data['mapNo']),
-                _buildDetailRow('Amount', data['amount'].toString()),
-                Text('Date Paid: ${formatDate(data['fActual'])}'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
+  void _navigateToProjectDetails(BuildContext context, dynamic data) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProjectDetailsPage(projectData: data),
+      ),
     );
   }
 
@@ -740,7 +716,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
                               ),
                             ],
                           ),
-                          onTap: () => _showDescriptionDialog(context, data),
+                          onTap: () => _navigateToProjectDetails(context, data),
                         ),
                       );
                     },
