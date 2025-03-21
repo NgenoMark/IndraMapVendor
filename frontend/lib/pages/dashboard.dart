@@ -74,6 +74,12 @@ class Dashboard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildProjectStatus('Total', '10', Colors.white),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
                 _buildProjectStatus('Completed', '6', Colors.greenAccent),
               ],
             ),
@@ -82,6 +88,11 @@ class Dashboard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildProjectStatus('Pending', '3', Colors.orangeAccent),
+              ],
+            ),SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
                 _buildProjectStatus('Cancelled', '1', Colors.redAccent),
               ],
             ),
