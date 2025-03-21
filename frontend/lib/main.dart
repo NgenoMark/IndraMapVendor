@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/dashboard.dart';
 import 'dart:async';
 import 'pages/login_page.dart'; // Import your login page
 
@@ -17,7 +18,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(), // Set SplashScreen as the first screen
+      //home: LoginPage(), // Set SplashScreen as the first screen
+      home: SplashScreen(), // Set SplashScreen as the first screen
+
     );
   }
 }
@@ -38,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // Change 3 to the duration you want
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => Dashboard()),
       );
     });
   }
