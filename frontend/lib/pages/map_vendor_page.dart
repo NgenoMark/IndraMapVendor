@@ -269,14 +269,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
@@ -291,11 +283,8 @@
 //   // final String mapVendorId = "VM012"; // Hardcoded for independent execution
 //   // final String accessToken ="your_access_token"; // Replace with actual token if needed
 
-
 //   //const MapVendorPage({Key? key, required this.mapVendorId, required this.accessToken}) : super(key: key);
 //   const MapVendorPage({Key? key}) : super(key: key);
-
-
 
 //   @override
 //   _MapVendorPageState createState() => _MapVendorPageState();
@@ -303,7 +292,7 @@
 
 // class _MapVendorPageState extends State<MapVendorPage> {
 //   List<dynamic> vendorDataList = [];
-  
+
 //   bool isLoading = true;
 //   final String mapVendorId = "VM012"; // Hardcoded for independent execution
 //   final String accessToken ="your_access_token"; // Replace with actual token if needed
@@ -321,7 +310,7 @@
 
 //     try {
 //       final response = await http.get(
-//         url,  
+//         url,
 //         headers: {
 //           //'Authorization': 'Bearer ${widget.accessToken}',
 //           'Authorization': 'Bearer $accessToken',
@@ -362,7 +351,7 @@
 //       return DateFormat('yyyy-MM-dd HH:mm:ss')
 //           .format(parsedDate); // Adjust format as needed
 //     } catch (e) {
-//       print("Error parsing date: $e"); 
+//       print("Error parsing date: $e");
 //       return 'Invalid Date';
 //     }
 //   }
@@ -535,7 +524,8 @@ class MapVendorPage extends StatefulWidget {
 }
 
 class _MapVendorPageState extends State<MapVendorPage> {
-  List<dynamic> vendorDataList = [];
+  List<dynamic> allProjectsList = []; // Store all fetched projects
+  List<dynamic> vendorDataList = []; // Displayed list after filtering
   bool isLoading = true;
   final String mapVendorId = "VM012"; // Hardcoded for independent execution
   final String accessToken = "your_access_token"; // Replace with actual token
@@ -547,12 +537,10 @@ class _MapVendorPageState extends State<MapVendorPage> {
     fetchVendorData();
   }
 
-  Future<void> fetchVendorData({String? completionStatus}) async {
-    String baseUrl = 'http://localhost:8081/project-data/status';
-    Uri url = completionStatus != null && completionStatus.isNotEmpty
-        ? Uri.parse('$baseUrl?completionStatus=$completionStatus')
-        : Uri.parse(baseUrl);
-
+  Future<void> fetchVendorData() async {
+    String baseUrl = 'http://localhost:8081/project-data/getProjectById/$mapVendorId';
+    
+    Uri url = Uri.parse(baseUrl);
     print("Fetching data from: $url");
 
     try {
@@ -569,8 +557,8 @@ class _MapVendorPageState extends State<MapVendorPage> {
         print("API Response: $decodedResponse");
 
         setState(() {
-          vendorDataList =
-              decodedResponse is List ? decodedResponse : [decodedResponse];
+          allProjectsList = decodedResponse is List ? decodedResponse : [decodedResponse];
+          vendorDataList = List.from(allProjectsList); // Initialize display list
           isLoading = false;
         });
       } else {
@@ -587,48 +575,17 @@ class _MapVendorPageState extends State<MapVendorPage> {
     }
   }
 
-  Color getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return Colors.green;
-      case 'cancelled':
-        return Colors.red;
-      case 'pending':
-        return Colors.grey;
-      default:
-        return Colors.black;
-    }
-  }
-
-  String formatDate(String? dateString) {
-    if (dateString == null || dateString.isEmpty) {
-      return 'N/A';
-    }
-    try {
-      DateTime parsedDate = DateTime.parse(dateString);
-      return DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedDate);
-    } catch (e) {
-      print("Error parsing date: $e");
-      return 'Invalid Date';
-    }
-  }
-
-  void _navigateToProjectDetails(BuildContext context, dynamic data) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProjectDetailsPage(projectData: data),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String? value) {
-    return Text('$label: ${value ?? 'N/A'}', style: TextStyle(fontSize: 16));
-  }
-
-  void _logout() {
-    print("User logged out");
-    // Implement logout functionality here
+  void filterProjectsByStatus(String status) {
+    setState(() {
+      selectedStatus = status;
+      if (status.isEmpty) {
+        vendorDataList = List.from(allProjectsList); // Reset to full list
+      } else {
+        vendorDataList = allProjectsList.where((project) =>
+            project['completionStatus']?.toLowerCase() == status.toLowerCase()
+        ).toList();
+      }
+    });
   }
 
   @override
@@ -639,11 +596,7 @@ class _MapVendorPageState extends State<MapVendorPage> {
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: (String value) {
-              setState(() {
-                selectedStatus = value;
-                isLoading = true;
-              });
-              fetchVendorData(completionStatus: value);
+              filterProjectsByStatus(value);
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
@@ -667,7 +620,9 @@ class _MapVendorPageState extends State<MapVendorPage> {
           ),
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: _logout,
+            onPressed: () {
+              print("User logged out");
+            },
           ),
         ],
       ),
@@ -693,10 +648,10 @@ class _MapVendorPageState extends State<MapVendorPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildDetailRow('Customer Name', data['customerName']),
-                              _buildDetailRow('City', data['city']),
-                              _buildDetailRow('District', data['district']),
-                              _buildDetailRow('Zone', data['zone']),
+                              Text('Customer Name: ${data['customerName'] ?? 'N/A'}'),
+                              Text('City: ${data['city'] ?? 'N/A'}'),
+                              Text('District: ${data['district'] ?? 'N/A'}'),
+                              Text('Zone: ${data['zone'] ?? 'N/A'}'),
                               Row(
                                 children: [
                                   Text('Status: ', style: TextStyle(fontSize: 16)),
@@ -708,14 +663,23 @@ class _MapVendorPageState extends State<MapVendorPage> {
                                     ),
                                     child: Text(
                                       status,
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                          onTap: () => _navigateToProjectDetails(context, data),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectDetailsPage(projectData: data),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
@@ -743,7 +707,8 @@ class _MapVendorPageState extends State<MapVendorPage> {
         ],
         onTap: (index) {
           if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Dashboard()));
           }
         },
       ),
@@ -751,8 +716,15 @@ class _MapVendorPageState extends State<MapVendorPage> {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: MapVendorPage(),
-  ));
+Color getStatusColor(String status) {
+  switch (status.toLowerCase()) {
+    case 'completed':
+      return Colors.green;
+    case 'cancelled':
+      return Colors.red;
+    case 'pending':
+      return Colors.grey;
+    default:
+      return Colors.black;
+  }
 }
