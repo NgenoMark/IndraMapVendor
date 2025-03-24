@@ -237,7 +237,6 @@
 // }
 
 
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -253,87 +252,302 @@ class MapVendorPage extends StatefulWidget {
 }
 
 class _MapVendorPageState extends State<MapVendorPage> {
-  int _currentIndex = 1; // Default to "My Projects"
-  List<dynamic> allProjectsList = [];
-  List<dynamic> vendorDataList = [];
-  bool isLoading = true;
-  final String mapVendorId = "VM012";
-  final String accessToken = "your_access_token";
-  String selectedStatus = '';
-  String searchQuery = '';
+  int _currentIndex = 1;
+  List<dynamic> _allProjects = [];
+  List<dynamic> _filteredProjects = [];
+  bool _isLoading = true;
+  bool _hasError = false;
+  final String _mapVendorId = "VM012";
+  final String _accessToken = "your_access_token";
+  String _selectedStatus = '';
+  String _searchQuery = '';
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
-    fetchVendorData();
+    _loadProjects();
   }
 
-  Future<void> fetchVendorData() async {
-    String baseUrl = 'http://localhost:8081/project-data/getProjectById/$mapVendorId';
-    Uri url = Uri.parse(baseUrl);
-    print("Fetching data from: $url");
-
+  Future<void> _loadProjects() async {
     try {
+      setState(() => _isLoading = true);
+      
       final response = await http.get(
-        url,
+        Uri.parse('http://localhost:8081/project-data/getProjectById/$_mapVendorId'),
         headers: {
-          'Authorization': 'Bearer $accessToken',
+          'Authorization': 'Bearer $_accessToken',
           'Content-Type': 'application/json',
         },
       );
 
       if (response.statusCode == 200) {
-        var decodedResponse = json.decode(response.body);
-        print("API Response: $decodedResponse");
-
+        final data = json.decode(response.body);
         setState(() {
-          allProjectsList = decodedResponse is List ? decodedResponse : [decodedResponse];
-          vendorDataList = List.from(allProjectsList);
-          isLoading = false;
+          _allProjects = data is List ? data : [data];
+          _filteredProjects = List.from(_allProjects);
+          _isLoading = false;
+          _hasError = false;
         });
       } else {
-        print("Error: Failed to load vendor data. Status Code: ${response.statusCode}");
-        setState(() {
-          isLoading = false;
-        });
+        throw Exception('Failed to load projects');
       }
     } catch (e) {
-      print("Error fetching data: $e");
       setState(() {
-        isLoading = false;
+        _isLoading = false;
+        _hasError = true;
       });
+      _showErrorSnackbar('Failed to load projects: $e');
     }
   }
 
-  void filterProjects() {
+  void _filterProjects() {
     setState(() {
-      vendorDataList = allProjectsList.where((project) {
-        bool matchesStatus = selectedStatus.isEmpty ||
-            project['completionStatus']?.toLowerCase() == selectedStatus.toLowerCase();
-        bool matchesSearch = searchQuery.isEmpty ||
-            project.values.any((value) => value.toString().toLowerCase().contains(searchQuery.toLowerCase()));
-        return matchesStatus && matchesSearch;
+      _filteredProjects = _allProjects.where((project) {
+        final statusMatch = _selectedStatus.isEmpty || 
+            (project['completionStatus']?.toString().toLowerCase() == _selectedStatus.toLowerCase());
+        final searchMatch = _searchQuery.isEmpty ||
+            project.values.any((value) => 
+                value.toString().toLowerCase().contains(_searchQuery.toLowerCase()));
+        return statusMatch && searchMatch;
       }).toList();
     });
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'Retry',
+          onPressed: _loadProjects,
+        ),
+      ),
+    );
+  }
 
-    if (index == 0) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
-      );
-    } else if (index == 2) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
+  Future<void> _navigateToProjectDetails(BuildContext context, dynamic projectData) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProjectDetailsPage(projectData: projectData),
+      ),
+    );
+
+    // This is the key part that ensures refresh when returning from edit
+    if (result == true) {
+      _refreshIndicatorKey.currentState?.show();
+      await _loadProjects();
     }
-    // For index 1 (My Projects), we're already here
+  }
+
+  void _onTabTapped(int index) {
+    if (_currentIndex == index) return;
+    
+    setState(() => _currentIndex = index);
+    if (index == 0) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Dashboard()));
+    } else if (index == 2) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProfilePage()));
+    }
+  }
+
+  Widget _buildProjectCard(dynamic project) {
+    final status = project['completionStatus']?.toString() ?? 'Unknown';
+    final statusColor = _getStatusColor(status);
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: InkWell(
+        onTap: () => _navigateToProjectDetails(context, project),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    project['applicationNo'] ?? 'N/A',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      status,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              _buildDetailRow('Customer:', project['customerName']),
+              _buildDetailRow('Location:', '${project['city']}, ${project['district']}'),
+              _buildDetailRow('Zone:', project['zone']),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[600],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value ?? 'Not available',
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Search projects...',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0),
+        ),
+        onChanged: (value) {
+          setState(() => _searchQuery = value);
+          _filterProjects();
+        },
+      ),
+    );
+  }
+
+  Widget _buildStatusFilter() {
+    const statuses = ['All', 'Pending', 'Completed', 'Cancelled'];
+    
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: statuses.map((status) {
+          final isSelected = (status == 'All' && _selectedStatus.isEmpty) || 
+              _selectedStatus.toLowerCase() == status.toLowerCase();
+          
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: ChoiceChip(
+              label: Text(status),
+              selected: isSelected,
+              onSelected: (_) {
+                setState(() {
+                  _selectedStatus = status == 'All' ? '' : status;
+                  _filterProjects();
+                });
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.inbox, size: 64, color: Colors.grey),
+          const SizedBox(height: 16),
+          Text(
+            _searchQuery.isEmpty && _selectedStatus.isEmpty
+                ? 'No projects available'
+                : 'No matching projects',
+            style: const TextStyle(fontSize: 18, color: Colors.grey),
+          ),
+          if (_searchQuery.isNotEmpty || _selectedStatus.isNotEmpty)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                  _selectedStatus = '';
+                  _filterProjects();
+                });
+              },
+              child: const Text('Clear filters'),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 64, color: Colors.red),
+          const SizedBox(height: 16),
+          const Text('Failed to load projects', style: TextStyle(fontSize: 18)),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _loadProjects,
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return const Center(child: CircularProgressIndicator());
+  }
+
+  Widget _buildProjectList() {
+    return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 16),
+      itemCount: _filteredProjects.length,
+      itemBuilder: (context, index) => _buildProjectCard(_filteredProjects[index]),
+    );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'completed': return Colors.green.shade600;
+      case 'cancelled': return Colors.red.shade600;
+      case 'pending': return Colors.orange.shade600;
+      default: return Colors.grey.shade600;
+    }
   }
 
   @override
@@ -341,168 +555,41 @@ class _MapVendorPageState extends State<MapVendorPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Projects'),
-      ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          onChanged: (value) {
-                            setState(() {
-                              searchQuery = value;
-                              filterProjects();
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Search projects...',
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      PopupMenuButton<String>(
-                        onSelected: (String value) {
-                          setState(() {
-                            selectedStatus = value;
-                            filterProjects();
-                          });
-                        },
-                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                          const PopupMenuItem<String>(value: '', child: Text('All Projects')),
-                          const PopupMenuItem<String>(value: 'Pending', child: Text('Pending')),
-                          const PopupMenuItem<String>(value: 'Completed', child: Text('Completed')),
-                          const PopupMenuItem<String>(value: 'Cancelled', child: Text('Cancelled')),
-                        ],
-                        icon: const Icon(Icons.filter_list),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: vendorDataList.length,
-                    itemBuilder: (context, index) {
-                      final data = vendorDataList[index];
-                      final status = data['completionStatus'] ?? 'Unknown';
-                      final statusColor = getStatusColor(status);
-
-                      return Card(
-                        margin: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Application No:', style: TextStyle(fontWeight: FontWeight.bold)),
-                              Text(data['applicationNo'] ?? 'N/A', textAlign: TextAlign.right),
-                            ],
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Customer Name:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Text(data['customerName'] ?? 'N/A', textAlign: TextAlign.right),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('City:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Text(data['city'] ?? 'N/A', textAlign: TextAlign.right),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('District:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Text(data['district'] ?? 'N/A', textAlign: TextAlign.right),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Zone:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Text(data['zone'] ?? 'N/A', textAlign: TextAlign.right),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Status:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: statusColor,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      status,
-                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                            // In MapVendorPage's ListView.builder:
-                        onTap: () async {
-                      final result = await Navigator.push(
-                    context,
-                  MaterialPageRoute(
-                      builder: (context) => ProjectDetailsPage(projectData: data),
-                  ),
-                );
-              if (result == true) {
-            fetchVendorData(); // Refresh the data
-          }
-         },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.blue,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.work),
-            label: 'My Projects',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'My Account',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => _refreshIndicatorKey.currentState?.show(),
           ),
         ],
       ),
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _loadProjects,
+        child: _isLoading
+            ? _buildLoadingState()
+            : _hasError
+                ? _buildErrorState()
+                : _filteredProjects.isEmpty
+                    ? _buildEmptyState()
+                    : Column(
+                        children: [
+                          _buildSearchField(),
+                          _buildStatusFilter(),
+                          Expanded(child: _buildProjectList()),
+                        ],
+                      ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onTabTapped,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Projects'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
     );
-  }
-}
-
-Color getStatusColor(String status) {
-  switch (status.toLowerCase()) {
-    case 'completed': return Colors.green.shade600;
-    case 'cancelled': return Colors.red.shade700;
-    case 'pending': return Colors.grey.shade800;
-    default: return Colors.black;
   }
 }
