@@ -1,5 +1,13 @@
 package com.example.backend.api.dto;
 
+import com.example.backend.api.model.MapMaterial;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class MapMaterialResponse {
 
     private Long idMaterials;
@@ -82,17 +90,17 @@ public class MapMaterialResponse {
         this.material = material;
     }
 
+        public MapMaterialResponse(MapMaterial mapMaterial) {
+            System.out.println("Mapping material: " + mapMaterial.getMaterial());
+            this.idMaterials = mapMaterial.getIdMaterials();
+            this.usuario = mapMaterial.getUsuario();
+            this.fActual = mapMaterial.getfActual();
+            this.programa = mapMaterial.getPrograma();
+            this.idMapWs = mapMaterial.getIdMapWs();
+            this.numExp = mapMaterial.getNumExp();
+            this.mapNumber = mapMaterial.getMapNumber();
+            this.material = mapMaterial.getMaterial();
+        }
 
-    public MapMaterialResponse() {
 
-        this.idMaterials = mapMaterial.getIdMaterials();
-        this.usuario = mapMaterial.getUsuario();
-        this.fActual = mapMaterial.getfActual();
-        this.programa = mapMaterial.getPrograma();
-        this.idMapWs = mapMaterial.getIdMapWs();
-        this.numExp = mapMaterial.getNumExp();
-        this.mapNumber = mapMaterial.getMapNumber();
-        this.material = mapMaterial.getMaterial();
-
-    }
 }

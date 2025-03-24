@@ -20,22 +20,32 @@ public class MapMaterialServiceImpl implements MapMaterialService {
     @Autowired
     private MapMaterialRepository mapMaterialRepository;
 
+//    @Override
+//    public Optional<List<MapMaterialResponse>> findMaterialsByMapNumber(String mapNumber) {
+//        Optional<List<MapMaterial>> materials = mapMaterialRepository.findByMapNumber(mapNumber);
+//
+//        return materials.map(list -> list.stream()
+//                .map(this::convertToResponse)
+//                .collect(Collectors.toList()));
+//    }
+
     @Override
     public Optional<List<MapMaterialResponse>> findMaterialsByMapNumber(String mapNumber) {
         Optional<List<MapMaterial>> materials = mapMaterialRepository.findByMapNumber(mapNumber);
 
+        System.out.println("Fetching map materials for mapNumber: " + mapNumber);
+        System.out.println("Materials Found: " + materials.isPresent());
+        materials.ifPresent(list -> list.forEach(m -> System.out.println("Material: " + m.getMaterial())));
+
         return materials.map(list -> list.stream()
-                .map(this::convertToResponse)
+                .map(MapMaterialResponse::new)
                 .collect(Collectors.toList()));
     }
 
+
+
     public MapMaterialResponse convertToResponse(MapMaterial mapMaterial) {
-        MapMaterialResponse response = new MapMaterialResponse();
-
-        response.setMapNumber(mapMaterial.getMapNumber());
-
-        return response;
-
+        return new  MapMaterialResponse(mapMaterial);
 
     }
 

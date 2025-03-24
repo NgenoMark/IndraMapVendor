@@ -20,7 +20,7 @@ public class MapMaterial  implements Serializable {
 
 
     @Id
-    @Column(name = "ID_MATERIALS", columnDefinition = "unknown")
+    @Column(name = "ID_MATERIALS")
     private Long idMaterials;
 
 
