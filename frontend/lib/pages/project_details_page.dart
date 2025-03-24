@@ -261,18 +261,34 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
     );
   }
 
-  Widget _buildDetailRow(String label, String? value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+Widget _buildDetailRow(String label, String? value) {
+  final isAssignedField = label == 'Assigned to';
+  final isNullValue = value == null || value.isEmpty;
+  
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+        if (isAssignedField && isNullValue)
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.red[100],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              'Not Assigned',
+              style: TextStyle(color: Colors.red[800]),
+            ),
+          )
+        else
           Text(value ?? 'N/A'),
-        ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
   String formatDate(String? date) {
     if (date == null) return 'N/A';
