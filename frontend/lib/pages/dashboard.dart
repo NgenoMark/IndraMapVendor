@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/map_vendor_page.dart';
+import 'package:frontend/pages/profile_page.dart';
+import 'map_vendor_page.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -9,6 +10,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  int _currentIndex = 0; // Default to "My Projects"
   int totalProjects = 0;
   int completedProjects = 0;
   int pendingProjects = 0;
@@ -44,6 +46,26 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+
+    void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    if (index == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MapVendorPage()),
+      );
+    } else if (index == 2) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+    }
+    // For index 1 (My Projects), we're already here
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +98,9 @@ class _DashboardState extends State<Dashboard> {
         backgroundColor: Colors.blue,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
-        items: [
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -90,14 +114,6 @@ class _DashboardState extends State<Dashboard> {
             label: 'My Account',
           ),
         ],
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MapVendorPage()),
-            );
-          }
-        },
       ),
     );
   }
