@@ -78,13 +78,6 @@ public class MapPaymentImpl implements MapPaymentService {
     }
 
     public MapPaymentResponse convertToResponse(MapPayment mapPayment) {
-        return new MapPaymentResponse(
-
-                mapPayment.getId(),
-                mapPayment.getNumMap(),
-                mapPayment.getImpTotRec(),
-                mapPayment.getEstPago()
-        );
-
+        return new MapPaymentResponse(mapPayment);
     }
 }
