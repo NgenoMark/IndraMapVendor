@@ -59,10 +59,11 @@ class _EditProjectPageState extends State<EditProjectPage> {
     );
 
     setState(() => _isSubmitting = false);
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Update successful!')));
-      Navigator.pop(context, true);
-    } else {
+// In EditProjectPage's _updateProject method:
+if (response.statusCode == 200) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Update successful!')));
+  Navigator.pop(context, true); // Return true to indicate success
+} else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Update failed! Try again.')));
     }
   }

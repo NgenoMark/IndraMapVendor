@@ -454,14 +454,18 @@ class _MapVendorPageState extends State<MapVendorPage> {
                               ),
                             ],
                           ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProjectDetailsPage(projectData: data),
-                              ),
-                            );
-                          },
+                            // In MapVendorPage's ListView.builder:
+                        onTap: () async {
+                      final result = await Navigator.push(
+                    context,
+                  MaterialPageRoute(
+                      builder: (context) => ProjectDetailsPage(projectData: data),
+                  ),
+                );
+              if (result == true) {
+            fetchVendorData(); // Refresh the data
+          }
+         },
                         ),
                       );
                     },

@@ -123,17 +123,23 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditProjectPage(projectData: data),
-                    ),
-                  );
-                },
-                child: Text('Edit Project'),
-              ),
+// In ProjectDetailsPage's _buildProjectDetailsTab method:
+ElevatedButton(
+  onPressed: () async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProjectPage(projectData: data),
+      ),
+    );
+    
+    if (result == true) {
+      // Refresh the project data if update was successful
+      Navigator.pop(context, true); // Pass the result back to MapVendorPage
+    }
+  },
+  child: Text('Edit Project'),
+),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
