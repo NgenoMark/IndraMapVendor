@@ -4,6 +4,7 @@ import com.example.backend.api.dto.ProjectDataRequest;
 import com.example.backend.api.dto.ProjectDataResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface  ProjectDataService {
     ProjectDataResponse saveProjectData (ProjectDataRequest projectDataRequest)
@@ -23,6 +24,8 @@ public interface  ProjectDataService {
     //ProjectDataResponse deleteProjectData(String applicationNumber);
 
     List<ProjectDataResponse> getAllProjectData();
+
+    Optional<ProjectDataResponse> updateProjectData (ProjectDataRequest projectDataRequest);
 
 
     List<ProjectDataResponse> getProjectDataByCompletionStatus(String completionStatus);

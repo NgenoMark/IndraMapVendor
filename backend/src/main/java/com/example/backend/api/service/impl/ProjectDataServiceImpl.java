@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,6 +51,13 @@ public class ProjectDataServiceImpl implements ProjectDataService {
             response.setCity(projectDataRequest.getCity());
             response.setDistrict(projectDataRequest.getDistrict());
             response.setZone(projectDataRequest.getZone());
+            response.setCompletionStatus(projectDataRequest.getCompletionStatus());
+            response.setSurveyStatus(projectDataRequest.getSurveyStatus());
+            response.setAssignedToId(projectDataRequest.getAssignedToId());
+            response.setStartDate(projectDataRequest.getStartDate());
+            response.setEndDate(projectDataRequest.getEndDate());
+            response.setLastUpdated(projectDataRequest.getLastUpdated());
+            response.setUpdatedBy(projectDataRequest.getUpdatedBy());
             response.setMessage("Data already exists");
             return response;
         }
@@ -63,10 +72,19 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         projectData.setCity(projectDataRequest.getCity());
         projectData.setDistrict(projectDataRequest.getDistrict());
         projectData.setZone(projectDataRequest.getZone());
+        projectData.setAssignedToId(projectDataRequest.getAssignedToId());
+        projectData.setStartDate(projectDataRequest.getStartDate());
+        projectData.setEndDate(projectDataRequest.getEndDate());
+        projectData.setLastUpdated(projectDataRequest.getLastUpdated());
+        projectData.setUpdatedBy(projectDataRequest.getUpdatedBy());
 
         // Set factual and usuario fields with defaults if null
         projectData.setfActual(projectDataRequest.getfActual() != null ? projectDataRequest.getfActual() : new Date());
         projectData.setUsuario(projectDataRequest.getUsuario() != null ? projectDataRequest.getUsuario() : "DEFAULT_USER");
+        projectData.setCompletionStatus(projectDataRequest.getCompletionStatus() != null ? projectDataRequest.getCompletionStatus() : "Pending");
+        projectData.setSurveyStatus(projectDataRequest.getSurveyStatus() != null ? projectDataRequest.getSurveyStatus() : "Pending");
+
+
 
         // Save to database
         projectData = projectDataRepository.save(projectData);
@@ -136,12 +154,13 @@ public class ProjectDataServiceImpl implements ProjectDataService {
     public List<ProjectDataResponse> getProjectDataById(String mapVendorId) {
         List<ProjectData> projectDataList = projectDataRepository.findByProjectDataId_MapVendorId(mapVendorId);
         if (projectDataList.isEmpty()) {
-            throw new RuntimeException("Project Data not found.");
+            throw new ResourceNotFoundException("Project Data not found for Vendor ID: " + mapVendorId);
         }
         return projectDataList.stream()
                 .map(projectData -> convertToResponse(projectData, "Data retrieved successfully"))
                 .collect(Collectors.toList());
     }
+
 
 
     // 🔹 Retrieve All Project Data
@@ -152,6 +171,48 @@ public class ProjectDataServiceImpl implements ProjectDataService {
                 .map(data -> convertToResponse(data, "Data retrieved successfully"))
                 .collect(Collectors.toList());
     }
+
+
+//    @Override
+//    public Optional<ProjectDataResponse> updateProjectData(ProjectDataRequest projectDataRequest) {
+//        ProjectData existingProjectData = projectDataRepository.updateByMapNumber(projectDataRequest.getMapNo())
+//                .orElseThrow(() -> new RuntimeException("Project data not found"));
+//
+//        existingProjectData.setCustomerName(projectDataRequest.getCustomerName());
+//        existingProjectData.setCustomerAddress(projectDataRequest.getCustomerAddress());
+//        existingProjectData.setCustomerTelephone(projectDataRequest.getCustomerTelephone());
+//        existingProjectData.setCity(projectDataRequest.getCity());
+//        existingProjectData.setDistrict(projectDataRequest.getDistrict());
+//        existingProjectData.setZone(projectDataRequest.getZone());
+//        existingProjectData.setCompletionStatus(projectDataRequest.getCompletionStatus());
+//        existingProjectData.setSurveyStatus(projectDataRequest.getSurveyStatus());
+//
+//        // Save updated data
+//        existingProjectData = projectDataRepository.save(existingProjectData);
+//
+//        return Optional.of(convertToResponse(existingProjectData, "Project updated successfully"));
+//    }
+
+    @Override
+    public Optional<ProjectDataResponse> updateProjectData(ProjectDataRequest projectDataRequest) {
+        return projectDataRepository.findByProjectDataId_MapNo(projectDataRequest.getMapNo())
+                .map(existingProjectData -> {
+                    existingProjectData.setCustomerName(projectDataRequest.getCustomerName());
+                    existingProjectData.setCustomerAddress(projectDataRequest.getCustomerAddress());
+                    existingProjectData.setCustomerTelephone(projectDataRequest.getCustomerTelephone());
+                    existingProjectData.setCity(projectDataRequest.getCity());
+                    existingProjectData.setDistrict(projectDataRequest.getDistrict());
+                    existingProjectData.setZone(projectDataRequest.getZone());
+                    existingProjectData.setCompletionStatus(projectDataRequest.getCompletionStatus());
+                    existingProjectData.setSurveyStatus(projectDataRequest.getSurveyStatus());
+
+                    // Save updated data
+                    ProjectData updatedProjectData = projectDataRepository.save(existingProjectData);
+
+                    return convertToResponse(updatedProjectData, "Project updated successfully");
+                });
+    }
+
 
 
     @Override
@@ -254,7 +315,6 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         response.setCity(projectData.getCity());
         response.setDistrict(projectData.getDistrict());
         response.setZone(projectData.getZone());
-        response.setMessage(message);
         response.setCompletionStatus(projectData.getCompletionStatus());
         response.setSurveyStatus(projectData.getSurveyStatus());
         response.setAssignedToId(projectData.getAssignedToId());
@@ -262,6 +322,8 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         response.setEndDate(projectData.getEndDate());
         response.setLastUpdated(projectData.getLastUpdated());
         response.setUpdatedBy(projectData.getUpdatedBy());
+        response.setMessage(message);
+
 
 //        // 🔹 Include Payment Details
 //        if (projectData.getPaymentDetail() != null) {

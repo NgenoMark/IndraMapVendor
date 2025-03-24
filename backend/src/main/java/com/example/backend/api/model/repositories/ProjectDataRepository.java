@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.awt.*;
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface ProjectDataRepository extends JpaRepository<ProjectData, ProjectDataId> {
@@ -36,6 +37,8 @@ public interface ProjectDataRepository extends JpaRepository<ProjectData, Projec
     //Optional<ProjectData> findByProjectDataId_MapVendorId(String mapVendorId);
 
     java.util.List<ProjectData> findByCompletionStatus(String completionStatus);
+
+    Optional<ProjectData> findByProjectDataId_MapNo(String mapNo);
 
 }
 

@@ -5,11 +5,13 @@ import com.example.backend.api.dto.ProjectDataResponse;
 import com.example.backend.api.model.ProjectData;
 import com.example.backend.api.service.ProjectDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -85,6 +87,17 @@ public class ProjectDataController {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Optional<ProjectDataResponse>> updateProject(@RequestBody ProjectDataRequest projectDataRequest) {
+        Optional<ProjectDataResponse> updatedProject = projectDataService.updateProjectData(projectDataRequest);
+
+        if (updatedProject.isPresent()) {
+            return ResponseEntity.ok(updatedProject);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Optional.empty());
+        }
     }
 
 }
