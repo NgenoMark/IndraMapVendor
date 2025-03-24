@@ -14,6 +14,8 @@ public interface MapVendorSurveyorService {
 
     List<MapVendorSurveyorResponse> findBySurveyorId ( String surveyorId);
 
+    List<MapVendorSurveyorResponse> findSurveyorByMapVendorId( String mapVendorId);
+
     MapVendorSurveyorResponse updateSurveyor ( MapVendorSurveyorRequest surveyorRequest);
 
     void deleteSurveyor ( String surveyorId , String employeeNumber);

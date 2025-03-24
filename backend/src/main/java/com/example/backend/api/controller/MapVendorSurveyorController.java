@@ -40,12 +40,21 @@ public class MapVendorSurveyorController {
         return mapVendorSurveyorService.findBySurveyorId(surveyorId);
     }
 
+    @GetMapping("/selectSurveyor")
+    public ResponseEntity<List<MapVendorSurveyorResponse>> getSurveyorsByVendor(
+            @RequestParam String mapVendorId) {
+        List<MapVendorSurveyorResponse> surveyors = mapVendorSurveyorService.findSurveyorByMapVendorId(mapVendorId);
+        return ResponseEntity.ok(surveyors);
+    }
+
+
     @PutMapping("/updateSurveyor")
     public MapVendorSurveyorResponse updateSurveyor(@RequestBody MapVendorSurveyorRequest request) throws Exception {
         return mapVendorSurveyorService.updateSurveyor(request);
     }
-//
-//
+
+
+
 //    @DeleteMapping("/deleteSurveyor/{surveyorId}")
 //    public ResponseEntity<MapVendorSurveyorResponse> deleteSurveyor(@PathVariable String surveyorId,
 //                                                                    @PathVariable String employeeNumber) {

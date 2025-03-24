@@ -156,6 +156,14 @@ public class MapVendorSurveyorImpl implements MapVendorSurveyorService {
     }
 
     @Override
+    public List<MapVendorSurveyorResponse> findSurveyorByMapVendorId( String mapVendorId) {
+        return mapVendorSurveyorRepository.findByMapVendorId(mapVendorId).
+                stream().
+                map(MapVendorSurveyorResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public MapVendorSurveyorResponse updateSurveyor(MapVendorSurveyorRequest mapVendorSurveyorRequest) {
         MapVendorSurveyorId mapVendorSurveyorId = new MapVendorSurveyorId();
         mapVendorSurveyorId.setSurveyorId(mapVendorSurveyorRequest.getSurveyorId());

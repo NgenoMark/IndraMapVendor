@@ -12,4 +12,6 @@ public interface MapVendorSurveyorRepository extends JpaRepository<MapVendorSurv
     List<MapVendorSurveyor> findAll();
 
     List<MapVendorSurveyor> findByIdSurveyorId(String surveyorId);
+
+    List<MapVendorSurveyor> findByMapVendorId( String mapVendorId);
 }
