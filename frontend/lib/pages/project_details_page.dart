@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'edit_project_page.dart';
+import 'assign_surveyor_page.dart';
 
 class ProjectDetailsPage extends StatefulWidget {
   final dynamic projectData;
 
-  const ProjectDetailsPage({Key? key, required this.projectData}) : super(key: key);
+  const ProjectDetailsPage({Key? key, required this.projectData})
+      : super(key: key);
 
   @override
   _ProjectDetailsPageState createState() => _ProjectDetailsPageState();
 }
 
-class _ProjectDetailsPageState extends State<ProjectDetailsPage> with SingleTickerProviderStateMixin {
+class _ProjectDetailsPageState extends State<ProjectDetailsPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   List<dynamic>? surveyData;
@@ -35,7 +39,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> with SingleTick
   }
 
   void fetchSurveyData() async {
-    final url = Uri.parse('http://localhost:8081/survey/searchSurvey/MAPXYZ678901');
+    final url =
+        Uri.parse('http://localhost:8081/survey/searchSurvey/MAPXYZ678901');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -112,7 +117,40 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> with SingleTick
     return SingleChildScrollView(
       padding: EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Buttons at the top
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProjectPage(projectData: data),
+                    ),
+                  );
+                },
+                child: Text('Edit Project'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          AssignSurveyorPage(projectData: data),
+                    ),
+                  );
+                },
+                child: Text('Assign Surveyor'),
+              ),
+            ],
+          ),
+          SizedBox(height: 20.0), // Add spacing
+
+          // Project details sections
           _buildDetailCard('Project Details', [
             _buildDetailRow('Application No', data['applicationNo']),
             _buildDetailRow('Map Vendor ID', data['mapVendorId']),
@@ -157,7 +195,6 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> with SingleTick
             _buildDetailRow('Phase Type', survey['tipFase']),
             _buildDetailRow('Last Altered', formatDate(survey['fActual'])),
             _buildDetailRow('Survey Id', survey['idSurveyData'].toString()),
-            _buildDetailRow('Remarks', survey['remarks']),
           ]),
           _buildMaterialsUsedSection(), // Materials inside survey tab
         ],
@@ -196,12 +233,14 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> with SingleTick
       return Center(child: Text('No material data available.'));
     }
 
-    return _buildDetailCard('Materials Used', materialData!.map((material) {
-      return _buildDetailRow(
-        '${material['material']}',
-        '',
-      );
-    }).toList());
+    return _buildDetailCard(
+        'Materials Used',
+        materialData!.map((material) {
+          return _buildDetailRow(
+            '${material['material']}',
+            '',
+          );
+        }).toList());
   }
 
   Widget _buildDetailCard(String title, List<Widget> children) {
@@ -212,7 +251,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> with SingleTick
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(title,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             ...children,
           ],
