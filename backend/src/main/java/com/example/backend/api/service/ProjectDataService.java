@@ -3,6 +3,7 @@ package com.example.backend.api.service;
 import com.example.backend.api.dto.ProjectDataRequest;
 import com.example.backend.api.dto.ProjectDataResponse;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,5 +30,8 @@ public interface  ProjectDataService {
 
 
     List<ProjectDataResponse> getProjectDataByCompletionStatus(String completionStatus);
+
+    @Transactional
+    boolean assignSurveyorToMap(String applicationNo, String assignedToId);
 
 }

@@ -4,10 +4,12 @@ import com.example.backend.api.dto.ProjectDataResponse;
 import com.example.backend.api.model.ProjectData;
 import com.example.backend.api.model.ProjectDataId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.*;
 import java.util.Optional;
@@ -39,6 +41,13 @@ public interface ProjectDataRepository extends JpaRepository<ProjectData, Projec
     java.util.List<ProjectData> findByCompletionStatus(String completionStatus);
 
     Optional<ProjectData> findByProjectDataId_MapNo(String mapNo);
+
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE ProjectData p SET p.assignedToId = :assignedToId WHERE p.projectDataId.applicationNo = :applicationNo")
+    int updateAssignedSurveyor(@Param("applicationNo") String applicationNo,
+                               @Param("assignedToId") String assignedToId);
 
 }
 

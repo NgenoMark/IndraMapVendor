@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -99,5 +100,23 @@ public class ProjectDataController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Optional.empty());
         }
     }
+
+
+    @PatchMapping("/{applicationNo}/assign-surveyor")
+    public ResponseEntity<String> assignSurveyor(
+            @PathVariable String applicationNo,
+            @RequestBody Map<String, String> request){
+
+        String assignedToId = request.get("assignedToId");
+        boolean updated = projectDataService.assignSurveyorToMap(applicationNo, assignedToId);
+
+        if(updated){
+            return ResponseEntity.ok("Surveyor assignment was successful");
+        }else{
+            return ResponseEntity.badRequest().body("Failed to assign surveyor.");
+        }
+
+    }
+
 
 }

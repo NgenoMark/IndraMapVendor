@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -225,14 +226,15 @@ public class ProjectDataServiceImpl implements ProjectDataService {
 //        return projects.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
-//    private ProjectDataResponse convertToResponse(ProjectData project) {
-//        return new ProjectDataResponse(
-//                project.getId(),
-//                project.getName(),
-//                project.getCompletionStatus(),
-//                project.getDescription()
-//        );
-   // }
+
+    @Override
+    @Transactional
+    public boolean assignSurveyorToMap(String applicationNo, String assignedToId){
+        int updatedRows = projectDataRepository.updateAssignedSurveyor(applicationNo, assignedToId);
+        return updatedRows > 0;
+    }
+
+
 
 
 
