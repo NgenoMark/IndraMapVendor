@@ -123,35 +123,41 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+// // In ProjectDetailsPage's _buildProjectDetailsTab method:
+// ElevatedButton(
+//   onPressed: () async {
+//     final result = await Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (context) => EditProjectPage(projectData: data),
+//       ),
+//     );
+    
+//     if (result == true) {
+//       // Refresh the project data if update was successful
+//       Navigator.pop(context, true); // Pass the result back to MapVendorPage
+//     }
+//   },
+//   child: Text('Edit Project'),
+// ),
+// In the button that opens AssignSurveyorPage in ProjectDetailsPage:
 // In ProjectDetailsPage's _buildProjectDetailsTab method:
 ElevatedButton(
   onPressed: () async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditProjectPage(projectData: data),
+        builder: (context) => AssignSurveyorPage(projectData: data),
       ),
     );
     
     if (result == true) {
-      // Refresh the project data if update was successful
-      Navigator.pop(context, true); // Pass the result back to MapVendorPage
+      // Return the refresh signal to MapVendorPage
+      Navigator.pop(context, true);
     }
   },
-  child: Text('Edit Project'),
+  child: Text('Assign Surveyor'),
 ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          AssignSurveyorPage(projectData: data),
-                    ),
-                  );
-                },
-                child: Text('Assign Surveyor'),
-              ),
             ],
           ),
           SizedBox(height: 20.0), // Add spacing
@@ -175,7 +181,7 @@ ElevatedButton(
           _buildDetailCard('Status Details', [
             _buildDetailRow('Completion Status', data['completionStatus']),
             _buildDetailRow('Survey Status', data['surveyStatus']),
-            _buildDetailRow('Assigned to', data['assignedToId']),
+            _buildDetailRow('Assigned to Surveyor : ', data['assignedToId']),
           ]),
         ],
       ),
@@ -268,7 +274,7 @@ ElevatedButton(
   }
 
 Widget _buildDetailRow(String label, String? value) {
-  final isAssignedField = label == 'Assigned to';
+  final isAssignedField = label == 'Assigned to Surveyor : ';
   final isNullValue = value == null || value.isEmpty;
   
   return Padding(
@@ -285,12 +291,31 @@ Widget _buildDetailRow(String label, String? value) {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
-              'Not Assigned',
-              style: TextStyle(color: Colors.red[800]),
+              'Not assigned',
+              style: TextStyle(
+                color: Colors.red[800],
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        else if (isNullValue)
+          Text(
+            'Not assigned',
+            style: TextStyle(
+              color: Colors.red, // Red color for null/empty values
+              fontStyle: FontStyle.italic,
+            ),
+          )
+        else if (isAssignedField)
+          Text(
+            value!,
+            style: TextStyle(
+              color: Colors.green[800], // Green for assigned surveyor
+              fontWeight: FontWeight.bold,
             ),
           )
         else
-          Text(value ?? 'N/A'),
+          Text(value!),
       ],
     ),
   );

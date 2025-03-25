@@ -327,20 +327,35 @@ class _MapVendorPageState extends State<MapVendorPage> {
     );
   }
 
-  Future<void> _navigateToProjectDetails(BuildContext context, dynamic projectData) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProjectDetailsPage(projectData: projectData),
-      ),
-    );
+  // Future<void> _navigateToProjectDetails(BuildContext context, dynamic projectData) async {
+  //   final result = await Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => ProjectDetailsPage(projectData: projectData),
+  //     ),
+  //   );
 
-    // This is the key part that ensures refresh when returning from edit
-    if (result == true) {
-      _refreshIndicatorKey.currentState?.show();
-      await _loadProjects();
-    }
+  //   // This is the key part that ensures refresh when returning from edit
+  //   if (result == true) {
+  //     _refreshIndicatorKey.currentState?.show();
+  //     await _loadProjects();
+  //   }
+  // }
+
+  // In MapVendorPage's _navigateToProjectDetails method:
+Future<void> _navigateToProjectDetails(BuildContext context, dynamic projectData) async {
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ProjectDetailsPage(projectData: projectData),
+    ),
+  );
+
+  if (result == true) {
+    // Refresh the project list
+    await _loadProjects();
   }
+}
 
   void _onTabTapped(int index) {
     if (_currentIndex == index) return;
