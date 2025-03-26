@@ -1,8 +1,10 @@
 package com.example.backend.api.service.impl;
 
+import com.example.backend.api.dto.SurveyDetailRequest;
 import com.example.backend.api.dto.SurveyDetailResponse;
 import com.example.backend.api.model.PaymentDetail;
 import com.example.backend.api.model.PaymentDetailId;
+import com.example.backend.api.model.SurveyDetail;
 import com.example.backend.api.model.repositories.PaymentDetailRepository;
 import com.example.backend.api.dto.PaymentDetailRequest;
 import com.example.backend.api.dto.PaymentDetailResponse;
@@ -95,6 +97,26 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
         return paymentDetailRepository.findAll().stream()
                 .map(PaymentDetailResponse::new)
                 .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public PaymentDetailResponse findPaymentDetails(PaymentDetailRequest request) {
+        // Fetch list, then get the first matching record
+        PaymentDetail paymentDetail = paymentDetailRepository.findById_ApplicationNo(request.getApplicationNo())
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        if (paymentDetail != null) {
+            return new PaymentDetailResponse(
+                    paymentDetail.getId().getApplicationNo(),
+                    paymentDetail.getId().getMapNo(),
+                    paymentDetail.getId().getMapVendorId()
+            );
+        }
+
+        return null; // Return null if not found
     }
 
 }

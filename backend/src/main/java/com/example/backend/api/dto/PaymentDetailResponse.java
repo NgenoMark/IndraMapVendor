@@ -105,5 +105,12 @@ public class PaymentDetailResponse {
         this.paymentDate = paymentDetail.getPaymentDate();
         this.paymentRef = paymentDetail.getPaymentRef();
     }
+
+
+    public PaymentDetailResponse(String applicationNo , String mapNo, String mapVendorId) {
+        this.applicationNo = applicationNo;
+        this.mapNo = mapNo;
+        this.mapVendorId = mapVendorId;
+    }
 }
 

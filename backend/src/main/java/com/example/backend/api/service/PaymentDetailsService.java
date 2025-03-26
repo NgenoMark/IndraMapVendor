@@ -1,9 +1,6 @@
 package com.example.backend.api.service;
 
-import com.example.backend.api.dto.PaymentDetailRequest;
-import com.example.backend.api.dto.PaymentDetailResponse;
-import com.example.backend.api.dto.ProjectDataRequest;
-import com.example.backend.api.dto.ProjectDataResponse;
+import com.example.backend.api.dto.*;
 
 import java.util.List;
 
@@ -14,5 +11,8 @@ public interface PaymentDetailsService {
     List<PaymentDetailResponse> getPaymentByApplicationNo(String applicationNo);
 
     List<PaymentDetailResponse> getAllPayments();
+
+    PaymentDetailResponse findPaymentDetails(PaymentDetailRequest request);
+
 
 }
