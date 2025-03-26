@@ -9,6 +9,7 @@ import com.example.backend.api.model.repositories.SurveyMaterialRepository;
 import com.example.backend.api.service.SurveyMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -24,22 +25,21 @@ public class SurveyMaterialImpl implements SurveyMaterialService {
         this.surveyMaterialRepository = surveyMaterialRepository;
     }
 
+    @Transactional
     @Override
-    public SurveyMaterialResponse saveSurveyMaterial(SurveyMaterialRequest surveyMaterialRequest){
+    public SurveyMaterialResponse saveSurveyMaterial(SurveyMaterialRequest surveyMaterialRequest) {
+
+        long seqMaterialId = surveyMaterialRepository.getNextSeqValue("SEQ_MATERIAL_ID");
 
         SurveyMaterialId surveyMaterialId = new SurveyMaterialId();
-        surveyMaterialId.setMaterialId(surveyMaterialRequest.getMaterialId());
-
-//        boolean exists = surveyMaterialRepository.existsById(surveyMaterialId);
-//        if(exists){
-//            return new SurveyMaterialResponse(surveyMaterialRepository.findById(surveyMaterialId).orElse(null));
-//        }
+        surveyMaterialId.setMaterialId((int) seqMaterialId);  // Cast long to int if needed
 
         SurveyMaterial surveyMaterial = new SurveyMaterial();
         surveyMaterial.setId(surveyMaterialId);
         surveyMaterial.setApplicationNumber(surveyMaterialRequest.getApplicationNumber());
         surveyMaterial.setVendorId(surveyMaterialRequest.getVendorId());
-        surveyMaterial.setMapNumber(surveyMaterialRequest.getMapNumber());       surveyMaterial.setPrograma(surveyMaterialRequest.getPrograma());
+        surveyMaterial.setMapNumber(surveyMaterialRequest.getMapNumber());
+        surveyMaterial.setPrograma(surveyMaterialRequest.getPrograma());
         surveyMaterial.setMaterial(surveyMaterialRequest.getMaterial());
 
         surveyMaterial.setfActual(surveyMaterialRequest.getfActual() != null ? surveyMaterialRequest.getfActual() : new Date());
@@ -48,7 +48,6 @@ public class SurveyMaterialImpl implements SurveyMaterialService {
         surveyMaterial = surveyMaterialRepository.save(surveyMaterial);
 
         return new SurveyMaterialResponse(surveyMaterial);
-
     }
 
     @Override
