@@ -23,6 +23,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
   List<dynamic>? paymentData;
   List<dynamic>? materialData;
 
+
   @override
   void initState() {
     super.initState();
@@ -39,8 +40,10 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
   }
 
   void fetchSurveyData() async {
-    final url =
-        Uri.parse('http://localhost:8081/survey/searchSurvey/MAPXYZ678901');
+    final applicationNo = widget.projectData['applicationNo'];
+
+    final url =    Uri.parse('http://localhost:8081/survey-detail/getByApplicationNo/$applicationNo');
+    //final url =Uri.parse('http://localhost:8081/survey/searchSurvey/MAPXYZ678901');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -56,7 +59,11 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
   }
 
   void fetchPaymentData() async {
-    final url = Uri.parse('http://localhost:8081/payment/numMap/MAPUPL001503');
+    final applicationNo = widget.projectData['applicationNo'];
+    final url = Uri.parse('http://localhost:8081/payment-detail/getPaymentByApplicationNo/$applicationNo');
+
+
+    //final url = Uri.parse('http://localhost:8081/payment/numMap/MAPUPL001503');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -72,7 +79,12 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
   }
 
   void fetchMaterialData() async {
-    final url = Uri.parse('http://localhost:8081/materials/mapNo/MAPXYZ678901');
+    final applicationNo = widget.projectData['applicationNo'];
+         final url = Uri.parse('http://localhost:8081/survey-material/getByApplicationNo/$applicationNo');
+
+
+
+    // final url = Uri.parse('http://localhost:8081/materials/mapNo/MAPXYZ678901');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -132,7 +144,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
 //         builder: (context) => EditProjectPage(projectData: data),
 //       ),
 //     );
-    
+
 //     if (result == true) {
 //       // Refresh the project data if update was successful
 //       Navigator.pop(context, true); // Pass the result back to MapVendorPage
@@ -142,22 +154,23 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
 // ),
 // In the button that opens AssignSurveyorPage in ProjectDetailsPage:
 // In ProjectDetailsPage's _buildProjectDetailsTab method:
-ElevatedButton(
-  onPressed: () async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AssignSurveyorPage(projectData: data),
-      ),
-    );
-    
-    if (result == true) {
-      // Return the refresh signal to MapVendorPage
-      Navigator.pop(context, true);
-    }
-  },
-  child: Text('Assign Surveyor'),
-),
+              ElevatedButton(
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          AssignSurveyorPage(projectData: data),
+                    ),
+                  );
+
+                  if (result == true) {
+                    // Return the refresh signal to MapVendorPage
+                    Navigator.pop(context, true);
+                  }
+                },
+                child: Text('Assign Surveyor'),
+              ),
             ],
           ),
           SizedBox(height: 20.0), // Add spacing
@@ -202,11 +215,13 @@ ElevatedButton(
       child: Column(
         children: [
           _buildDetailCard('Survey Details', [
+            _buildDetailRow('Survey Id', survey['surveyId'].toString()),
+            _buildDetailRow('Application Number', survey['applicationNumber']),
             _buildDetailRow('Map Number', survey['mapNumber']),
             _buildDetailRow('Map Vendor', survey['vendorId']),
-            _buildDetailRow('Phase Type', survey['tipFase']),
+            _buildDetailRow('Phase Type', survey['meterPhase']),
             _buildDetailRow('Last Altered', formatDate(survey['fActual'])),
-            _buildDetailRow('Survey Id', survey['idSurveyData'].toString()),
+            _buildDetailRow('Survey Status', survey['surveyStatus']),
           ]),
           _buildMaterialsUsedSection(), // Materials inside survey tab
         ],
@@ -226,34 +241,42 @@ ElevatedButton(
       child: Column(
         children: paymentData!.map((payment) {
           return _buildDetailCard('Payment Details', [
-            _buildDetailRow('Map Number', payment['numMap']),
-            _buildDetailRow('Map Vendor', payment['coMapVend']),
-            _buildDetailRow('Account Payer ID', payment['accountId'].toString()),
-            _buildDetailRow('Total Amount', payment['impTotRec'].toString()),
-            _buildDetailRow('Payment Date', formatDate(payment['fActual'])),
-            _buildDetailRow('Status', payment['estPago']),
+            _buildDetailRow('Application Number', payment['applicationNo']),
+            _buildDetailRow('Map Number', payment['mapNo']),
+            _buildDetailRow('Map Vendor', payment['mapVendorId']),
+            _buildDetailRow('Payent Reference', payment['paymentRef']),
+            _buildDetailRow('Total Amount', payment['amount'].toString()),
+            _buildDetailRow('Payment Date', formatDate(payment['paymentDate'])),
           ]);
         }).toList(),
       ),
     );
   }
 
-  Widget _buildMaterialsUsedSection() {
-    if (materialData == null) {
-      return Center(child: CircularProgressIndicator());
-    } else if (materialData!.isEmpty) {
+Widget _buildMaterialsUsedSection() {
+  if (materialData == null) {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  if (materialData is List) {
+    final materials = materialData as List;
+    if (materials.isEmpty) {
       return Center(child: Text('No material data available.'));
     }
 
     return _buildDetailCard(
-        'Materials Used',
-        materialData!.map((material) {
-          return _buildDetailRow(
-            '${material['material']}',
-            '',
-          );
-        }).toList());
+      'Materials Used',
+      materials.map((material) {
+        return _buildDetailRow(
+          material['material'] ?? 'Unknown Material',
+          null, // No value needed for second column
+        );
+      }).toList(),
+    );
   }
+
+  return Center(child: Text('Invalid material data format'));
+}
 
   Widget _buildDetailCard(String title, List<Widget> children) {
     return Card(
@@ -273,10 +296,13 @@ ElevatedButton(
     );
   }
 
-Widget _buildDetailRow(String label, String? value) {
+ Widget _buildDetailRow(String label, dynamic value) {
   final isAssignedField = label == 'Assigned to Surveyor : ';
-  final isNullValue = value == null || value.isEmpty;
-  
+  final isNullValue = value == null || value.toString().isEmpty;
+
+  // Convert value to string for display
+  final displayValue = value?.toString() ?? '';
+
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 4),
     child: Row(
@@ -302,20 +328,20 @@ Widget _buildDetailRow(String label, String? value) {
           Text(
             'Not assigned',
             style: TextStyle(
-              color: Colors.red, // Red color for null/empty values
+              color: Colors.red,
               fontStyle: FontStyle.italic,
             ),
           )
         else if (isAssignedField)
           Text(
-            value!,
+            displayValue,
             style: TextStyle(
-              color: Colors.green[800], // Green for assigned surveyor
+              color: Colors.green[800],
               fontWeight: FontWeight.bold,
             ),
           )
         else
-          Text(value!),
+          Text(displayValue),
       ],
     ),
   );
