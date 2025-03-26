@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'edit_project_page.dart';
 import 'assign_surveyor_page.dart';
+import 'add_material_page.dart';
 
 class ProjectDetailsPage extends StatefulWidget {
   final dynamic projectData;
@@ -23,7 +23,6 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
   List<dynamic>? paymentData;
   List<dynamic>? materialData;
 
-
   @override
   void initState() {
     super.initState();
@@ -42,7 +41,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
   void fetchSurveyData() async {
     final applicationNo = widget.projectData['applicationNo'];
 
-    final url =    Uri.parse('http://localhost:8081/survey-detail/getByApplicationNo/$applicationNo');
+    final url = Uri.parse(
+        'http://localhost:8081/survey-detail/getByApplicationNo/$applicationNo');
     //final url =Uri.parse('http://localhost:8081/survey/searchSurvey/MAPXYZ678901');
     try {
       final response = await http.get(url);
@@ -60,8 +60,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
 
   void fetchPaymentData() async {
     final applicationNo = widget.projectData['applicationNo'];
-    final url = Uri.parse('http://localhost:8081/payment-detail/getPaymentByApplicationNo/$applicationNo');
-
+    final url = Uri.parse(
+        'http://localhost:8081/payment-detail/getPaymentByApplicationNo/$applicationNo');
 
     //final url = Uri.parse('http://localhost:8081/payment/numMap/MAPUPL001503');
     try {
@@ -80,9 +80,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
 
   void fetchMaterialData() async {
     final applicationNo = widget.projectData['applicationNo'];
-         final url = Uri.parse('http://localhost:8081/survey-material/getByApplicationNo/$applicationNo');
-
-
+    final url = Uri.parse(
+        'http://localhost:8081/survey-material/getByApplicationNo/$applicationNo');
 
     // final url = Uri.parse('http://localhost:8081/materials/mapNo/MAPXYZ678901');
     try {
@@ -253,30 +252,51 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
     );
   }
 
-Widget _buildMaterialsUsedSection() {
-  if (materialData == null) {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  if (materialData is List) {
-    final materials = materialData as List;
-    if (materials.isEmpty) {
-      return Center(child: Text('No material data available.'));
+  Widget _buildMaterialsUsedSection() {
+    if (materialData == null) {
+      return Center(child: CircularProgressIndicator());
     }
 
-    return _buildDetailCard(
-      'Materials Used',
-      materials.map((material) {
-        return _buildDetailRow(
-          material['material'] ?? 'Unknown Material',
-          null, // No value needed for second column
-        );
-      }).toList(),
-    );
-  }
+    if (materialData is List) {
+      final materials = materialData as List;
+      return Column(
+        children: [
+          if (materials.isNotEmpty)
+            _buildDetailCard(
+              'Materials Used',
+              materials.map((material) {
+            return _buildDetailRow(' Material' ,
+              material['material'] ?? 'Unknown Material',
+               // Pass an empty string or null if _buildDetailRow requires two arguments
+            );
+              }).toList(),
+            ),
+          ElevatedButton(
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddMaterialPage(
+                    applicationNumber: widget.projectData['applicationNo'],
+                    mapNumber: widget.projectData['mapNo'],
+                    vendorId: widget.projectData['mapVendorId'],
+                  ),
+                ),
+              );
 
-  return Center(child: Text('Invalid material data format'));
-}
+              if (result == true) {
+                // Refresh material data if save was successful
+                fetchMaterialData();
+              }
+            },
+            child: Text('Add New Material'),
+          ),
+        ],
+      );
+    }
+
+    return Center(child: Text('Invalid material data format'));
+  }
 
   Widget _buildDetailCard(String title, List<Widget> children) {
     return Card(
@@ -296,56 +316,56 @@ Widget _buildMaterialsUsedSection() {
     );
   }
 
- Widget _buildDetailRow(String label, dynamic value) {
-  final isAssignedField = label == 'Assigned to Surveyor : ';
-  final isNullValue = value == null || value.toString().isEmpty;
+  Widget _buildDetailRow(String label, dynamic value) {
+    final isAssignedField = label == 'Assigned to Surveyor : ';
+    final isNullValue = value == null || value.toString().isEmpty;
 
-  // Convert value to string for display
-  final displayValue = value?.toString() ?? '';
+    // Convert value to string for display
+    final displayValue = value?.toString() ?? '';
 
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
-        if (isAssignedField && isNullValue)
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.red[100],
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          if (isAssignedField && isNullValue)
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.red[100],
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Not assigned',
+                style: TextStyle(
+                  color: Colors.red[800],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          else if (isNullValue)
+            Text(
               'Not assigned',
               style: TextStyle(
-                color: Colors.red[800],
+                color: Colors.red,
+                fontStyle: FontStyle.italic,
+              ),
+            )
+          else if (isAssignedField)
+            Text(
+              displayValue,
+              style: TextStyle(
+                color: Colors.green[800],
                 fontWeight: FontWeight.bold,
               ),
-            ),
-          )
-        else if (isNullValue)
-          Text(
-            'Not assigned',
-            style: TextStyle(
-              color: Colors.red,
-              fontStyle: FontStyle.italic,
-            ),
-          )
-        else if (isAssignedField)
-          Text(
-            displayValue,
-            style: TextStyle(
-              color: Colors.green[800],
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        else
-          Text(displayValue),
-      ],
-    ),
-  );
-}
+            )
+          else
+            Text(displayValue),
+        ],
+      ),
+    );
+  }
 
   String formatDate(String? date) {
     if (date == null) return 'N/A';
