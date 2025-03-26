@@ -50,13 +50,13 @@ public class SurveyDetailImpl implements SurveyDetailService {
         // If it doesn't exist, create and save new survey detail
         SurveyDetail surveyDetail = new SurveyDetail();
         surveyDetail.setId(surveyDetailId);
-        surveyDetail.setPrograma(surveyDetailRequest.getPrograma());
         surveyDetail.setSurveyId((int)seqSurveyId);
         surveyDetail.setMeterPhase(surveyDetailRequest.getMeterPhase());
         surveyDetail.setSurveyStatus(surveyDetailRequest.getSurveyStatus());
 
+        surveyDetail.setPrograma(surveyDetailRequest.getPrograma() != null ? surveyDetailRequest.getPrograma() : "MAP_API");
         surveyDetail.setfActual(surveyDetailRequest.getfActual() != null ? surveyDetailRequest.getfActual() : new Date());
-        surveyDetail.setUsuario(surveyDetailRequest.getUsuario() != null ? surveyDetailRequest.getUsuario() : "DEFAULT_USER");
+        surveyDetail.setUsuario(surveyDetailRequest.getVendorId() != null ? surveyDetailRequest.getVendorId() : "DEFAULT_USER");
 
 
         // Save the new survey detail to the database
@@ -74,4 +74,26 @@ public class SurveyDetailImpl implements SurveyDetailService {
                 .collect(Collectors.toList());
 
     }
+
+
+    @Override
+    public SurveyDetailResponse findSurveyDetails(SurveyDetailRequest request) {
+        // Fetch list, then get the first matching record
+        SurveyDetail surveyDetail = surveyDetailRepository.findById_ApplicationNumber(request.getApplicationNumber())
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        if (surveyDetail != null) {
+            return new SurveyDetailResponse(
+                    surveyDetail.getId().getApplicationNumber(),
+                    surveyDetail.getId().getMapNumber(),
+                    surveyDetail.getId().getVendorId()
+            );
+        }
+
+        return null; // Return null if not found
+    }
+
+
 }

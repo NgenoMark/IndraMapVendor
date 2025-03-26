@@ -40,4 +40,25 @@ public class SurveyDetailController {
     }
 
 
+    @PostMapping("/sendSurvey/1.0.1/")
+    public ResponseEntity<?> sendSurvey(@RequestBody SurveyDetailRequest request) {
+        try {
+            // Call service method with the full request object
+            SurveyDetailResponse response = surveyDetailService.findSurveyDetails(request);
+
+            if (response != null) {
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Survey details not found for application number: " + request.getApplicationNumber());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error retrieving survey details: " + e.getMessage());
+        }
+    }
+
+
+
+
 }

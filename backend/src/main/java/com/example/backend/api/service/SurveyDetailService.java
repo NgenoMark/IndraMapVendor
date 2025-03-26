@@ -9,10 +9,13 @@ import java.util.List;
 public interface SurveyDetailService {
 
 
-    SurveyDetailResponse  saveSurveyDetail(SurveyDetailRequest surveyDetailRequest)
-        throws  Exception;
+    SurveyDetailResponse saveSurveyDetail(SurveyDetailRequest surveyDetailRequest)
+            throws Exception;
 
 
     @Transactional
     List<SurveyDetailResponse> getByApplicationNumber(String applicationNumber);
+
+    SurveyDetailResponse findSurveyDetails(SurveyDetailRequest request);
+
 }

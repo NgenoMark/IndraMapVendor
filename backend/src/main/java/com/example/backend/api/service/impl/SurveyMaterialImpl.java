@@ -39,11 +39,12 @@ public class SurveyMaterialImpl implements SurveyMaterialService {
         surveyMaterial.setApplicationNumber(surveyMaterialRequest.getApplicationNumber());
         surveyMaterial.setVendorId(surveyMaterialRequest.getVendorId());
         surveyMaterial.setMapNumber(surveyMaterialRequest.getMapNumber());
-        surveyMaterial.setPrograma(surveyMaterialRequest.getPrograma());
         surveyMaterial.setMaterial(surveyMaterialRequest.getMaterial());
 
+
+        surveyMaterial.setPrograma(surveyMaterialRequest.getPrograma() != null ? surveyMaterialRequest.getPrograma() : "MAP_API");
         surveyMaterial.setfActual(surveyMaterialRequest.getfActual() != null ? surveyMaterialRequest.getfActual() : new Date());
-        surveyMaterial.setUsuario(surveyMaterialRequest.getUsuario() != null ? surveyMaterialRequest.getUsuario() : "DEFAULT_USER");
+        surveyMaterial.setUsuario(surveyMaterialRequest.getVendorId() != null ? surveyMaterialRequest.getVendorId() : "DEFAULT_USER");
 
         surveyMaterial = surveyMaterialRepository.save(surveyMaterial);
 

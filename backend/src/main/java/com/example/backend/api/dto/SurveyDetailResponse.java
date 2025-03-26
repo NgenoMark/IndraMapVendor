@@ -100,4 +100,11 @@ public class SurveyDetailResponse {
         this.surveyStatus = surveyDetail.getSurveyStatus();
     }
 
+    public SurveyDetailResponse(String applicationNumber, String mapNumber, String vendorId) {
+        this.applicationNumber = applicationNumber;
+        this.mapNumber = mapNumber;
+        this.vendorId = vendorId;
+    }
+
+
 }
