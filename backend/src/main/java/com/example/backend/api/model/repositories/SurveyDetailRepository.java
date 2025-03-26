@@ -1,4 +1,13 @@
 package com.example.backend.api.model.repositories;
 
-public interface SurveyDetailRepository {
+import com.example.backend.api.model.SurveyDetail;
+import com.example.backend.api.model.SurveyDetailId;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface SurveyDetailRepository extends JpaRepository<SurveyDetail, SurveyDetailId> {
+
+    List<SurveyDetail> findById_ApplicationNumber(String applicationNumber);
 }
