@@ -11,6 +11,7 @@ import com.example.backend.api.model.repositories.SurveyDetailRepository;
 import com.example.backend.api.service.SurveyDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -26,9 +27,12 @@ public class SurveyDetailImpl implements SurveyDetailService {
         this.surveyDetailRepository = surveyDetailRepository;
     }
 
+    @Transactional
     @Override
     public     SurveyDetailResponse  saveSurveyDetail(SurveyDetailRequest surveyDetailRequest)
     {
+
+        long seqSurveyId = surveyDetailRepository.getNextSeqValue("SEQ_SURVEY_ID");
         // Create composite ID object
         SurveyDetailId surveyDetailId = new SurveyDetailId();
         surveyDetailId.setApplicationNumber(surveyDetailRequest.getApplicationNumber());
@@ -47,7 +51,7 @@ public class SurveyDetailImpl implements SurveyDetailService {
         SurveyDetail surveyDetail = new SurveyDetail();
         surveyDetail.setId(surveyDetailId);
         surveyDetail.setPrograma(surveyDetailRequest.getPrograma());
-        surveyDetail.setSurveyId(surveyDetailRequest.getSurveyId());
+        surveyDetail.setSurveyId((int)seqSurveyId);
         surveyDetail.setMeterPhase(surveyDetailRequest.getMeterPhase());
         surveyDetail.setSurveyStatus(surveyDetailRequest.getSurveyStatus());
 
