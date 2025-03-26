@@ -8,9 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/payment-detail")
 public class PaymentDetailsController {
 
     private final PaymentDetailsService paymentDetailsService;
@@ -32,10 +33,9 @@ public class PaymentDetailsController {
 //        return paymentDetailsService.getPaymentByMapNo(mapNo);
 //    }
 
-    @GetMapping("/getPaymentByMapNo/{mapNo}")
-    public ResponseEntity<PaymentDetailResponse> getPaymentByMapNo(@PathVariable String mapNo){
-        PaymentDetailResponse paymentDetailResponse = paymentDetailsService.getPaymentByMapNo(mapNo);
-        return ResponseEntity.ok(paymentDetailResponse);
+    @GetMapping("/getPaymentByApplicationNo/{applicationNo}")
+    public List<PaymentDetailResponse> getPaymentByApplicationNo(@PathVariable String applicationNo){
+        return paymentDetailsService.getPaymentByApplicationNo(applicationNo);
     }
 
 }

@@ -7,12 +7,13 @@ import com.example.backend.api.model.PaymentDetailId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.persistence.Embeddable;
+import java.util.List;
 import java.util.Optional;
 
 @Embeddable
 
 public interface PaymentDetailRepository extends JpaRepository<PaymentDetail, PaymentDetailId> {
 
-   Optional<PaymentDetail> findById_MapNo(String mapNo);
+   List<PaymentDetail> findById_ApplicationNo(String applicationNo);
 
 }

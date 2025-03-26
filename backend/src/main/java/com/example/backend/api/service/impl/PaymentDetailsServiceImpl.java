@@ -1,5 +1,6 @@
 package com.example.backend.api.service.impl;
 
+import com.example.backend.api.dto.SurveyDetailResponse;
 import com.example.backend.api.model.PaymentDetail;
 import com.example.backend.api.model.PaymentDetailId;
 import com.example.backend.api.model.repositories.PaymentDetailRepository;
@@ -80,11 +81,13 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
 
     @Override
 
-    public PaymentDetailResponse getPaymentByMapNo(String mapNo) {
-        PaymentDetail paymentDetail = paymentDetailRepository.findById_MapNo(mapNo)
-                .orElseThrow(() -> new RuntimeException("Project Data not found"));
+    public List<PaymentDetailResponse> getPaymentByApplicationNo(String applicationNo) {
+        return paymentDetailRepository.findById_ApplicationNo(applicationNo)
+                .stream()
+                .map(PaymentDetailResponse::new)
+                .collect(Collectors.toList());
 
-        return new PaymentDetailResponse(paymentDetail);
+
     }
 
     @Override
