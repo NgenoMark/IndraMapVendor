@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,9 +30,7 @@ public class SurveyDetailImpl implements SurveyDetailService {
 
     @Transactional
     @Override
-    public     SurveyDetailResponse  saveSurveyDetail(SurveyDetailRequest surveyDetailRequest)
-    {
-
+    public SurveyDetailResponse saveSurveyDetail(SurveyDetailRequest surveyDetailRequest) {
         long seqSurveyId = surveyDetailRepository.getNextSeqValue("SEQ_SURVEY_ID");
         // Create composite ID object
         SurveyDetailId surveyDetailId = new SurveyDetailId();
@@ -44,7 +43,6 @@ public class SurveyDetailImpl implements SurveyDetailService {
         if (exists) {
             // If it exists, return a response without saving
             return new SurveyDetailResponse(surveyDetailRepository.findById(surveyDetailId).orElse(null));
-
         }
 
         // If it doesn't exist, create and save new survey detail
@@ -53,11 +51,9 @@ public class SurveyDetailImpl implements SurveyDetailService {
         surveyDetail.setSurveyId((int)seqSurveyId);
         surveyDetail.setMeterPhase(surveyDetailRequest.getMeterPhase());
         surveyDetail.setSurveyStatus(surveyDetailRequest.getSurveyStatus() != null ? surveyDetailRequest.getSurveyStatus() : "PENDING");
-
         surveyDetail.setPrograma(surveyDetailRequest.getPrograma() != null ? surveyDetailRequest.getPrograma() : "MAP_API");
         surveyDetail.setfActual(surveyDetailRequest.getfActual() != null ? surveyDetailRequest.getfActual() : new Date());
         surveyDetail.setUsuario(surveyDetailRequest.getVendorId() != null ? surveyDetailRequest.getVendorId() : "DEFAULT_USER");
-
 
         // Save the new survey detail to the database
         surveyDetail = surveyDetailRepository.save(surveyDetail);
@@ -68,32 +64,48 @@ public class SurveyDetailImpl implements SurveyDetailService {
 
     @Override
     public List<SurveyDetailResponse> getByApplicationNumber(String applicationNumber) {
-        return surveyDetailRepository.findById_ApplicationNumber(applicationNumber).
-                stream()
+        return surveyDetailRepository.findById_ApplicationNumber(applicationNumber)
+                .stream()
                 .map(SurveyDetailResponse::new)
                 .collect(Collectors.toList());
-
     }
-
 
     @Override
     public SurveyDetailResponse findSurveyDetails(SurveyDetailRequest request) {
         // Fetch list, then get the first matching record
-        SurveyDetail surveyDetail = surveyDetailRepository.findById_ApplicationNumber(request.getApplicationNumber())
+        Optional<SurveyDetail> surveyDetail = surveyDetailRepository.findById_ApplicationNumber(request.getApplicationNumber())
                 .stream()
-                .findFirst()
-                .orElse(null);
+                .findFirst();
 
-        if (surveyDetail != null) {
-            return new SurveyDetailResponse(
-                    surveyDetail.getId().getApplicationNumber(),
-                    surveyDetail.getId().getMapNumber(),
-                    surveyDetail.getId().getVendorId()
-            );
-        }
-
-        return null; // Return null if not found
+        return surveyDetail.map(detail -> new SurveyDetailResponse(
+                detail.getId().getApplicationNumber(),
+                detail.getId().getMapNumber(),
+                detail.getId().getVendorId()
+        )).orElse(null);
     }
 
+    @Override
+    @Transactional
+    public boolean updateSurveyStatus(String surveyId, String surveyStatus) {
+        try {
+            Integer id = Integer.parseInt(surveyId);
+            int updated = surveyDetailRepository.updateSurveyStatus(id, surveyStatus);
+            if (updated == 0) {
+                throw new RuntimeException("No records were updated - survey may not exist");
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid survey ID format: " + surveyId, e);
+        } catch (Exception e) {
+            throw new RuntimeException("Database update failed", e);
+        }
+    }
 
+    @Override
+    public List<SurveyDetailResponse> getSurveyById(String surveyId) {
+        return surveyDetailRepository.findBySurveyId(surveyId)
+                .stream()
+                .map(SurveyDetailResponse::new)
+                .collect(Collectors.toList());
+    }
 }
