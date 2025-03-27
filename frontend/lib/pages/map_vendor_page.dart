@@ -245,7 +245,20 @@ import 'dashboard.dart';
 import 'profile_page.dart';
 
 class MapVendorPage extends StatefulWidget {
-  const MapVendorPage({Key? key}) : super(key: key);
+
+  final String mapVendorNumber;
+  final String accessToken;
+  final Map<String, dynamic> userDetails;
+
+  //const MapVendorPage({Key? key}) : super(key: key);
+  //const MapVendorPage({Key? key, required this.mapVendorId, required this.accessToken}) : super(key: key);
+  const MapVendorPage({
+    Key? key,
+    required this.mapVendorNumber,
+    required this.accessToken,
+    required this.userDetails,
+  }) : super(key: key);
+
 
   @override
   _MapVendorPageState createState() => _MapVendorPageState();
@@ -257,8 +270,8 @@ class _MapVendorPageState extends State<MapVendorPage> {
   List<dynamic> _filteredProjects = [];
   bool _isLoading = true;
   bool _hasError = false;
-  final String _mapVendorId = "VM012";
-  final String _accessToken = "your_access_token";
+  // final String _mapVendorId = "VM012";
+  // final String _accessToken = "your_access_token";
   String _selectedStatus = '';
   String _searchQuery = '';
   final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
@@ -274,9 +287,10 @@ class _MapVendorPageState extends State<MapVendorPage> {
       setState(() => _isLoading = true);
       
       final response = await http.get(
-        Uri.parse('http://localhost:8081/project-data/getProjectById/$_mapVendorId'),
+        Uri.parse('http://localhost:8081/project-data/getProjectById/${widget.mapVendorNumber}'),
         headers: {
-          'Authorization': 'Bearer $_accessToken',
+         'Authorization': 'Bearer ${widget.accessToken}',
+          //'Authorization': "ebe769cf-a3e6-311a-9075-548393f70ea2",
           'Content-Type': 'application/json',
         },
       );
@@ -362,9 +376,32 @@ Future<void> _navigateToProjectDetails(BuildContext context, dynamic projectData
     
     setState(() => _currentIndex = index);
     if (index == 0) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Dashboard()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Dashboard(
+            mapVendorNumber: widget.mapVendorNumber,
+            accessToken: widget.accessToken,
+            userDetails: widget.userDetails,
+          ),
+        ),
+      );
+
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Dashboard()));
     } else if (index == 2) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProfilePage()));
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ProfilePage(
+            mapVendorNumber: widget.mapVendorNumber,
+            accessToken: widget.accessToken,
+            userDetails: widget.userDetails,
+          ),
+        ),
+      );
+
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProfilePage()));
     }
   }
 
@@ -570,6 +607,7 @@ Future<void> _navigateToProjectDetails(BuildContext context, dynamic projectData
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Projects'),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

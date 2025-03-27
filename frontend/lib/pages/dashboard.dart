@@ -5,101 +5,135 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Dashboard extends StatefulWidget {
+  final String mapVendorNumber;
+  final String accessToken;
+  final Map<String, dynamic> userDetails;
+
+  const Dashboard({
+    Key? key,
+    required this.mapVendorNumber,
+    required this.accessToken,
+    required this.userDetails,
+  }) : super(key: key);
+
   @override
   _DashboardState createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _currentIndex = 0; // Default to "My Projects"
+  int _currentIndex = 0;
   int totalProjects = 0;
   int completedProjects = 0;
   int pendingProjects = 0;
   int cancelledProjects = 0;
+  bool _isLoading = true;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    fetchProjectData(); // Fetch data when the page loads
+    fetchProjectData();
   }
 
   Future<void> fetchProjectData() async {
-    String vendorId = "VM012"; // Change this to a dynamic vendor ID if needed
-    String url = "http://localhost:8081/project-data/getProjectById/$vendorId";
-
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(
+        Uri.parse('http://localhost:8081/project-data/getProjectById/${widget.mapVendorNumber}'),
+        headers: {
+          'Authorization': 'Bearer ${widget.accessToken}',
+          'Content-Type': 'application/json',
+        },
+      );
 
       if (response.statusCode == 200) {
-        List<dynamic> projects = json.decode(response.body);
-
+        final projects = json.decode(response.body) as List;
         setState(() {
           totalProjects = projects.length;
           completedProjects = projects.where((p) => p["completionStatus"] == "Completed").length;
           pendingProjects = projects.where((p) => p["completionStatus"] == "Pending").length;
           cancelledProjects = projects.where((p) => p["completionStatus"] == "Cancelled").length;
+          _isLoading = false;
         });
       } else {
-        print("Error fetching data: ${response.statusCode}");
+        setState(() {
+          _errorMessage = 'Failed to load projects (${response.statusCode})';
+          _isLoading = false;
+        });
       }
     } catch (e) {
-      print("Exception: $e");
+      setState(() {
+        _errorMessage = 'Network error: ${e.toString()}';
+        _isLoading = false;
+      });
     }
   }
 
-
-    void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-
+  void _onTabTapped(int index) {
+    if (_currentIndex == index) return;
+    
+    setState(() => _currentIndex = index);
     if (index == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MapVendorPage()),
+        MaterialPageRoute(
+          builder: (_) => MapVendorPage(
+            mapVendorNumber: widget.mapVendorNumber,
+            accessToken: widget.accessToken,
+            userDetails: widget.userDetails,
+          ),
+        ),
       );
     } else if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
+        MaterialPageRoute(
+          builder: (_) => ProfilePage(
+            mapVendorNumber: widget.mapVendorNumber,
+            accessToken: widget.accessToken,
+            userDetails: widget.userDetails,
+          ),
+        ),
       );
     }
-    // For index 1 (My Projects), we're already here
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
         backgroundColor: Colors.blue,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome, Vendor!', // Add a welcome message
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Here’s an overview of your projects:',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              SizedBox(height: 20),
-              _buildProjectSummaryCard(), // Project stats card
-            ],
-          ),
-        ),
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _errorMessage != null
+              ? Center(child: Text(_errorMessage!))
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome, ${widget.userDetails['username'] ?? 'Vendor'}!',
+                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Here\'s an overview of your projects:',
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildProjectSummaryCard(),
+                      ],
+                    ),
+                  ),
+                ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.blue,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
         currentIndex: _currentIndex,
-        onTap: _onItemTapped,
+        onTap: _onTabTapped,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -107,11 +141,11 @@ class _DashboardState extends State<Dashboard> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.work),
-            label: 'My Projects',
+            label: 'Projects',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'My Account',
+            label: 'Profile',
           ),
         ],
       ),
@@ -126,62 +160,52 @@ class _DashboardState extends State<Dashboard> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
+            const Text(
               'Project Status',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildProjectStatus('Total', '$totalProjects', Colors.white),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildProjectStatus('Completed', '$completedProjects', Colors.greenAccent),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildProjectStatus('Pending', '$pendingProjects', Colors.orangeAccent),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildProjectStatus('Cancelled', '$cancelledProjects', Colors.redAccent),
-              ],
-            ),
+            const SizedBox(height: 10),
+            _buildStatusRow('Total', totalProjects, Colors.white),
+            const SizedBox(height: 10),
+            _buildStatusRow('Completed', completedProjects, Colors.greenAccent),
+            const SizedBox(height: 10),
+            _buildStatusRow('Pending', pendingProjects, Colors.orangeAccent),
+            const SizedBox(height: 10),
+            _buildStatusRow('Cancelled', cancelledProjects, Colors.redAccent),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProjectStatus(String title, String count, Color color) {
-    return Column(
+  Widget _buildStatusRow(String title, int count, Color color) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text(
-          count,
-          style: TextStyle(color: color, fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          title,
-          style: TextStyle(color: Colors.white, fontSize: 14),
+        Column(
+          children: [
+            Text(
+              '$count',
+              style: TextStyle(
+                color: color,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: Dashboard(),
-  ));
 }
