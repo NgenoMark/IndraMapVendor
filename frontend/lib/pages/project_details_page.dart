@@ -39,6 +39,23 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
     super.dispose();
   }
 
+  String _getMeterPhaseDisplayValue(String? phaseCode) {
+  if (phaseCode == null) return 'Not specified';
+  
+  switch (phaseCode) {
+    case 'FA001':
+      return '1 Phase';
+    case 'FA002':
+      return '3 Phase';
+    case 'FA003':
+      return '3 Phase CT';
+    case 'FA004':
+      return '3 Phase/4 Wire';
+    default:
+      return phaseCode; // Return the code if it's not recognized
+  }
+}
+
   void fetchSurveyData() async {
     final applicationNo = widget.projectData['applicationNo'];
 
@@ -224,10 +241,7 @@ Widget _buildSurveyDetailsTab() {
                 );
                 
                 if (result == true) {
-                  // Refresh survey data if survey was added
                   fetchSurveyData();
-                  //Navigator.pop(context, true);
-
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -246,7 +260,8 @@ Widget _buildSurveyDetailsTab() {
             _buildDetailRow('Application Number', surveyData![0]['applicationNumber']),
             _buildDetailRow('Map Number', surveyData![0]['mapNumber']),
             _buildDetailRow('Map Vendor', surveyData![0]['vendorId']),
-            _buildDetailRow('Phase Type', surveyData![0]['meterPhase']),
+            _buildDetailRow('Phase Type', 
+              _getMeterPhaseDisplayValue(surveyData![0]['meterPhase'])), // Use the helper function here
             _buildDetailRow('Last Altered', formatDate(surveyData![0]['fActual'])),
             _buildDetailRow('Survey Status', surveyData![0]['surveyStatus']),
           ]),
