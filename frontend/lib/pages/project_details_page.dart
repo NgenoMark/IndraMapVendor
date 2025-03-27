@@ -116,6 +116,50 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
     }
   }
 
+
+Future<void> _updateSurveyStatus() async {
+  if (surveyData == null || surveyData!.isEmpty) return;
+
+  try {
+    final surveyId = surveyData![0]['surveyId'].toString();
+    final url = Uri.parse('http://localhost:8081/survey-detail/updateStatus/$surveyId');
+
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'surveyStatus': 'SENT TO EKEDC',
+      }),
+    );
+
+    final responseBody = jsonDecode(response.body);
+    
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(responseBody['message'] ?? 'Status updated successfully'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      fetchSurveyData();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(responseBody['message'] ?? 'Failed to update status'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error: ${e.toString()}'),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -268,6 +312,21 @@ Widget _buildSurveyDetailsTab() {
         
         // Materials section
         _buildMaterialsUsedSection(),
+
+        if ((surveyData != null && surveyData!.isNotEmpty) && 
+            (materialData != null && materialData!.isNotEmpty))
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: ElevatedButton(
+              onPressed: _updateSurveyStatus,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green.shade700,
+                foregroundColor: Colors.white,
+                minimumSize: Size(double.infinity, 48),
+              ),
+              child: Text('Confirm and Send to EKEDC'),
+            ),
+          ),
       ],
     ),
   );
@@ -297,25 +356,21 @@ Widget _buildSurveyDetailsTab() {
     );
   }
 
-  Widget _buildMaterialsUsedSection() {
-    if (materialData == null) {
-      return Center(child: CircularProgressIndicator());
-    }
+Widget _buildMaterialsUsedSection() {
+  if (materialData == null) {
+    return Center(child: CircularProgressIndicator());
+  }
 
-    if (materialData is List) {
-      final materials = materialData as List;
-      return Column(
-        children: [
-          if (materials.isNotEmpty)
-            _buildDetailCard(
-              'Materials Used',
-              materials.map((material) {
-            return _buildDetailRow(' Material' ,
-              material['material'] ?? 'Unknown Material',
-               // Pass an empty string or null if _buildDetailRow requires two arguments
-            );
-              }).toList(),
-            ),
+  if (materialData is List) {
+    final materials = materialData as List;
+    
+    return Column(
+      children: [
+        if (materials.isNotEmpty)
+          _buildMaterialCard(materials),
+        
+        // Only show button if no materials exist
+        if (materials.isEmpty)
           ElevatedButton(
             onPressed: () async {
               final result = await Navigator.push(
@@ -330,18 +385,56 @@ Widget _buildSurveyDetailsTab() {
               );
 
               if (result == true) {
-                // Refresh material data if save was successful
                 fetchMaterialData();
               }
             },
             child: Text('Add New Material'),
           ),
-        ],
-      );
-    }
-
-    return Center(child: Text('Invalid material data format'));
+      ],
+    );
   }
+
+  return Center(child: Text('Invalid material data format'));
+}
+
+
+
+Widget _buildMaterialCard(List<dynamic> materials) {
+  return Card(
+    margin: EdgeInsets.only(bottom: 16),
+    child: Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Materials Used',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 10),
+          // Display each material as a simple list item
+          ...materials.map((material) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_right, size: 16),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      material['material'] ?? 'Unknown Material',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
+      ),
+    ),
+  );
+}
 
   Widget _buildDetailCard(String title, List<Widget> children) {
     return Card(
