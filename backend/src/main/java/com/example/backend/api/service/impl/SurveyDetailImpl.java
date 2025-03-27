@@ -52,7 +52,7 @@ public class SurveyDetailImpl implements SurveyDetailService {
         surveyDetail.setId(surveyDetailId);
         surveyDetail.setSurveyId((int)seqSurveyId);
         surveyDetail.setMeterPhase(surveyDetailRequest.getMeterPhase());
-        surveyDetail.setSurveyStatus(surveyDetailRequest.getSurveyStatus());
+        surveyDetail.setSurveyStatus(surveyDetailRequest.getSurveyStatus() != null ? surveyDetailRequest.getSurveyStatus() : "PENDING");
 
         surveyDetail.setPrograma(surveyDetailRequest.getPrograma() != null ? surveyDetailRequest.getPrograma() : "MAP_API");
         surveyDetail.setfActual(surveyDetailRequest.getfActual() != null ? surveyDetailRequest.getfActual() : new Date());

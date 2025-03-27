@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'assign_surveyor_page.dart';
 import 'add_material_page.dart';
+import 'add_survey_page.dart';
 
 class ProjectDetailsPage extends StatefulWidget {
   final dynamic projectData;
@@ -200,33 +201,62 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
     );
   }
 
-  Widget _buildSurveyDetailsTab() {
-    if (surveyData == null) {
-      return Center(child: CircularProgressIndicator());
-    } else if (surveyData!.isEmpty) {
-      return Center(child: Text('No survey data available.'));
-    }
+Widget _buildSurveyDetailsTab() {
+  return SingleChildScrollView(
+    padding: EdgeInsets.all(16.0),
+    child: Column(
+      children: [
+        // Add Survey Button (only show if no survey exists)
+        if (surveyData == null || surveyData!.isEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddSurveyPage(
+                      applicationNumber: widget.projectData['applicationNo'],
+                      mapNumber: widget.projectData['mapNo'],
+                      vendorId: widget.projectData['mapVendorId'],
+                    ),
+                  ),
+                );
+                
+                if (result == true) {
+                  // Refresh survey data if survey was added
+                  fetchSurveyData();
+                  //Navigator.pop(context, true);
 
-    final survey = surveyData![0];
-
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        children: [
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade700,
+                foregroundColor: Colors.white,
+                minimumSize: Size(double.infinity, 48),
+              ),
+              child: Text('Add Survey'),
+            ),
+          ),
+        
+        // Survey Details (only show if survey exists)
+        if (surveyData != null && surveyData!.isNotEmpty)
           _buildDetailCard('Survey Details', [
-            _buildDetailRow('Survey Id', survey['surveyId'].toString()),
-            _buildDetailRow('Application Number', survey['applicationNumber']),
-            _buildDetailRow('Map Number', survey['mapNumber']),
-            _buildDetailRow('Map Vendor', survey['vendorId']),
-            _buildDetailRow('Phase Type', survey['meterPhase']),
-            _buildDetailRow('Last Altered', formatDate(survey['fActual'])),
-            _buildDetailRow('Survey Status', survey['surveyStatus']),
+            _buildDetailRow('Survey Id', surveyData![0]['surveyId'].toString()),
+            _buildDetailRow('Application Number', surveyData![0]['applicationNumber']),
+            _buildDetailRow('Map Number', surveyData![0]['mapNumber']),
+            _buildDetailRow('Map Vendor', surveyData![0]['vendorId']),
+            _buildDetailRow('Phase Type', surveyData![0]['meterPhase']),
+            _buildDetailRow('Last Altered', formatDate(surveyData![0]['fActual'])),
+            _buildDetailRow('Survey Status', surveyData![0]['surveyStatus']),
           ]),
-          _buildMaterialsUsedSection(), // Materials inside survey tab
-        ],
-      ),
-    );
-  }
+        
+        // Materials section
+        _buildMaterialsUsedSection(),
+      ],
+    ),
+  );
+}
 
   Widget _buildPaymentDetailsTab() {
     if (paymentData == null) {
