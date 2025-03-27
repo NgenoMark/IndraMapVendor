@@ -18,13 +18,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      //home: LoginPage(), // Set SplashScreen as the first screen
-      home: SplashScreen(), // Set SplashScreen as the first screen
-
+      
+      home: const SplashScreen(),
     );
   }
 }
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,30 +35,55 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 2), () {
-      // Change 3 to the duration you want
+    Timer(const Duration(seconds: 2), () {
+      // For testing - navigate directly to Dashboard with test credentials
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+        MaterialPageRoute(
+          builder: (context) => Dashboard(
+            mapVendorNumber: "VM012", // Test vendor number
+            accessToken: "test_access_token", // Test token
+            userDetails: {"username": "test_user"}, // Test user details
+          ),
+        ),
       );
+
+      // For production - navigate to LoginPage
+      
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => LoginPage()),
+      // );
+      
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.white, // Change this to match your splash screen design
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Replace with your actual logo asset
             Image.asset(
               "assets/splash_logo.png",
               width: 200,
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.business, size: 100),
             ),
-            SizedBox(height: 20),
-            CircularProgressIndicator(), // Loading animation
+            const SizedBox(height: 20),
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Loading...',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
           ],
         ),
       ),
