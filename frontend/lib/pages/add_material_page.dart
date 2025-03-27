@@ -31,32 +31,21 @@ class _AddMaterialPageState extends State<AddMaterialPage> {
   }
 
   Future<void> _saveMaterial() async {
-    if (!_formKey.currentState!.validate()) return;
+  if (!_formKey.currentState!.validate()) return;
 
-    // Only include materials with quantity > 0
-    final materials = <String>[];
-    if (_transformerController.text.isNotEmpty && int.tryParse(_transformerController.text) != null && int.parse(_transformerController.text) > 0) {
-      materials.add('${_transformerController.text} TRANSFORMERS');
-    }
-    if (_polesController.text.isNotEmpty && int.tryParse(_polesController.text) != null && int.parse(_polesController.text) > 0) {
-      materials.add('${_polesController.text} POLES');
-    }
+  bool allSuccess = true;
+  String errorMessage = '';
+  int successfulSaves = 0;
 
-    if (materials.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter at least one material quantity'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
-
+  // Save transformers if entered
+  if (_transformerController.text.isNotEmpty && 
+      int.tryParse(_transformerController.text) != null && 
+      int.parse(_transformerController.text) > 0) {
     final materialData = {
       "applicationNumber": widget.applicationNumber,
       "mapNumber": widget.mapNumber,
       "vendorId": widget.vendorId,
-      "material": materials.join(', '), // Combine materials with comma
+      "material": "${_transformerController.text} TRANSFORMERS", // Format as "X TRANSFORMERS"
     };
 
     try {
@@ -67,37 +56,74 @@ class _AddMaterialPageState extends State<AddMaterialPage> {
       );
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Material saved successfully!'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-        Navigator.pop(context, true);
-      } else if (response.statusCode == 400) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Invalid data: ${response.body}'),
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        successfulSaves++;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Server error: ${response.statusCode}'),
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        allSuccess = false;
+        errorMessage = 'Failed to save transformers: ${response.body}';
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Network error: $e'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      allSuccess = false;
+      errorMessage = 'Network error saving transformers: $e';
     }
   }
+
+  // Save poles if entered (only proceed if transformers were successful)
+  if (allSuccess && _polesController.text.isNotEmpty && 
+      int.tryParse(_polesController.text) != null && 
+      int.parse(_polesController.text) > 0) {
+    final materialData = {
+      "applicationNumber": widget.applicationNumber,
+      "mapNumber": widget.mapNumber,
+      "vendorId": widget.vendorId,
+      "material": "${_polesController.text} POLES", // Format as "X POLES"
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:8081/survey-material/saveSurveyMaterial'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(materialData),
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        successfulSaves++;
+      } else {
+        allSuccess = false;
+        errorMessage = 'Failed to save poles: ${response.body}';
+      }
+    } catch (e) {
+      allSuccess = false;
+      errorMessage = 'Network error saving poles: $e';
+    }
+  }
+
+  // Show appropriate message
+  if (successfulSaves == 0) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Please enter at least one material quantity'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  } else if (allSuccess) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(successfulSaves == 2 
+            ? 'Both materials saved successfully!' 
+            : 'Material saved successfully!'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+    Navigator.pop(context, true);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
