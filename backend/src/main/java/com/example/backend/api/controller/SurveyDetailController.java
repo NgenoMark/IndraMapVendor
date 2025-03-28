@@ -63,7 +63,7 @@ public class SurveyDetailController {
 
     @PutMapping("/updateStatus/{surveyId}")
     public ResponseEntity<?> updateSurveyStatus(
-            @PathVariable String surveyId,
+            @PathVariable Integer surveyId,
             @RequestBody Map<String, String> request) {
 
         String newStatus = request.get("surveyStatus");

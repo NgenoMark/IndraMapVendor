@@ -86,9 +86,9 @@ public class SurveyDetailImpl implements SurveyDetailService {
 
     @Override
     @Transactional
-    public boolean updateSurveyStatus(String surveyId, String surveyStatus) {
+    public boolean updateSurveyStatus(Integer surveyId, String surveyStatus) {
         try {
-            Integer id = Integer.parseInt(surveyId);
+            Integer id = Integer.parseInt(String.valueOf(surveyId));
             int updated = surveyDetailRepository.updateSurveyStatus(id, surveyStatus);
             if (updated == 0) {
                 throw new RuntimeException("No records were updated - survey may not exist");
@@ -102,7 +102,7 @@ public class SurveyDetailImpl implements SurveyDetailService {
     }
 
     @Override
-    public List<SurveyDetailResponse> getSurveyById(String surveyId) {
+    public List<SurveyDetailResponse> getSurveyById(Integer surveyId) {
         return surveyDetailRepository.findBySurveyId(surveyId)
                 .stream()
                 .map(SurveyDetailResponse::new)

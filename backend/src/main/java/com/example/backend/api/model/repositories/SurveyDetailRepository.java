@@ -31,6 +31,6 @@ public interface SurveyDetailRepository extends JpaRepository<SurveyDetail, Surv
 //    int updateSurveyStatus(@Param("surveyId") Integer surveyId,
 //                           @Param("status") String status);
 
-    List<SurveyDetail> findBySurveyId(String surveyId);
+    List<SurveyDetail> findBySurveyId(Integer surveyId);
 
 }

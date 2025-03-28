@@ -19,7 +19,7 @@ public interface SurveyDetailService {
 
     SurveyDetailResponse findSurveyDetails(SurveyDetailRequest request);
 
-    boolean updateSurveyStatus(String surveyId, String surveyStatus);
-    List<SurveyDetailResponse> getSurveyById(String surveyId);
+    boolean updateSurveyStatus(Integer surveyId, String surveyStatus);
+    List<SurveyDetailResponse> getSurveyById(Integer surveyId);
 
 }

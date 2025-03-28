@@ -117,46 +117,37 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
   }
 
 
+
+
 Future<void> _updateSurveyStatus() async {
   if (surveyData == null || surveyData!.isEmpty) return;
 
   try {
-    final surveyId = surveyData![0]['surveyId'].toString();
+    // Safely parse the surveyId to integer
+    final surveyId = int.tryParse(surveyData![0]['surveyId'].toString());
+    
+    if (surveyId == null) return;
+    
     final url = Uri.parse('http://localhost:8081/survey-detail/updateStatus/$surveyId');
 
-    final response = await http.put(
+    // Make the API call but don't wait for response
+    http.put(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'surveyStatus': 'SENT TO EKEDC',
       }),
-    );
-
-    final responseBody = jsonDecode(response.body);
-    
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(responseBody['message'] ?? 'Status updated successfully'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+    ).then((response) {
+      // Regardless of response, refresh the data
       fetchSurveyData();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(responseBody['message'] ?? 'Failed to update status'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
+    }).catchError((e) {
+      // Silent fail - just refresh
+      fetchSurveyData();
+    });
+
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Error: ${e.toString()}'),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    // Silent fail - just refresh
+    fetchSurveyData();
   }
 }
 
@@ -313,20 +304,28 @@ Widget _buildSurveyDetailsTab() {
         // Materials section
         _buildMaterialsUsedSection(),
 
-        if ((surveyData != null && surveyData!.isNotEmpty) && 
-            (materialData != null && materialData!.isNotEmpty))
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: ElevatedButton(
-              onPressed: _updateSurveyStatus,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green.shade700,
-                foregroundColor: Colors.white,
-                minimumSize: Size(double.infinity, 48),
-              ),
-              child: Text('Confirm and Send to EKEDC'),
-            ),
-          ),
+if ((surveyData != null && surveyData!.isNotEmpty) && 
+    (materialData != null && materialData!.isNotEmpty))
+  Padding(
+    padding: const EdgeInsets.only(top: 16.0),
+    child:ElevatedButton(
+  onPressed: (surveyData![0]['surveyStatus'] == 'SENT TO EKEDC')
+      ? null
+      : _updateSurveyStatus,
+  style: ElevatedButton.styleFrom(
+    backgroundColor: (surveyData![0]['surveyStatus'] == 'SENT TO EKEDC')
+        ? Colors.grey
+        : Colors.green.shade700,
+    foregroundColor: Colors.white,
+    minimumSize: Size(double.infinity, 48),
+  ),
+  child: Text(
+    (surveyData![0]['surveyStatus'] == 'SENT TO EKEDC')
+        ? 'Already Sent to EKEDC'
+        : 'Confirm and Send to EKEDC',
+  ),
+),
+  ),
       ],
     ),
   );
