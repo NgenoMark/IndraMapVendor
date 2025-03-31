@@ -15,54 +15,45 @@ public class ProjectData {
     @EmbeddedId
     private ProjectDataId projectDataId;
 
-@Column(name = "USUARIO", columnDefinition = "unknown")
+@Column(name = "USUARIO")
     private String usuario;
-@Column(name = "F_ACTUAL", columnDefinition = "unknown")
+@Column(name = "F_ACTUAL")
     private Date fActual;
-@Column(name = "PROGRAMA", columnDefinition = "unknown")
+@Column(name = "PROGRAMA")
     private String programa;
-@Column(name = "CUSTOMER_NAME", columnDefinition = "unknown")
+@Column(name = "CUSTOMER_NAME")
     private String customerName;
-@Column(name = "CUSTOMER_ADDRESS", columnDefinition = "unknown")
+@Column(name = "CUSTOMER_ADDRESS")
     private String customerAddress;
-@Column(name = "CUSTOMER_TELEPHONE", columnDefinition = "unknown")
+@Column(name = "CUSTOMER_TELEPHONE")
     private String customerTelephone;
-@Column(name = "CITY", columnDefinition = "unknown")
+@Column(name = "CITY")
     private String city;
-@Column(name = "DISTRICT", columnDefinition = "unknown")
+@Column(name = "DISTRICT")
     private String district;
-@Column(name = "ZONE", columnDefinition = "unknown")
+@Column(name = "ZONE")
     private String zone;
 
-@Column(name = "COMPLETION_STATUS", columnDefinition = "unknown")
+@Column(name = "COMPLETION_STATUS")
     private String completionStatus;
 
-@Column(name = "SURVEY_STATUS", columnDefinition = "unknown")
+@Column(name = "SURVEY_STATUS")
     private String surveyStatus;
 
-@Column(name = "ASSIGNED_TO_ID", columnDefinition = "unknown")
+@Column(name = "ASSIGNED_TO_ID")
     private String assignedToId;
 
-@Column(name = "START_DATE", columnDefinition = "unknown")
+@Column(name = "START_DATE")
     private Date startDate;
 
-@Column(name = "END_DATE", columnDefinition = "unknown")
+@Column(name = "END_DATE")
     private Date endDate;
 
-@Column(name = "LAST_UPDATED", columnDefinition = "unknown")
+@Column(name = "LAST_UPDATED")
     private Date lastUpdated;
 
-@Column(name = "UPDATED_BY", columnDefinition = "unknown")
+@Column(name = "UPDATED_BY")
     private String updatedBy;
-
-
-//    @ManyToOne
-//    @JoinColumns({
-//            @JoinColumn(name = "APPLICATION_NO", referencedColumnName = "APPLICATION_NO", insertable = false, updatable = false),
-//            @JoinColumn(name = "MAP_VENDOR_ID", referencedColumnName = "MAP_VENDOR_ID", insertable = false, updatable = false),
-//            @JoinColumn(name = "MAP_NO", referencedColumnName = "MAP_NO", insertable = false, updatable = false)
-//    })
-//    private PaymentDetail paymentDetail;
 
     public ProjectDataId getId() {
         return projectDataId;
@@ -151,14 +142,6 @@ public class ProjectData {
     public void setZone(String zone) {
         this.zone = zone;
     }
-
-//    public PaymentDetail getPaymentDetail() {
-//        return paymentDetail;
-//    }
-//
-//    public void setPaymentDetail(PaymentDetail paymentDetail) {
-//        this.paymentDetail = paymentDetail;
-//    }
 
     public String getCompletionStatus() {
         return completionStatus;

@@ -17,19 +17,11 @@ public interface SurveyDetailRepository extends JpaRepository<SurveyDetail, Surv
     @Query(nativeQuery = true, value = "SELECT SECUENCIAL(:seqName) FROM dual")
     Long getNextSeqValue(@Param("seqName") String seqName);
 
-
     // Custom method to update status
     @Modifying
     @Query("UPDATE SurveyDetail s SET s.surveyStatus = :surveyStatus WHERE s.surveyId = :surveyId")
     int updateSurveyStatus(@Param("surveyId") Integer surveyId,
                            @Param("surveyStatus") String surveyStatus);
-
-
-
-//    @Modifying
-//    @Query("UPDATE SurveyDetail s SET s.SURVEY_STATUS = :status WHERE s.surveyId = :surveyId")
-//    int updateSurveyStatus(@Param("surveyId") Integer surveyId,
-//                           @Param("status") String status);
 
     List<SurveyDetail> findBySurveyId(Integer surveyId);
 

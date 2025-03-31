@@ -20,15 +20,6 @@ public class MapMaterialServiceImpl implements MapMaterialService {
     @Autowired
     private MapMaterialRepository mapMaterialRepository;
 
-//    @Override
-//    public Optional<List<MapMaterialResponse>> findMaterialsByMapNumber(String mapNumber) {
-//        Optional<List<MapMaterial>> materials = mapMaterialRepository.findByMapNumber(mapNumber);
-//
-//        return materials.map(list -> list.stream()
-//                .map(this::convertToResponse)
-//                .collect(Collectors.toList()));
-//    }
-
     @Override
     public Optional<List<MapMaterialResponse>> findMaterialsByMapNumber(String mapNumber) {
         Optional<List<MapMaterial>> materials = mapMaterialRepository.findByMapNumber(mapNumber);
@@ -41,8 +32,6 @@ public class MapMaterialServiceImpl implements MapMaterialService {
                 .map(MapMaterialResponse::new)
                 .collect(Collectors.toList()));
     }
-
-
 
     public MapMaterialResponse convertToResponse(MapMaterial mapMaterial) {
         return new  MapMaterialResponse(mapMaterial);

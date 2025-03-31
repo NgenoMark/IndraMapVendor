@@ -14,11 +14,11 @@ import java.util.Objects;
 
 public  class ProjectDataId implements Serializable {
 
-    @Column(name = "APPLICATION_NO", columnDefinition = "unknown")
+    @Column(name = "APPLICATION_NO")
     private String applicationNo;
-    @Column(name = "MAP_VENDOR_ID", columnDefinition = "unknown")
+    @Column(name = "MAP_VENDOR_ID")
     private String mapVendorId;
-    @Column(name = "MAP_NO", columnDefinition = "unknown")
+    @Column(name = "MAP_NO")
     private String mapNo;
     private static final long serialVersionUID = 4531758268798428805L;
 

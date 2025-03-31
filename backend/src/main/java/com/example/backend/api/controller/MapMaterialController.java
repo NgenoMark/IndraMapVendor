@@ -24,16 +24,9 @@ public class MapMaterialController {
     public MapMaterialController(MapMaterialService mapMaterialService) {
         this.mapMaterialService = mapMaterialService;
     }
-//
-//    @GetMapping("mapNo/{mapNumber}")
-//    public Optional<List<MapMaterialResponse>> getMapNo(@PathVariable("mapNumber") String mapNumber) {
-//        Optional<List<MapMaterialResponse>> materials = mapMaterialService.findMaterialsByMapNumber(mapNumber);
-//
-//        return mapMaterialService.findMaterialsByMapNumber(mapNumber);
-//
-//    }
-@GetMapping("mapNo/{mapNumber}")
-public ResponseEntity<List<MapMaterialResponse>> getMapNo(@PathVariable("mapNumber") String mapNumber) {
+
+    @GetMapping("mapNo/{mapNumber}")
+    public ResponseEntity<List<MapMaterialResponse>> getMapNo(@PathVariable("mapNumber") String mapNumber) {
     Optional<List<MapMaterialResponse>> materials = mapMaterialService.findMaterialsByMapNumber(mapNumber);
 
     System.out.println("Materials Response: " + materials);

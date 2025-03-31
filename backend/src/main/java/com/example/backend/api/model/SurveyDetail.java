@@ -17,17 +17,17 @@ public class SurveyDetail {
     @EmbeddedId
     private SurveyDetailId id;
 
-@Column(name = "USUARIO", columnDefinition = "unknown")
+@Column(name = "USUARIO")
     private String usuario;
-@Column(name = "F_ACTUAL", columnDefinition = "unknown")
+@Column(name = "F_ACTUAL")
     private Date fActual;
-@Column(name = "PROGRAMA", columnDefinition = "unknown")
+@Column(name = "PROGRAMA")
     private String programa;
-@Column(name = "SURVEY_ID", columnDefinition = "unknown")
+@Column(name = "SURVEY_ID")
     private     Integer surveyId;
-@Column(name = "METER_PHASE", columnDefinition = "unknown")
+@Column(name = "METER_PHASE")
     private String meterPhase;
-@Column(name = "SURVEY_STATUS", columnDefinition = "unknown")
+@Column(name = "SURVEY_STATUS")
     private String surveyStatus;
 
     public SurveyDetailId getId() {

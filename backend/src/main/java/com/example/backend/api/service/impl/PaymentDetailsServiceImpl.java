@@ -27,28 +27,6 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
         this.paymentDetailRepository = paymentDetailRepository;
     }
 
-//    @Override
-//    public PaymentDetailResponse savePaymentDetails(PaymentDetailRequest request) {
-//        PaymentDetail paymentDetail = new PaymentDetail();
-//
-//        PaymentDetailId paymentDetailId = new PaymentDetailId();
-//        paymentDetailId.setApplicationNo(request.getApplicationNo());
-//        paymentDetailId.setMapNo(request.getMapNo());
-//        paymentDetailId.setMapVendorId(request.getMapVendorId());
-//
-//        paymentDetail.setId(paymentDetailId);
-//        paymentDetail.setUsuario(request.getUsuario());
-//        paymentDetail.setfActual(request.getFActual());
-//        paymentDetail.setPrograma(request.getPrograma());
-//        paymentDetail.setAmount(new BigDecimal(String.valueOf(request.getAmount())));
-//        paymentDetail.setPaymentDate(request.getPaymentDate());
-//        paymentDetail.setPaymentRef(request.getPaymentRef());
-//
-//        PaymentDetail savedDetail = paymentDetailRepository.save(paymentDetail);
-//
-//        return new PaymentDetailResponse(savedDetail);
-//    }
-
 
     @Override
     public PaymentDetailResponse savePaymentDetails(PaymentDetailRequest paymentDetailRequest) {
@@ -76,20 +54,12 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
 
     }
 
-//    @Override
-//    public PaymentDetailResponse savePaymentDetails(PaymentDetailRequest paymentDetailRequest) {
-//        return null;
-//    }
-
     @Override
-
     public List<PaymentDetailResponse> getPaymentByApplicationNo(String applicationNo) {
         return paymentDetailRepository.findById_ApplicationNo(applicationNo)
                 .stream()
                 .map(PaymentDetailResponse::new)
                 .collect(Collectors.toList());
-
-
     }
 
     @Override

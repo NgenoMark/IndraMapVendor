@@ -14,13 +14,13 @@ import java.util.Objects;
 @Embeddable
 public class SurveyDetailId implements Serializable {
     private static final long serialVersionUID = 987913956424763625L;
-    @Column(name = "MAP_NUMBER", columnDefinition = "unknown")
+    @Column(name = "MAP_NUMBER")
     private String mapNumber;
 
-    @Column(name = "APPLICATION_NUMBER", columnDefinition = "unknown")
+    @Column(name = "APPLICATION_NUMBER")
     private String applicationNumber;
 
-    @Column(name = "VENDOR_ID", columnDefinition = "unknown")
+    @Column(name = "VENDOR_ID")
     private String vendorId;
 
     @Override

@@ -20,7 +20,7 @@ public class MapSurveyDetail {
 @Column(name = "USUARIO", length = 255)
     private String usuario;
 
-@Column(name = "F_ACTUAL", columnDefinition = "unknown")
+@Column(name = "F_ACTUAL")
     private Date fActual;
 
 @Column(name = "PROGRAMA", length = 255)

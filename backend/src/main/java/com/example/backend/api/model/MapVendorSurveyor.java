@@ -17,21 +17,21 @@ public class MapVendorSurveyor {
     @EmbeddedId
     private MapVendorSurveyorId id;
 
-@Column(name = "USUARIO", columnDefinition = "unknown")
+@Column(name = "USUARIO")
     private String usuario;
-@Column(name = "F_ACTUAL", columnDefinition = "unknown")
+@Column(name = "F_ACTUAL")
     private Date fActual;
-@Column(name = "PROGRAMA", columnDefinition = "unknown")
+@Column(name = "PROGRAMA")
     private String programa;
-@Column(name = "MAP_VENDOR_ID", columnDefinition = "unknown")
+@Column(name = "MAP_VENDOR_ID")
     private String mapVendorId;
-@Column(name = "MAP_NUMBER", columnDefinition = "unknown")
+@Column(name = "MAP_NUMBER")
     private String mapNumber;
-@Column(name = "NAME", columnDefinition = "unknown")
+@Column(name = "NAME")
     private String name;
-@Column(name = "EMAIL", columnDefinition = "unknown")
+@Column(name = "EMAIL")
     private String email;
-@Column(name = "PHONE_NUMBER", columnDefinition = "unknown")
+@Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
 

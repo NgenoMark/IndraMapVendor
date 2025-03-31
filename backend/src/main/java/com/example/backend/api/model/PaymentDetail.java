@@ -18,22 +18,22 @@ public class PaymentDetail {
     @EmbeddedId
     private PaymentDetailId id;
 
-@Column(name = "USUARIO", columnDefinition = "unknown")
+@Column(name = "USUARIO")
     private String usuario;
 
-@Column(name = "F_ACTUAL", columnDefinition = "unknown")
+@Column(name = "F_ACTUAL")
     private Date fActual;
 
-@Column(name = "PROGRAMA", columnDefinition = "unknown")
+@Column(name = "PROGRAMA")
     private String  programa;
 
-@Column(name = "AMOUNT", columnDefinition = "unknown")
+@Column(name = "AMOUNT")
     private BigDecimal amount;
 
-@Column(name = "PAYMENT_DATE", columnDefinition = "unknown")
+@Column(name = "PAYMENT_DATE")
     private Date paymentDate;
 
-@Column(name = "PAYMENT_REF", columnDefinition = "unknown")
+@Column(name = "PAYMENT_REF")
     private String paymentRef;
 
     public PaymentDetailId getId() {

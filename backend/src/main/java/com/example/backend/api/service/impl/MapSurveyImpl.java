@@ -25,49 +25,6 @@ public class MapSurveyImpl implements MapSurveyService {
         this.mapSurveyRepository = mapSurveyRepository;
     }
 
-//    @Override
-//    public MapSurveyResponse saveMapSurvey(MapSurveyRequest mapSurveyRequest) {
-//
-//        MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId();
-//
-//        mapSurveyDetailId.setIdSurveyData( mapSurveyRequest.getIdSurveyData());
-//        mapSurveyDetailId.setMapNumber( mapSurveyRequest.getMapNumber());
-//        mapSurveyDetailId.setNumExp( mapSurveyRequest.getNumExp());
-//
-//        boolean exists = mapSurveyRepository.existsById( mapSurveyDetailId);
-//        if (exists) {
-//            MapSurveyResponse response = new MapSurveyResponse();
-//            response.setIdSurveyData(mapSurveyRequest.getIdSurveyData());
-//            response.setMapNumber(mapSurveyRequest.getMapNumber());
-//            response.setNumExp(mapSurveyRequest.getNumExp());
-//            response.setUsuario(mapSurveyRequest.getUsuario());
-//            response.setfActual(mapSurveyRequest.getfActual());
-//            response.setPrograma( mapSurveyRequest.getPrograma());
-//            response.setIdMapWs(mapSurveyRequest.getIdMapWs());
-//            response.setTipFase(mapSurveyRequest.getTipFase());
-//            response.setVendorId(mapSurveyRequest.getVendorId());
-//            return response;
-//        }
-//
-//        MapSurveyDetail mapSurveyDetail = new MapSurveyDetail();
-//        mapSurveyDetail.setId( mapSurveyDetailId);
-//        //mapSurveyDetail.setUsuario( mapSurveyRequest.getUsuario());
-//        //mapSurveyDetail.setfActual( mapSurveyRequest.getfActual());
-//        mapSurveyDetail.setPrograma( mapSurveyRequest.getPrograma());
-//        mapSurveyDetail.setIdMapWs( mapSurveyRequest.getIdMapWs());
-//        mapSurveyDetail.setTipFase( mapSurveyRequest.getTipFase());
-//        mapSurveyDetail.setVendorId( mapSurveyRequest.getVendorId());
-//
-//        mapSurveyDetail.setfActual( mapSurveyRequest.getfActual() != null ? mapSurveyRequest.getfActual() :new Date());
-//        mapSurveyDetail.setUsuario( mapSurveyRequest.getUsuario() != null ? mapSurveyRequest.getUsuario() : "OPEN_U");
-//
-//
-//        mapSurveyDetail = mapSurveyRepository.save(mapSurveyDetail);
-//
-//        return new MapSurveyResponse(mapSurveyDetail);
-//
-//    }
-
     @Override
     public MapSurveyResponse saveMapSurvey(MapSurveyRequest mapSurveyRequest) {
 
@@ -141,32 +98,6 @@ public class MapSurveyImpl implements MapSurveyService {
 
     }
 
-
-//    @Override
-//    public void deleteSurvey(Integer idSurveyData , String mapNumber , String numExp ) {
-//        MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId(idSurveyData, mapNumber, numExp);
-//        if(!mapSurveyRepository.existsById(mapSurveyDetailId)) {
-//            throw new RuntimeException("Survey not found");
-//        }
-//        mapSurveyRepository.deleteById(mapSurveyDetailId);
-//    }
-
-//    @Override
-//    public void deleteSurvey(Integer idSurveyData, String mapNumber, String numExp) {
-//        // Create composite key
-//        MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId();
-//
-//        //MapSurveyDetailId mapSurveyDetailId = new MapSurveyDetailId(idSurveyData, mapNumber, numExp);
-//
-//        // Check if the survey exists (optional, for custom error message)
-//        if (!mapSurveyRepository.existsById(mapSurveyDetailId)) {
-//            throw new EntityNotFoundException("Survey not found with ID: " + mapSurveyDetailId);
-//        }
-//
-//        // Delete the survey
-//        mapSurveyRepository.deleteById(mapSurveyDetailId);
-//    }
-
     @Override
     public void deleteSurvey(Integer idSurveyData, String mapNumber, String numExp) {
         // Create composite key and set its fields
@@ -183,8 +114,5 @@ public class MapSurveyImpl implements MapSurveyService {
         // Delete the survey
         mapSurveyRepository.deleteById(mapSurveyDetailId);
     }
-
-
-
 
 }

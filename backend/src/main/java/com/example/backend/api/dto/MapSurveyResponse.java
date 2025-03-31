@@ -19,22 +19,6 @@ public class MapSurveyResponse {
     private String tipFase;
     private String vendorId;
 
-//    public Long getId() {
-//        return id;
-//    }
-//
-////    public void setId(Long id) {
-////        this.id = id;
-////    }
-//
-//
-//    public String getMessage() {
-//        return message;
-//    }
-//
-//    public void setMessage(String message) {
-//        this.message = message;
-//    }
 
     public String getUsuario() {
         return usuario;

@@ -14,10 +14,10 @@ import java.util.Objects;
 @Embeddable
 public class MapPaymentId implements Serializable {
     private static final long serialVersionUID = -9079040025988093700L;
-    @Column(name = "ID_RECORD", columnDefinition = "unknown")
+    @Column(name = "ID_RECORD")
     private String idRecord;
 
-    @Column(name = "ACCOUNT_ID", columnDefinition = "unknown")
+    @Column(name = "ACCOUNT_ID")
     private String accountId;
 
 

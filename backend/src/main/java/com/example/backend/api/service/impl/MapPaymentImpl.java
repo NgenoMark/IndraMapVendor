@@ -20,13 +20,6 @@ public class MapPaymentImpl implements MapPaymentService {
 
     private MapPaymentRepository mapPaymentRepository;
 
-//    @Autowired
-//    public List<MapPaymentResponse> getAllMapPayments() {
-//        return MapPaymentRepository.findAll().stream()
-//                .map(MapPaymentResponse::new)
-//                .collect(Collectors.toList());
-//    }
-
     @Autowired
     public MapPaymentImpl(MapPaymentRepository mapPaymentRepository) {
         this.mapPaymentRepository = mapPaymentRepository;
@@ -38,21 +31,6 @@ public class MapPaymentImpl implements MapPaymentService {
                 .map(MapPaymentResponse::new)
                 .collect(Collectors.toList());
     }
-
-//    @Autowired
-//    public List<MapPaymentResponse> getPaymentsByAccountIdOrIdRecord( String accountId, String idRecord)
-//    {
-//        List<MapPayment> mapPaymentList = mapPaymentRepository
-//                .findByIdRecordOrAccountId( String idRecord, String accountId);
-//
-//        if (mapPaymentList.isEmpty()) {
-//            throw new ResourceNotFoundException("Project data not available for ID: " + idRecord + accountId);
-//        }
-//
-//        return mapPaymentList.stream()
-//                .map(projectData -> convertToResponse(projectData, "Project data has been retrieved successfully"))
-//                .collect(Collectors.toList());
-//    }
 
     @Override
     public List<MapPaymentResponse> getPaymentsByAccountIdOrIdRecord(String accountId, Long idRecord) {

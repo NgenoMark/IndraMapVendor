@@ -46,14 +46,6 @@ public class MapSurveyController {
         return mapSurveyService.updateSurvey(request);
     }
 
-//    @DeleteMapping("/delete/{idSurveyData}/{mapNumber}/{numExp}") {
-//        public ResponseEntity<String> deleteSurvey (@PathVariable Integer idSurveyData, @PathVariable String
-//        mapNumber, @PathVariable String numExp){
-//            mapSurveyService.deleteSurvey(idSurveyData, mapNumber, numExp);
-//            return ResponseEntity.ok("Survey deleted successfully")
-//        }
-//    }
-
     @DeleteMapping("/deleteSurvey/{idSurveyData}/{mapNumber}/{numExp}")
     public ResponseEntity<String> deleteSurvey(
             @PathVariable Integer idSurveyData,

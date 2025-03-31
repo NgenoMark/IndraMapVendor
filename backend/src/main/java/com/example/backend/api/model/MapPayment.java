@@ -17,47 +17,47 @@ public class MapPayment {
     @EmbeddedId
     private MapPaymentId id;
 
-@Column(name = "USUARIO", columnDefinition = "unknown")
+@Column(name = "USUARIO" )
     private String usuario;
-@Column(name = "F_ACTUAL", columnDefinition = "unknown")
+@Column(name = "F_ACTUAL")
     private Date fActual;
-@Column(name = "PROGRAMA", columnDefinition = "unknown")
+@Column(name = "PROGRAMA")
     private String programa;
-@Column(name = "NIS_RAD", columnDefinition = "unknown")
+@Column(name = "NIS_RAD")
     private String nisRad;
-@Column(name = "NUM_MAP", columnDefinition = "unknown")
+@Column(name = "NUM_MAP")
     private String numMap;
-@Column(name = "CO_MAP_VEND", columnDefinition = "unknown")
+@Column(name = "CO_MAP_VEND")
     private String coMapVend;
-@Column(name = "IMP_TOT_REC", columnDefinition = "unknown")
+@Column(name = "IMP_TOT_REC")
     private Double impTotRec;
-@Column(name = "IMP_PAGO", columnDefinition = "unknown")
+@Column(name = "IMP_PAGO")
     private Double impPago;
-@Column(name = "IMP_QUOTA", columnDefinition = "unknown")
+@Column(name = "IMP_QUOTA")
     private Double impQuota;
-@Column(name = "REM_QUOTA", columnDefinition = "unknown")
+@Column(name = "REM_QUOTA")
     private Double remQuota;
-@Column(name = "EST_PAGO", columnDefinition = "unknown")
+@Column(name = "EST_PAGO")
     private String estPago;
-@Column(name = "F_PAGO", columnDefinition = "unknown")
+@Column(name = "F_PAGO")
     private String fPago;
-@Column(name = "F_VAL", columnDefinition = "unknown")
+@Column(name = "F_VAL")
     private String fVal;
-@Column(name = "F_TRANS", columnDefinition = "unknown")
+@Column(name = "F_TRANS")
     private String fTrans;
-@Column(name = "REF_TRANS", columnDefinition = "unknown")
+@Column(name = "REF_TRANS")
     private String refTrans;
-@Column(name = "REF_PAGO", columnDefinition = "unknown")
+@Column(name = "REF_PAGO")
     private String refPago;
-@Column(name = "F_GEN", columnDefinition = "unknown")
+@Column(name = "F_GEN")
     private String fGen;
-@Column(name = "USER_GEN", columnDefinition = "unknown")
+@Column(name = "USER_GEN")
     private String  userGen;
-@Column(name = "LINK_PAGO", columnDefinition = "unknown")
+@Column(name = "LINK_PAGO")
     private String linkPago;
-@Column(name = "TIP_FORMA_PAGO", columnDefinition = "unknown")
+@Column(name = "TIP_FORMA_PAGO")
     private String tipFormaPago;
-@Column(name = "NUM_EXP", columnDefinition = "unknown")
+@Column(name = "NUM_EXP")
     private String numExp;
 
     public MapPaymentId getId() {

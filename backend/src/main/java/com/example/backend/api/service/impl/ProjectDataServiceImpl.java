@@ -94,27 +94,6 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         return convertToResponse(projectData, "Data saved successfully");
     }
 
-//    @Override
-//    public ProjectDataResponse getProjectData(String applicationNoOrMapVendorId) {
-//        ProjectData projectData = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId ,applicationNoOrMapVendorId)
-//                .orElseThrow(() -> new RuntimeException("Project Data not found"));
-//
-//        return convertToResponse(projectData, "Data retrieved successfully");
-//    }
-
-
-//    @Override
-//    public List<ProjectDataResponse> getProjectData(String applicationNoOrMapVendorId) {
-//        List<ProjectData> projectDataList = projectDataRepository.findByProjectDataId_ApplicationNoOrProjectDataId_MapVendorId(applicationNoOrMapVendorId , applicationNoOrMapVendorId);
-//        if(projectDataList.isEmpty()){
-//            throw new RuntimeException("Project data is not available");
-//        }
-//        return projectDataList.stream()
-//                .map(projectData -> convertToResponse(projectData , "Project data has been retrieved successfully"))
-//                .collect(Collectors.toList());
-//    }
-
-
     @Override
     public List<ProjectDataResponse> getProjectData(String applicationNoOrMapNo) {
         List<ProjectData> projectDataList = projectDataRepository
@@ -129,28 +108,6 @@ public class ProjectDataServiceImpl implements ProjectDataService {
                 .collect(Collectors.toList());
     }
 
-
-
-
-    // 🔹 Retrieve Single Project Data by Application No
-//    @Override
-//    public ProjectDataResponse getProjectDataBy(String applicationNo) {
-//        ProjectData projectData = projectDataRepository.findByProjectDataId_ApplicationNo(applicationNo)
-//                .orElseThrow(() -> new RuntimeException("Project Data not found"));
-//
-//        return convertToResponse(projectData, "Data retrieved successfully");
-//    }
-//
-//
-//    @Override
-//    public ProjectDataResponse getProjectDataById(String mapVendorId){
-//        ProjectData projectData = projectDataRepository.findByProjectDataId_MapVendorId(mapVendorId)
-//                .orElseThrow(() -> new RuntimeException("Project Data not found."));
-//
-//        return convertToResponse(projectData, "Data retrieved successfully");
-//    }
-
-
     @Override
     public List<ProjectDataResponse> getProjectDataById(String mapVendorId) {
         List<ProjectData> projectDataList = projectDataRepository.findByProjectDataId_MapVendorId(mapVendorId);
@@ -163,7 +120,6 @@ public class ProjectDataServiceImpl implements ProjectDataService {
     }
 
 
-
     // 🔹 Retrieve All Project Data
     @Override
     public List<ProjectDataResponse> getAllProjectData() {
@@ -173,26 +129,6 @@ public class ProjectDataServiceImpl implements ProjectDataService {
                 .collect(Collectors.toList());
     }
 
-
-//    @Override
-//    public Optional<ProjectDataResponse> updateProjectData(ProjectDataRequest projectDataRequest) {
-//        ProjectData existingProjectData = projectDataRepository.updateByMapNumber(projectDataRequest.getMapNo())
-//                .orElseThrow(() -> new RuntimeException("Project data not found"));
-//
-//        existingProjectData.setCustomerName(projectDataRequest.getCustomerName());
-//        existingProjectData.setCustomerAddress(projectDataRequest.getCustomerAddress());
-//        existingProjectData.setCustomerTelephone(projectDataRequest.getCustomerTelephone());
-//        existingProjectData.setCity(projectDataRequest.getCity());
-//        existingProjectData.setDistrict(projectDataRequest.getDistrict());
-//        existingProjectData.setZone(projectDataRequest.getZone());
-//        existingProjectData.setCompletionStatus(projectDataRequest.getCompletionStatus());
-//        existingProjectData.setSurveyStatus(projectDataRequest.getSurveyStatus());
-//
-//        // Save updated data
-//        existingProjectData = projectDataRepository.save(existingProjectData);
-//
-//        return Optional.of(convertToResponse(existingProjectData, "Project updated successfully"));
-//    }
 
     @Override
     public Optional<ProjectDataResponse> updateProjectData(ProjectDataRequest projectDataRequest) {
@@ -234,37 +170,6 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         return updatedRows > 0;
     }
 
-
-
-
-
-    // 🔹 Convert Entity to Response DTO
-//    private ProjectDataResponse convertToResponse(ProjectData projectData, String message) {
-//        ProjectDataResponse response = new ProjectDataResponse();
-//
-//        // Retrieve values from composite key
-//        ProjectDataId projectDataId = projectData.getProjectDataId();
-//
-//        response.setApplicationNo(projectDataId.getApplicationNo());
-//        response.setMapVendorId(projectDataId.getMapVendorId());
-//        response.setMapNo(projectDataId.getMapNo());
-//
-//        // Retrieve values from main entity
-//        response.setfActual(projectData.getfActual());
-//        response.setPrograma(projectData.getPrograma());
-//        response.setUsuario(projectData.getUsuario());
-//        response.setCustomerName(projectData.getCustomerName());
-//        response.setCustomerAddress(projectData.getCustomerAddress());
-//        response.setCustomerTelephone(projectData.getCustomerTelephone());
-//        response.setCity(projectData.getCity());
-//        response.setDistrict(projectData.getDistrict());
-//        response.setZone(projectData.getZone());
-//        response.setMessage(message);
-//
-//        return response;
-//    }
-
-
     private ProjectDataResponse convertToResponse1(ProjectData projectData, String message) {
         ProjectDataResponse response = new ProjectDataResponse();
 
@@ -285,15 +190,6 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         response.setDistrict(projectData.getDistrict());
         response.setZone(projectData.getZone());
         response.setMessage(message);
-
-        // 🔹 Include Payment Details
-//        if (projectData.getPaymentDetail() != null) {
-//            response.setAmount(projectData.getPaymentDetail().getAmount());
-//            response.setPaymentDate(projectData.getPaymentDetail().getPaymentDate());
-//        } else {
-//            response.setAmount(null);
-//            response.setPaymentDate(null);
-//        }
 
         return response;
     }
@@ -325,17 +221,6 @@ public class ProjectDataServiceImpl implements ProjectDataService {
         response.setLastUpdated(projectData.getLastUpdated());
         response.setUpdatedBy(projectData.getUpdatedBy());
         response.setMessage(message);
-
-
-//        // 🔹 Include Payment Details
-//        if (projectData.getPaymentDetail() != null) {
-//            response.setAmount(projectData.getPaymentDetail().getAmount());
-//            response.setPaymentDate(projectData.getPaymentDetail().getPaymentDate());
-//        } else {
-//            response.setAmount(BigDecimal.valueOf(0.0));
-//            response.setPaymentDate(new Date());
-//        }
-
         return response;
     }
 

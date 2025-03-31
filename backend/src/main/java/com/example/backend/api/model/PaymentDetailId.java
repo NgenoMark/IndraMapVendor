@@ -14,13 +14,13 @@ import java.util.Objects;
 @Embeddable
 public class PaymentDetailId implements Serializable {
     private static final long serialVersionUID = -1331555916875501934L;
-    @Column(name = "APPLICATION_NO", columnDefinition = "unknown")
+    @Column(name = "APPLICATION_NO")
     private String  applicationNo;
 
-    @Column(name = "MAP_NO", columnDefinition = "unknown")
+    @Column(name = "MAP_NO" )
     private String  mapNo;
 
-    @Column(name = "MAP_VENDOR_ID", columnDefinition = "unknown")
+    @Column(name = "MAP_VENDOR_ID")
     private String  mapVendorId;
 
     public String getApplicationNo() {

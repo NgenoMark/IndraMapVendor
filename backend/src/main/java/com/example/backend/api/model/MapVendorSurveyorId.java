@@ -14,10 +14,10 @@ import java.util.Objects;
 @Embeddable
 public class MapVendorSurveyorId implements Serializable {
     private static final long serialVersionUID = 8320475828942985482L;
-    @Column(name = "SURVEYOR_ID", columnDefinition = "unknown")
+    @Column(name = "SURVEYOR_ID")
     private String surveyorId;
 
-    @Column(name = "EMPLOYEE_NUMBER", columnDefinition = "unknown")
+    @Column(name = "EMPLOYEE_NUMBER")
     private String employeeNumber;
 
 

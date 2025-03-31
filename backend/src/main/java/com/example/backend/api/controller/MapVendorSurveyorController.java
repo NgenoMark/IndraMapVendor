@@ -53,26 +53,6 @@ public class MapVendorSurveyorController {
         return mapVendorSurveyorService.updateSurveyor(request);
     }
 
-
-
-//    @DeleteMapping("/deleteSurveyor/{surveyorId}")
-//    public ResponseEntity<MapVendorSurveyorResponse> deleteSurveyor(@PathVariable String surveyorId,
-//                                                                    @PathVariable String employeeNumber) {
-//        //mapVendorSurveyorService.deleteSurveyor(surveyorId);
-//        //return ResponseEntity.noContent().build();
-//        try {
-//            // Call the service method to delete the survey
-//            mapVendorSurveyorService.deleteSurveyor(surveyorId , employeeNumber);
-//            return ResponseEntity.ok("Survey deleted successfully");
-//        } catch (EntityNotFoundException e) {
-//            // Handle survey not found exception
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        } catch (Exception e) {
-//            // Handle other exceptions
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
-//        }
-//    }
-
     @DeleteMapping("/deleteSurveyor/{surveyorId}/{employeeNumber}")
     public ResponseEntity<String> deleteSurveyor(
             @PathVariable String surveyorId,

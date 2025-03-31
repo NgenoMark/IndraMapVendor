@@ -10,8 +10,6 @@ public interface MapPaymentService {
 
     List<MapPaymentResponse> getAllPayments();
 
-    //List<MapPaymentResponse> getPaymentsByAccountIdOrIdRecord( String accountId, String idRecord);
-
     List<MapPaymentResponse> getPaymentsByAccountIdOrIdRecord(String accountId, Long idRecord);
 
     Optional<List<MapPaymentResponse>> getPaymentByNumMap(String numMap);

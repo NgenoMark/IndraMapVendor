@@ -30,12 +30,6 @@ public class PaymentDetailsController {
         return paymentDetailsService.savePaymentDetails( paymentDetailRequest);
     }
 
-
-//    @GetMapping("/getPaymentByMapNo/{mapNo}")
-//    public Object getPaymentByMapNo(@RequestParam String mapNo) {
-//        return paymentDetailsService.getPaymentByMapNo(mapNo);
-//    }
-
     @GetMapping("/getPaymentByApplicationNo/{applicationNo}")
     public List<PaymentDetailResponse> getPaymentByApplicationNo(@PathVariable String applicationNo){
         return paymentDetailsService.getPaymentByApplicationNo(applicationNo);
