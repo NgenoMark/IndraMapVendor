@@ -1,6 +1,5 @@
 package com.example.backend.api.service.impl;
 
-import com.example.backend.api.dto.MapSurveyResponse;
 import com.example.backend.api.dto.MapVendorSurveyorResponse;
 import com.example.backend.api.dto.SurveyDetailRequest;
 import com.example.backend.api.dto.SurveyDetailResponse;
