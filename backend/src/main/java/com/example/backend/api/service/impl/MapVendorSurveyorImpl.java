@@ -74,10 +74,8 @@ package com.example.backend.api.service.impl;
 
 import com.example.backend.api.dto.MapVendorSurveyorRequest;
 import com.example.backend.api.dto.MapVendorSurveyorResponse;
-import com.example.backend.api.model.MapSurveyDetail;
 import com.example.backend.api.model.MapVendorSurveyor;
 import com.example.backend.api.model.MapVendorSurveyorId;
-import com.example.backend.api.model.repositories.MapSurveyRepository;
 import com.example.backend.api.model.repositories.MapVendorSurveyorRepository;
 import com.example.backend.api.service.MapVendorSurveyorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,13 +89,11 @@ import java.util.stream.Collectors;
 @Service
 public class MapVendorSurveyorImpl implements MapVendorSurveyorService {
 
-    private final MapSurveyRepository mapSurveyRepository;
     private final MapVendorSurveyorRepository mapVendorSurveyorRepository;
 
     @Autowired
-    public MapVendorSurveyorImpl(MapVendorSurveyorRepository mapVendorSurveyorRepository, MapSurveyRepository mapSurveyRepository) {
+    public MapVendorSurveyorImpl(MapVendorSurveyorRepository mapVendorSurveyorRepository) {
         this.mapVendorSurveyorRepository = mapVendorSurveyorRepository;
-        this.mapSurveyRepository = mapSurveyRepository;
     }
 
     @Override
