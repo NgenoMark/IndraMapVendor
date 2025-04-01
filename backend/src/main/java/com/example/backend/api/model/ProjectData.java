@@ -3,16 +3,22 @@ package com.example.backend.api.model;
 import lombok.Getter;
 import lombok.Setter;
 
+<<<<<<< HEAD
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+=======
+import javax.persistence.*;
+import java.util.Date;
+>>>>>>> 58dfc9860314d825cb89c80da1d297e78c564335
 
 @Getter
 @Setter
 @Entity
 @Table(name = "PROJECT_DATA", schema = "SGC")
 public class ProjectData {
+<<<<<<< HEAD
     @EmbeddedId
     private ProjectDataId id;
     
@@ -22,6 +28,16 @@ public class ProjectData {
 
 @Column(name = "F_ACTUAL", columnDefinition = "unknown")
     private String fActual;
+=======
+
+    @EmbeddedId
+    private ProjectDataId projectDataId;
+
+@Column(name = "USUARIO", columnDefinition = "unknown")
+    private String usuario;
+@Column(name = "F_ACTUAL", columnDefinition = "unknown")
+    private Date fActual;
+>>>>>>> 58dfc9860314d825cb89c80da1d297e78c564335
 @Column(name = "PROGRAMA", columnDefinition = "unknown")
     private String programa;
 @Column(name = "CUSTOMER_NAME", columnDefinition = "unknown")
@@ -37,12 +53,51 @@ public class ProjectData {
 @Column(name = "ZONE", columnDefinition = "unknown")
     private String zone;
 
+<<<<<<< HEAD
     public ProjectDataId getId() {
         return id;
     }
 
     public void setId(ProjectDataId id) {
         this.id = id;
+=======
+@Column(name = "COMPLETION_STATUS", columnDefinition = "unknown")
+    private String completionStatus;
+
+@Column(name = "SURVEY_STATUS", columnDefinition = "unknown")
+    private String surveyStatus;
+
+@Column(name = "ASSIGNED_TO_ID", columnDefinition = "unknown")
+    private String assignedToId;
+
+@Column(name = "START_DATE", columnDefinition = "unknown")
+    private Date startDate;
+
+@Column(name = "END_DATE", columnDefinition = "unknown")
+    private Date endDate;
+
+@Column(name = "LAST_UPDATED", columnDefinition = "unknown")
+    private Date lastUpdated;
+
+@Column(name = "UPDATED_BY", columnDefinition = "unknown")
+    private String updatedBy;
+
+
+//    @ManyToOne
+//    @JoinColumns({
+//            @JoinColumn(name = "APPLICATION_NO", referencedColumnName = "APPLICATION_NO", insertable = false, updatable = false),
+//            @JoinColumn(name = "MAP_VENDOR_ID", referencedColumnName = "MAP_VENDOR_ID", insertable = false, updatable = false),
+//            @JoinColumn(name = "MAP_NO", referencedColumnName = "MAP_NO", insertable = false, updatable = false)
+//    })
+//    private PaymentDetail paymentDetail;
+
+    public ProjectDataId getId() {
+        return projectDataId;
+    }
+
+    public void setId(ProjectDataId id) {
+        this.projectDataId = id;
+>>>>>>> 58dfc9860314d825cb89c80da1d297e78c564335
     }
 
     public String getUsuario() {
@@ -53,11 +108,27 @@ public class ProjectData {
         this.usuario = usuario;
     }
 
+<<<<<<< HEAD
     public String getfActual() {
         return fActual;
     }
 
     public void setfActual(String fActual) {
+=======
+    public ProjectDataId getProjectDataId() {
+        return projectDataId;
+    }
+
+    public void setProjectDataId(ProjectDataId projectDataId) {
+        this.projectDataId = projectDataId;
+    }
+
+    public Date getfActual() {
+        return fActual;
+    }
+
+    public void setfActual(Date fActual) {
+>>>>>>> 58dfc9860314d825cb89c80da1d297e78c564335
         this.fActual = fActual;
     }
 
@@ -116,4 +187,71 @@ public class ProjectData {
     public void setZone(String zone) {
         this.zone = zone;
     }
+<<<<<<< HEAD
+=======
+
+//    public PaymentDetail getPaymentDetail() {
+//        return paymentDetail;
+//    }
+//
+//    public void setPaymentDetail(PaymentDetail paymentDetail) {
+//        this.paymentDetail = paymentDetail;
+//    }
+
+    public String getCompletionStatus() {
+        return completionStatus;
+    }
+
+    public void setCompletionStatus(String completionStatus) {
+        this.completionStatus = completionStatus;
+    }
+
+    public String getSurveyStatus() {
+        return surveyStatus;
+    }
+
+    public void setSurveyStatus(String surveyStatus) {
+        this.surveyStatus = surveyStatus;
+    }
+
+    public String getAssignedToId() {
+        return assignedToId;
+    }
+
+    public void setAssignedToId(String assignedToId) {
+        this.assignedToId = assignedToId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+>>>>>>> 58dfc9860314d825cb89c80da1d297e78c564335
 }

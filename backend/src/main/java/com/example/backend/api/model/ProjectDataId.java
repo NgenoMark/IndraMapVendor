@@ -13,6 +13,16 @@ import java.util.Objects;
 @Embeddable
 
 public  class ProjectDataId implements Serializable {
+<<<<<<< HEAD
+=======
+
+    @Column(name = "APPLICATION_NO", columnDefinition = "unknown")
+    private String applicationNo;
+    @Column(name = "MAP_VENDOR_ID", columnDefinition = "unknown")
+    private String mapVendorId;
+    @Column(name = "MAP_NO", columnDefinition = "unknown")
+    private String mapNo;
+>>>>>>> 58dfc9860314d825cb89c80da1d297e78c564335
     private static final long serialVersionUID = 4531758268798428805L;
 
     public String getMapNo() {
@@ -39,12 +49,16 @@ public  class ProjectDataId implements Serializable {
         this.applicationNo = applicationNo;
     }
 
+<<<<<<< HEAD
     @Column(name = "APPLICATION_NO", columnDefinition = "unknown")
     private String applicationNo;
     @Column(name = "MAP_VENDOR_ID", columnDefinition = "unknown")
     private String mapVendorId;
     @Column(name = "MAP_NO", columnDefinition = "unknown")
     private String mapNo;
+=======
+
+>>>>>>> 58dfc9860314d825cb89c80da1d297e78c564335
 
     @Override
     public boolean equals(Object other) {
